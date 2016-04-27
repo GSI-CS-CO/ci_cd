@@ -1,9 +1,18 @@
 #!/bin/bash
 #===========================================================
 # First parameter must be the saftlib directory
-DIRECTORY=$1
+#
+# Example: ./install-run-deb.sh ../somewhere/saftlib
 
-if [ -d "$DIRECTORY" ]; then
+directory=$1
+
+if [ $# -ne 1 ]; then
+  echo "Sorry we need at least 1 parameter..."
+  echo "Example: ./install-run-deb.sh ../somewhere/saftlib"
+  exit 1
+fi
+
+if [ -d "$directory" ]; then
   cd $DIRECTORY
   ./autogen.sh
   ./configure --enable-maintainer-mode --prefix=/usr --sysconfdir=/etc
