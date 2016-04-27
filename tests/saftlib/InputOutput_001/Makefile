@@ -1,6 +1,6 @@
 # Packages
 # --------------------------------------------------------------------
-pkg_packages := dbus-glib-1 saftlib glibmm-2.4 giomm-2.4
+pkg_packages := saftlib glibmm-2.4 giomm-2.4
 PKG_CFLAGS   := $(shell pkg-config --cflags $(pkg_packages))
 PKG_LDFLAGS  := $(shell pkg-config --libs $(pkg_packages))
 
