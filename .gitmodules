@@ -1,0 +1,4 @@
+[submodule "external/bel_projects"]
+	path = external/bel_projects
+	url = https://github.com/GSI-CS-CO/bel_projects.git
+	branch = proposed_master
