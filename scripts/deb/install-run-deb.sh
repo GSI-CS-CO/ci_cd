@@ -1,10 +1,12 @@
 #!/bin/bash
 #===========================================================
-# First parameter must be the saftlib directory
+# First parameter must be the saftlib directory and the 
+# second parameter should be a device (with path)
 #
-# Example: ./install-run-deb.sh ../somewhere/saftlib
+# Example: ./install-run-deb.sh ../somewhere/saftlib baseboard:dev/wbm0
 
 directory=$1
+saftd_arg=$2
 
 if [ $# -ne 1 ]; then
   echo "Sorry we need at least 1 parameter..."
@@ -21,7 +23,7 @@ if [ -d "$directory" ]; then
   sleep 0.5
   sudo killall saftd | true
   sleep 0.5
-  sudo saftd baseboard:dev/wbm0
+  sudo saftd $2
   exit 0
 else
   echo "Saftlib directory not found!"
