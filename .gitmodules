@@ -1,0 +1,3 @@
+[submodule "submodules/bel_projects"]
+	path = submodules/bel_projects
+	url = https://github.com/GSI-CS-CO/bel_projects.git
