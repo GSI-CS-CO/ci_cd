@@ -35,6 +35,18 @@ make -j $JOBS DESTDIR=$DEST_DIRECTORY/etherbone/x86_64 install
 make -j $JOBS DESTDIR=$DEST_DIRECTORY/etherbone/i386 EXTRA_FLAGS="-m32" install
 cd ../../..
 
+# Build all tools and copy them
+cd tools
+make -j $JOBS
+for i in flash console info sflash time; do
+  cp eb-$i $DEST_DIRECTORY/etherbone/x86_64/bin
+done
+make -j $JOBS EXTRA_FLAGS="-m32"
+for i in flash console info sflash time; do
+  cp eb-$i $DEST_DIRECTORY/etherbone/i386/bin
+done
+cd ..
+
 # Leave bel_projects
 cd ..
 
