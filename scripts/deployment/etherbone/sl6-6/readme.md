@@ -1,3 +1,7 @@
+# Deployment
+
+Just run the build script: `./build-etherbone.sh`
+
 # Example Setup
 
 <pre>
