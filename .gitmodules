@@ -1,0 +1,8 @@
+[submodule "submodules/latest/bel_projects"]
+	path = submodules/latest/bel_projects
+	url = https://github.com/GSI-CS-CO/bel_projects.git
+	branch = proposed_master
+[submodule "submodules/latest/saftlib"]
+	path = submodules/latest/saftlib
+	url = https://github.com/GSI-CS-CO/saftlib.git
+	branch = master
