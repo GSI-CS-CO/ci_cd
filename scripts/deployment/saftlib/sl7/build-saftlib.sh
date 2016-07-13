@@ -6,7 +6,7 @@ BEL_BRANCH="proposed_master"
 DEST_DIRECTORY=`pwd`"/"$BUILD_DIRECTORY
 BASE_DIR=`pwd`
 JOBS=32
-DEPLOY_TARGET="/common/export/saftlib-rc8"
+DEPLOY_TARGET="/common/export/saftlib-dev/rc8"
 
 # Create a new checkout
 if [ -d "$BUILD_DIRECTORY" ]; then
@@ -45,7 +45,7 @@ cd $LIBS_DIRECTORY
 for i in x86_64 i386; do
   # set ARCH and download our stuff
   ARCH=$i
-  yumdownloader --destdir tmp glibmm24 lib dbus glib2.$ARCH libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH libsigc++20.$ARCH 
+  yumdownloader --destdir tmp glibmm24.$ARCH lib dbus glib2.$ARCH libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH libsigc++20.$ARCH 
   rm -rf staging
   mkdir staging
   cd staging
