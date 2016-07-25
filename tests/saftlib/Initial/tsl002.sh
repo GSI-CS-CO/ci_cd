@@ -31,26 +31,26 @@ saft-io-ctl $device_name -n IO3 -o 0 -t 1
 
 # Set up LEDs to indicate activity
 saft-io-ctl $device_name -n LED1_ADD_R -c 0x0 0x0 0 0xf 1 -u
-saft-io-ctl $device_name -n LED1_ADD_R -c 0x0 0x0 62500000 0xf 0 -u
+saft-io-ctl $device_name -n LED1_ADD_R -c 0x0 0x0 31250000 0xf 0 -u
 
 saft-io-ctl $device_name -n LED2_ADD_B -c 0x0 0x0 0 0xf 1 -u
-saft-io-ctl $device_name -n LED2_ADD_B -c 0x0 0x0 125000000 0xf 0 -u
+saft-io-ctl $device_name -n LED2_ADD_B -c 0x0 0x0 62500000 0xf 0 -u
 
 saft-io-ctl $device_name -n LED3_ADD_G -c 0x0 0x0 0 0xf 1 -u
-saft-io-ctl $device_name -n LED3_ADD_G -c 0x0 0x0 250000000 0xf 0 -u
+saft-io-ctl $device_name -n LED3_ADD_G -c 0x0 0x0 125000000 0xf 0 -u
 
 saft-io-ctl $device_name -n LED4_ADD_W -c 0x0 0x0 0 0xf 1 -u 
-saft-io-ctl $device_name -n LED4_ADD_W -c 0x0 0x0 500000000 0xf 0 -u 
+saft-io-ctl $device_name -n LED4_ADD_W -c 0x0 0x0 250000000 0xf 0 -u 
 
 saft-io-ctl $device_name -n LED1_BASE_R -c 0x0 0x0 0 0xf 1 -u 
-saft-io-ctl $device_name -n LED1_BASE_R -c 0x0 0x0 62500000 0xf 0 -u 
+saft-io-ctl $device_name -n LED1_BASE_R -c 0x0 0x0 31250000 0xf 0 -u 
 
 saft-io-ctl $device_name -n LED2_BASE_B -c 0x0 0x0 0 0xf 1 -u 
-saft-io-ctl $device_name -n LED2_BASE_B -c 0x0 0x0 125000000 0xf 0 -u 
+saft-io-ctl $device_name -n LED2_BASE_B -c 0x0 0x0 62500000 0xf 0 -u 
 
 saft-io-ctl $device_name -n LED3_BASE_G -c 0x0 0x0 0 0xf 1 -u 
-saft-io-ctl $device_name -n LED3_BASE_G -c 0x0 0x0 250000000 0xf 0 -u 
+saft-io-ctl $device_name -n LED3_BASE_G -c 0x0 0x0 125000000 0xf 0 -u 
 
 saft-io-ctl $device_name -n LED4_BASE_W -c 0x0 0x0 0 0xf 1 -u 
-saft-io-ctl $device_name -n LED4_BASE_W -c 0x0 0x0 500000000 0xf 0 -u 
+saft-io-ctl $device_name -n LED4_BASE_W -c 0x0 0x0 250000000 0xf 0 -u 
 
