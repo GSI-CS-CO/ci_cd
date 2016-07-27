@@ -25,7 +25,7 @@ from multiprocessing import Process
 
 ########################################################################################################################
 
-def snoop_events(number_of_events):
+def snoop_events(number_of_events, device):
   # Prepare XML log document
   doc = Document()
   root = doc.createElement('root')
@@ -33,7 +33,7 @@ def snoop_events(number_of_events):
   event_count = 0
 
   # Snoop events
-  process = subprocess.Popen(["saft-ctl", "dut", "snoop", "0x0", "0x0", "0", "-x"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+  process = subprocess.Popen(["saft-ctl", device, "snoop", "0x0", "0x0", "0", "-x"], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
   
   # Wait for events
   while True:
@@ -86,7 +86,7 @@ def snoop_events(number_of_events):
 
 ########################################################################################################################
 
-def inject_events(number_of_events):
+def inject_events(number_of_events, device):
   # Variables
   out_send = [0 for x in range(number_of_events)]
   err_send = [0 for x in range(number_of_events)]
@@ -101,7 +101,7 @@ def inject_events(number_of_events):
   for x in range(0, number_of_events):
     eid = np.uint64(rnd.randint(0, max_uint64))
     epara = np.uint64(rnd.randint(0, max_uint64))
-    process_send = subprocess.Popen(["saft-ctl", "dut", "inject", str(eid), str(epara), "0", "-v", "-x",], stdout=subprocess.PIPE)
+    process_send = subprocess.Popen(["saft-ctl", device, "inject", str(eid), str(epara), "0", "-v", "-x",], stdout=subprocess.PIPE)
     out_send[x], err_send[x] = process_send.communicate()
     out_send_split = out_send[x].split()
     
@@ -149,10 +149,20 @@ def inject_events(number_of_events):
 ########################################################################################################################
 
 def main():
+  # Get arguments
+  cmdtotal = len(sys.argv)
+  cmdargs = str(sys.argv)
+  
+  # Plausibility check
+  if cmdtotal != 4:
+    print "Error: Arguments are {device name} {max. events} {max. loops}"
+    sys.exit(1)
+  
   # Settings
   sleep_time = 1
-  max_events = 2500
-  max_loops = 25
+  device = str(sys.argv[1])
+  max_events = int(sys.argv[2])
+  max_loops = int(sys.argv[3])
 
   # Generate random test boundaries
   number_of_events = rnd.randint(1, max_events)
@@ -160,10 +170,10 @@ def main():
   
   # Run test cases
   for i in range(1, max_loops+1):
-    p_snoop = Process(target=snoop_events, args=(number_of_events,))
+    p_snoop = Process(target=snoop_events, args=(number_of_events, device))
     p_snoop.start()
     time.sleep(sleep_time)
-    p_inject = Process(target=inject_events, args=(number_of_events,))
+    p_inject = Process(target=inject_events, args=(number_of_events, device))
     p_inject.start()
     p_inject.join()
     p_snoop.join()

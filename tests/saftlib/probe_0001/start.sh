@@ -1,4 +1,4 @@
-# !/bin/bash
+#!/bin/bash
 
 setup_file=$(hostname)
 setup_file=$setup_file".sh"
