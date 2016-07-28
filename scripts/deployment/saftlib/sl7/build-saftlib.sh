@@ -27,7 +27,12 @@ cd ip_cores/saftlib
 git clean -xfd .
 ./autogen.sh
 export PKG_CONFIG_PATH=/common/usr/timing/root/lib/pkgconfig
-./configure --prefix="" --sysconfdir=/etc
+#./configure --prefix="" --sysconfdir=/etc
+
+./configure --prefix="" --sysconfdir=/etc \
+CFLAGS="-I$DEPLOY_TARGET/usr" \
+GIOMM_CFLAGS="-pthread -I/c/usr/include/giomm-2.4 -I/common/usr/timing/root/usr/lib64/giomm-2.4/include -I/common/usr/timing/root/usr/include/glibmm-2.4 -I/common/usr/timing/root/usr/lib64/glibmm-2.4/include -I/common/usr/timing/root/usr/include/sigc++-2.0 -I/common/usr/timing/root/usr/lib64/sigc++-2.0/include -I/common/usr/timing/root/usr/include/glib-2.0 -I/common/usr/timing/root/usr/lib64/glib-2.0/include" GIOMM_LIBS="-L/common/usr/timing/root/usr/lib64/ -lgiomm-2.4 -lgio-2.0 -lglibmm-2.4 -lgobject-2.0 -lsigc-2.0 -lglib-2.0"
+
 make -j $JOBS DESTDIR=$DEST_DIRECTORY/saftlib/x86_64 install
 make -j $JOBS DESTDIR=$DEST_DIRECTORY/saftlib/i386 EXTRA_FLAGS="-m32" install
 cd ../../..

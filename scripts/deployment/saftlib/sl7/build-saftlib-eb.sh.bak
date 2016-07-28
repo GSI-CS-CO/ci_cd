@@ -1,0 +1,76 @@
+#! /bin/bash
+BASE_DIR=`pwd`
+ENV_DIR=$BASE_DIR/"env"
+BUILD_DIRECTORY="saftlib-build"
+SAFTLIB_BRANCH="master"
+DEST_DIRECTORY=`pwd`"/"$BUILD_DIRECTORY
+JOBS=32
+DEPLOY_TARGET="/common/export/saftlib-dev/rc8"
+
+# Create a new checkout
+if [ -d "$BUILD_DIRECTORY" ]; then
+  rm -fr $BUILD_DIRECTORY
+fi
+mkdir $BUILD_DIRECTORY
+mkdir $BUILD_DIRECTORY/tmp
+cd $BUILD_DIRECTORY
+
+git clone https://github.com/GSI-CS-CO/saftlib.git tmp/saftlib
+
+# Update all submodules and checkout the select branch
+cd tmp/saftlib
+#git checkout $SAFTLIB_BRANCH
+git checkout 3edce2751bf0d217f95cb9403739d1f00b28bcf4
+
+# Build saftlib
+git clean -xfd .
+./autogen.sh
+export PKG_CONFIG_PATH=$ENV_DIR/lib/pkgconfig:$ENV_DIR/usr/lib64/pkgconfig/
+
+#./configure --prefix=$DEST_DIRECTORY EB_CFLAGS="-I$ENV_DIR/include" EB_LIBS="-L$ENV_DIR/lib -letherbone" GIOMM_CFLAGS="-pthread -I$ENV_DIR/usr/include/giomm-2.4 -I$ENV_DIR/usr/lib64/giomm-2.4/include -I$ENV_DIR/usr/include/glibmm-2.4 -I$ENV_DIR/usr/lib64/glibmm-2.4/include -I$ENV_DIR/usr/include/sigc++-2.0 -I$ENV_DIR/usr/lib64/sigc++-2.0/include -I$ENV_DIR/usr/include/glib-2.0 -I$ENV_DIR/usr/lib64/glib-2.0/include" GIOMM_LIBS="-L$ENV_DIR/usr/lib64/ -lgiomm-2.4 -lgio-2.0 -lglibmm-2.4 -lgobject-2.0 -lsigc-2.0 -lglib-2.0"
+
+#./configure --prefix=$DEST_DIRECTORY  LDFLAGS="-L$ENV_DIR/usr" LDFLAGS="-lglib-2.0" EB_CFLAGS="-I$ENV_DIR/include" EB_LIBS="-L$ENV_DIR/lib -letherbone" GIOMM_CFLAGS="-pthread -I$ENV_DIR/usr/include/giomm-2.4 -I$ENV_DIR/usr/lib64/giomm-2.4/include -I$ENV_DIR/usr/include/glibmm-2.4 -I$ENV_DIR/usr/lib64/glibmm-2.4/include -I$ENV_DIR/usr/include/sigc++-2.0 -I$ENV_DIR/usr/lib64/sigc++-2.0/include -I$ENV_DIR/usr/include/glib-2.0 -I$ENV_DIR/usr/lib64/glib-2.0/include" GIOMM_LIBS="-L$ENV_DIR/usr/lib64/ -lgiomm-2.4 -lgio-2.0 -lglibmm-2.4 -lsigc-2.0"
+
+./configure --prefix=""  LDFLAGS="-L$ENV_DIR/usr" LDFLAGS="-lglib-2.0" EB_CFLAGS="-I$ENV_DIR/include" EB_LIBS="-L$ENV_DIR/lib -letherbone" GIOMM_CFLAGS="-pthread -I$ENV_DIR/usr/include/giomm-2.4 -I$ENV_DIR/usr/lib64/giomm-2.4/include -I$ENV_DIR/usr/include/glibmm-2.4 -I$ENV_DIR/usr/lib64/glibmm-2.4/include -I$ENV_DIR/usr/include/sigc++-2.0 -I$ENV_DIR/usr/lib64/sigc++-2.0/include -I$ENV_DIR/usr/include/glib-2.0 -I$ENV_DIR/usr/lib64/glib-2.0/include" GIOMM_LIBS="-L$ENV_DIR/usr/lib64/ -lgiomm-2.4 -lgio-2.0 -lglibmm-2.4 -lsigc-2.0"
+
+#CFLAGS="-I$ENV_DIR/usr"
+#./configure --prefix="" --sysconfdir=/etc \
+#./configure --prefix="" --with-sysroot=$ENV_DIR 
+
+make -j $JOBS DESTDIR=$DEST_DIRECTORY install
+#make -j $JOBS install
+
+cd ../../
+
+## Get stuff we depent on
+#if [ -d "$LIBS_DIRECTORY" ]; then
+#  rm -fr $LIBS_DIRECTORY
+#fi
+#mkdir $LIBS_DIRECTORY
+#cd $LIBS_DIRECTORY
+#
+## set ARCH and download our stuff
+ARCH=x86_64
+yumdownloader --destdir tmp glibmm24.$ARCH glibmm24-devel.$ARCH dbus glib2.$ARCH glib2-devel.$ARCH libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH libsigc++20.$ARCH libffi.$ARCH pcre.$ARCH pcre-devel.$ARCH
+
+## Extract all rpms
+for i in tmp/*.rpm; do rpm2cpio "$i" | cpio -idmv; done
+
+# Remove unwanted ko files
+find . -name *.ko -exec rm -rf {} \;
+rm -rf tmp
+
+cd $BASE_DIR
+
+# Create output
+tar cvJf saftlib-$ARCH.tar.xz saftlib-build/*
+
+#Deploy
+rm -rf $DEPLOY_TARGET/*
+cp saftlib-x86_64.tar.xz $DEPLOY_TARGET
+mkdir $DEPLOY_TARGET/x86_64
+
+cp -r saftlib-build/* $DEPLOY_TARGET/x86_64
+#tar xvf $DEPLOY_TARGET/saftlib-x86_64.tar.xz
+#mv $DEPLOY_TARGET/saftlib-build $DEPLOY_TARGET/x86_64
+cp saftlib-dev.sh $DEPLOY_TARGET
