@@ -12,7 +12,7 @@ else
 	echo -e "\e[33mUser defined directory $NIGHTLY created to save files"
 fi
 
-wget $WEB_SERVER/device-list.txt -O $NIGHTLY/device-list.txt
+wget $WEB_SERVER/device-list-testing-facility.txt -O $NIGHTLY/device-list-testing-facility.txt
 wget $WEB_SERVER/exploder5_csco_tr.rpd -O $NIGHTLY/exploder5_csco_tr.rpd
 wget $WEB_SERVER/pci_control.rpd -O $NIGHTLY/pci_control.rpd
 wget $WEB_SERVER/vetar2a.rpd -O $NIGHTLY/vetar2a.rpd
@@ -20,7 +20,7 @@ wget $WEB_SERVER/scu_control3.rpd -O $NIGHTLY/scu_control3.rpd
 wget $WEB_SERVER/scu_control2.rpd -O $NIGHTLY/scu_control2.rpd
 wget $WEB_SERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
 
-list=$NIGHTLY/device-list.txt
+list=$NIGHTLY/device-list-testing-facility.txt
 temp=$NIGHTLY/tmp.txt
 
 echo -e "\e[96mEnter the keyword of device name to flash"
