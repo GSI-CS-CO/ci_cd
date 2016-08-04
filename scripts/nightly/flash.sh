@@ -1,6 +1,7 @@
 #!/bin/bash
 
 OPT="web"
+FACILITY="testing"
 
 HELP="$(basename "$0") [-h] [-w directory] [-l directory] [-f deployment target] -- script to flash Timing Receivers
 
@@ -10,60 +11,46 @@ where:
     -l  if you want to flash the TR from a local bitstreams
     -w  if you want to flash the TR from remote files in the Nightly Web Server
     -f  where you want to deploy the bitstreams:
-	pro (production)
-	test(default)
-	coci (continous integration)"
+	prod (production)
+	testing(default)
+	cicd (continous integration)"
 
-# read the options
-TEMP=`getopt -o hw::l::f: --long argh:argw::,argl::,argf: -n 'flash.sh' -- "$@"`
+TEMP=`getopt -o hl:w:f: --long help,local:,web:,facility: -n 'flash.sh' -- "$@"`
 eval set -- "$TEMP"
 
 # extract options and their arguments into variables.
 while true ; do
     case "$1" in
-        -h|--argh) echo "$HELP"; exit 1 ;;
-        -w|--argw) DIR=$2; OPT="local" ;;
-        -l|--argl) DIR=$2; OPT="web" ;;
-        -f|--argf) echo $3;;
-        --) shift; break ;;
+        -h|--help) echo $HELP; shift; exit 1;;
+
+        -l|--local)
+            case "$2" in
+                "") shift 2 ;;
+                *) DIR=$2; OPT="local"; shift 2 ;;
+            esac ;;
+        -w|--web)
+            case "$2" in
+                "") shift 2 ;;
+                *) DIR=$2; OPT="web"; shift 2 ;;
+            esac ;;
+        -f|--facility)
+            case "$2" in
+                "") shift 2 ;;
+                *) FACILITY=$2; shift 2 ;;
+            esac ;;
+        --) shift ; break ;;
         *) echo "Internal error!" ; exit 1 ;;
     esac
 done
 
-echo $DIR $OPT
-
-#while getopts 'hl:w:f:' option; do
-#  case "$option" in
-#    h) echo "$HELP"
-#       exit 1
-#       ;;
-#    l) DIR="$OPTARG"
-#       OPT="local"
-#       ;;    
-#    w) DIR="$OPTARG"
-#       OPT="web"
-#       ;;
-#    f) if [ -z "$OPTARG" ]; then
-#		TARGET="test"
-#	else
-#		TARGET="$OPTARG"
-#	fi
-#       ;;
-#    \?) printf "illegal option: -%s\n" "$OPTARG" >&2
-#       echo "$HELP" >&2
-#       exit 1
-#       ;;
-#  esac
-#done
-#shift $((OPTIND - 1))
-
-
 if [ -z "$DIR" ]; then
         NIGHTLY=./nightly_files
+	rm -rf $NIGHTLY
         mkdir $NIGHTLY
 	echo -e "\e[33mDefault directory $NIGHTLY"
 else
         NIGHTLY="$DIR"
+	rm -rf $NIGHTLY
         mkdir $NIGHTLY
 	echo -e "\e[33mUser defined directory $NIGHTLY"
 fi
@@ -81,7 +68,6 @@ if [ "$OPT" = "web" ]; then
     	wget $WEB_SERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
 else 
     	wget $WEB_SERVER/$DEV_LIST  -O $NIGHTLY/$DEV_LIST
-	echo "download"
 fi
 
 list=$NIGHTLY/$DEV_LIST
@@ -114,7 +100,7 @@ if [ "$input" == "pex" ] || [ "$input" == "all" ]; then
 	#Search for keyword pexarria in the device list and store the value to a text file
 	grep -ie "pexarria" $list > $temp
 
-	##Create an array with the values from the text file created in previous step
+	#Create an array with the values from the text file created in previous step
 	while IFS=$'\t' read -r -a nightlyArray
 	do
         	for i in {nightlyArray[2]}
@@ -132,7 +118,7 @@ if [ "$input" == "vet" ] || [ "$input" == "all" ]; then
 	#Search for keyword pexarria in the device list and store the value to a text file
 	grep -ie "vetar" $list > $temp
 
-	##Create an array with the values from the text file created in previous step
+	#Create an array with the values from the text file created in previous step
 	while IFS=$'\t' read -r -a nightlyArray
 	do
         	for i in {nightlyArray[2]}
@@ -147,10 +133,10 @@ else
 fi
 
 if [ "$input" == "scu3" ] || [ "$input" == "all" ]; then
-	##Search for keyword pexarria in the device list and store the value to a text file
+	#Search for keyword pexarria in the device list and store the value to a text file
 	grep -ie "scu3" $list > $temp
 
-	##Create an array with the values from the text file created in previous step
+	#Create an array with the values from the text file created in previous step
 	while IFS=$'\t' read -r -a nightlyArray
 	do
         	for i in {nightlyArray[2]}
@@ -166,10 +152,10 @@ else
 fi
 
 if [ "$input" == "scu2" ] || [ "$input" == "all" ]; then
-	##Search for keyword pexarria in the device list and store the value to a text file
+	#Search for keyword pexarria in the device list and store the value to a text file
 	grep -ie "scu2" $list > $temp
 
-	##Create an array with the values from the text file created in previous step
+	#Create an array with the values from the text file created in previous step
 	while IFS=$'\t' read -r -a nightlyArray
 	do
         	for i in {nightlyArray[2]}
@@ -185,10 +171,10 @@ else
 fi
 
 if [ "$input" == "dm" ] || [ "$input" == "all" ]; then
-	##Search for keyword pexarria in the device list and store the value to a text file
+	#Search for keyword pexarria in the device list and store the value to a text file
 	grep -ie "datamaster" $list > $temp
 
-	##Create an array with the values from the text file created in previous step
+	#Create an array with the values from the text file created in previous step
 	while IFS=$'\t' read -r -a nightlyArray
 	do
         	for i in {nightlyArray[2]}
@@ -206,6 +192,3 @@ fi
 if [ "$input" != "exp" ] && [ "$input" != "pex" ] && [ "$input" != "vet" ] && [ "$input" != "scu3" ] && [ "$input" != "scu2" ] && [ "$input" != "dm" ] && [ "$input" != "all" ]; then
 	echo -e "\e[31mIncorrect keyword. Please try again"
 fi
-
-#rm $temp
-#rm -rf $NIGHTLY
