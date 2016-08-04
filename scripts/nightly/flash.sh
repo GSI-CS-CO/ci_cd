@@ -14,24 +14,48 @@ where:
 	test(default)
 	coci (continous integration)"
 
-while getopts 'hl:w:f:' option; do
-  case "$option" in
-    h) echo "$HELP"
-       exit 1
-       ;;
-    l) DIR="$OPTARG"
-       OPT="local"
-       ;;    
-    w) DIR="$OPTARG"
-       OPT="web"
-       ;;
-    \?) printf "illegal option: -%s\n" "$OPTARG" >&2
-       echo "$HELP" >&2
-       exit 1
-       ;;
-  esac
+# read the options
+TEMP=`getopt -o hw::l::f: --long argh:argw::,argl::,argf: -n 'flash.sh' -- "$@"`
+eval set -- "$TEMP"
+
+# extract options and their arguments into variables.
+while true ; do
+    case "$1" in
+        -h|--argh) echo "$HELP"; exit 1 ;;
+        -w|--argw) DIR=$2; OPT="local" ;;
+        -l|--argl) DIR=$2; OPT="web" ;;
+        -f|--argf) echo $3;;
+        --) shift; break ;;
+        *) echo "Internal error!" ; exit 1 ;;
+    esac
 done
-shift $((OPTIND - 1))
+
+echo $DIR $OPT
+
+#while getopts 'hl:w:f:' option; do
+#  case "$option" in
+#    h) echo "$HELP"
+#       exit 1
+#       ;;
+#    l) DIR="$OPTARG"
+#       OPT="local"
+#       ;;    
+#    w) DIR="$OPTARG"
+#       OPT="web"
+#       ;;
+#    f) if [ -z "$OPTARG" ]; then
+#		TARGET="test"
+#	else
+#		TARGET="$OPTARG"
+#	fi
+#       ;;
+#    \?) printf "illegal option: -%s\n" "$OPTARG" >&2
+#       echo "$HELP" >&2
+#       exit 1
+#       ;;
+#  esac
+#done
+#shift $((OPTIND - 1))
 
 
 if [ -z "$DIR" ]; then
