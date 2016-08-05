@@ -2,8 +2,9 @@
 
 OPT="web"
 FACILITY="testing"
+RELEASE="nightly"
 
-HELP="$(basename "$0") [-h] [-w directory] [-l directory] [-f deployment target] -- script to flash Timing Receivers
+HELP="$(basename "$0") [-h] [-w directory] [-l directory] [-f deployment target] [-r release] -- script to flash Timing Receivers
 
 
 where:
@@ -13,15 +14,19 @@ where:
     -f  where you want to deploy the bitstreams:
 	prod (production)
 	testing(default)
-	cicd (continous integration)"
+	cicd (continous integration)
+    -r  which release bitstream you want to use
+        balloon
+	golden_image
+	nightly(default)\n"
 
-TEMP=`getopt -o hl:w:f: --long help,local:,web:,facility: -n 'flash.sh' -- "$@"`
+TEMP=`getopt -o hl:w:f:r: --long help,local:,web:,facility:,release: -n 'flash.sh' -- "$@"`
 eval set -- "$TEMP"
 
 # extract options and their arguments into variables.
 while true ; do
     case "$1" in
-        -h|--help) echo $HELP; shift; exit 1;;
+        -h|--help) printf "$HELP"; shift; exit 1;;
 
         -l|--local)
             case "$2" in
@@ -38,6 +43,11 @@ while true ; do
                 "") shift 2 ;;
                 *) FACILITY=$2; shift 2 ;;
             esac ;;
+        -r|--release)
+            case "$2" in
+                "") shift 2 ;;
+                *) RELEASE=$2; shift 2 ;;
+            esac ;;
         --) shift ; break ;;
         *) echo "Internal error!" ; exit 1 ;;
     esac
@@ -49,17 +59,21 @@ if [ -z "$DIR" ]; then
         mkdir $NIGHTLY
 	echo -e "\e[33mDefault directory $NIGHTLY"
 else
-        NIGHTLY="$DIR"
-	rm -rf $NIGHTLY
-        mkdir $NIGHTLY
-	echo -e "\e[33mUser defined directory $NIGHTLY"
+	if [ -d "$DIR" ]; then
+        	NIGHTLY="$DIR"
+		echo -e "\e[33mUser defined directory $NIGHTLY"
+	else
+		echo -e "\e[31mDirectory $DIR does not exist"
+		exit 1
+	fi
 fi
 
-WEB_SERVER=http://tsl002.acc.gsi.de/releases/nightly/gateware
+WEB_SERVER=http://tsl002.acc.gsi.de/releases/$RELEASE/gateware
+DEVICE=http://tsl002.acc.gsi.de/releases
 DEV_LIST=device-list-$FACILITY.txt
 
 if [ "$OPT" = "web" ]; then
-    	wget $WEB_SERVER/$DEV_LIST -O $NIGHTLY/$DEV_LIST
+    	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
     	wget $WEB_SERVER/exploder5_csco_tr.rpd -O $NIGHTLY/exploder5_csco_tr.rpd
     	wget $WEB_SERVER/pci_control.rpd -O $NIGHTLY/pci_control.rpd
     	wget $WEB_SERVER/vetar2a.rpd -O $NIGHTLY/vetar2a.rpd
@@ -67,7 +81,7 @@ if [ "$OPT" = "web" ]; then
     	wget $WEB_SERVER/scu_control2.rpd -O $NIGHTLY/scu_control2.rpd
     	wget $WEB_SERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
 else 
-    	wget $WEB_SERVER/$DEV_LIST  -O $NIGHTLY/$DEV_LIST
+    	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
 fi
 
 list=$NIGHTLY/$DEV_LIST
