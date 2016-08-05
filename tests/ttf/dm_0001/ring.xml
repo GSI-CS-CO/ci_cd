@@ -6,18 +6,29 @@
    <plan>
       <!-- Plan A, normal operation -->
       <meta>
-         <starttime>1470139670000000000</starttime>
+         <starttime>___STARTTIME___</starttime>
          <lastjump>idle</lastjump>
       </meta>  
       <chain>
          <!-- Cycle A0, entry -->
          <meta>
-            <rep>2</rep>
-            <period>100000000</period>
+            <rep>1000</rep>
+            <period>10000000</period>
             <branchpoint>yes</branchpoint>
          </meta>
          <msg>
-             <!-- Msg A0B, EVT_PREP_INJ -->
+            <id>
+               <FID>1</FID>
+               <GID>3000</GID>
+               <EVTNO>9</EVTNO>
+               <SID>0</SID>
+               <BPID>0</BPID>
+            </id>
+            <par>0xfeedbeef</par>
+            <tef>000</tef>
+            <offs>000000000</offs>
+         </msg>
+         <msg>
             <id>
                <FID>0</FID>
                <GID>4002</GID>
@@ -27,10 +38,9 @@
             </id>
             <par>0xfeed0132</par>
             <tef>000</tef>
-            <offs>005000000</offs>
+            <offs>000050000</offs>
          </msg>
          <msg>
-             <!-- Msg A0C, EVT_MB_LOAD -->
             <id>
                <FID>0</FID>
                <GID>4002</GID>
@@ -38,9 +48,9 @@
                <SID>1</SID>
                <BPID>1</BPID>
             </id>
-            <par>0xfeed0132</par>
+            <par>0xfeed0133</par>
             <tef>000</tef>
-            <offs>010000000</offs>
+            <offs>001000000</offs>
          </msg>
       </chain>
    </plan>

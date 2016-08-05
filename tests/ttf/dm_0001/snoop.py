@@ -34,18 +34,23 @@ def main():
     line = process.stdout.readline()
     if not line: break
     else: 
-      event_count = event_count + 1
+      #event_count = event_count + 1
       reception_string = line
       reception_string = reception_string.replace("!", " ") # get rid of exclamation marks
       reception_string = reception_string.split()
       
-      # Write to log file
-      f.write(str(reception_string[1]))
-      f.write(" ")
-      f.write(str(reception_string[3]))
-      f.write(" ")
-      f.write(str(reception_string[5]))
-      f.write("\n")
+      # Remove PPS events from stream
+      if (reception_string[3] == "0xffff000000000000"):
+        pass
+      else:
+        # Write to log file
+        f.write(str(reception_string[1]))
+        f.write(" ")
+        f.write(str(reception_string[3]))
+        f.write(" ")
+        f.write(str(reception_string[5]))
+        f.write("\n")
+        event_count = event_count + 1
     
     if (event_count == number_of_events):
       break

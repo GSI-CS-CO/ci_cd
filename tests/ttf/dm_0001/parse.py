@@ -38,7 +38,7 @@ class EventMessage(object):
     print "SID:   ", self.sid
     print "BPID:  ", self.bpid
     print "EVENT: ", self.event
-    print "PAR:   ", self.par
+    print "PAR:   ", format(self.par, '#018x')
     print "TEF:   ", self.tef
     print "OFFS:  ", self.offs
     print 50 * "="
@@ -87,23 +87,24 @@ def parse_schedule(xmlFile, verbose):
       elif  (elem.tag == "BPID"):
         v_lst[v_messages].bpid = int(text, 0)
       elif  (elem.tag == "par"):
-        v_lst[v_messages].par = int(text, 0)
+        v_lst[v_messages].par = int(text, 16)
       elif  (elem.tag == "tef"):
-        v_lst[v_messages].tef = int(text, 0)
+        v_lst[v_messages].tef = int(text, 10)
       elif  (elem.tag == "offs"):
-        v_lst[v_messages].offs = int(text, 0)
+        v_lst[v_messages].offs = int(text, 10)
+        v_messages = v_messages + 1
       
       # Search for the next message
       if (elem.tag == "id"):
-        v_messages = v_messages + 1
+        pass
       
       # Search configuration parameters
       if (elem.tag == "starttime"):
-        v_starttime = int(text, 0)
+        v_starttime = int(text, 10)
       elif (elem.tag == "rep"):
-        v_rep = int(text, 0)
+        v_rep = int(text, 10)
       elif (elem.tag == "period"):
-        v_period = int(text, 0)
+        v_period = int(text, 10)
         
     if (verbose == 1):
       print "Found start time:"
