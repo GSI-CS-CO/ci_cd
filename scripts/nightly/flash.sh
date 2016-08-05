@@ -101,7 +101,7 @@ if [ "$input" == "exp" ] || [ "$input" == "all" ]; then
 	do
 		for i in {nightlyArray[2]}
 		do
-#			sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/exploder5_csco_tr.rpd
+			sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/exploder5_csco_tr.rpd
 			echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
 			echo
 		done
@@ -137,7 +137,7 @@ if [ "$input" == "vet" ] || [ "$input" == "all" ]; then
 	do
         	for i in {nightlyArray[2]}
 	        do
-#	    	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/vetar2a.rpd
+	    	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/vetar2a.rpd
                 	echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest vetar2a.rpd gateware"
 	                echo
         	done
@@ -177,7 +177,7 @@ if [ "$input" == "scu2" ] || [ "$input" == "all" ]; then
 	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/scu_control2.rpd
                 	echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control2.rpd gateware"
 	                echo
-#		. ./scu_reset.sh ${nightlyArray[0]} ${nightlyArray[2]}
+		. ./scu_reset.sh ${nightlyArray[0]} ${nightlyArray[2]}
         	done
 	done < $temp
 else
@@ -193,7 +193,7 @@ if [ "$input" == "dm" ] || [ "$input" == "all" ]; then
 	do
         	for i in {nightlyArray[2]}
 	        do
-#	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/ftm.rpd
+	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/ftm.rpd
 	                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest ftm.rpd gateware"
         	        echo
 	        done
