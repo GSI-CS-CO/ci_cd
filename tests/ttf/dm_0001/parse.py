@@ -4,6 +4,7 @@
 
 from lxml import etree
 from StringIO import StringIO
+import sys
 
 ########################################################################################################################
 
@@ -45,14 +46,12 @@ class EventMessage(object):
   
   # Print <deadline> <eventid> <parameter> as hex
   def print_cmp_line(self, iteration, start_time, period):
-    tmp = str(format(start_time+(iteration*period)+self.offs, '#016x') + " " + format(self.event, '#016x') + " " + format(self.par, '#016x') + '\n')
+    tmp = str(format(start_time+(iteration*period)+self.offs, '#018x') + " " + format(self.event, '#018x') + " " + format(self.par, '#018x') + '\n')
     return tmp
-
 
 ########################################################################################################################
 
-def parseBookXML(xmlFile, verbose):
-
+def parse_schedule(xmlFile, verbose):
     v_lst = [EventMessage() for _ in range(100)]
     v_starttime = 0
     v_rep = 0
@@ -63,13 +62,11 @@ def parseBookXML(xmlFile, verbose):
     xml = f.read()
     f.close()
  
+    # Get elements from schedule
     tree = etree.parse(StringIO(xml))
     print tree.docinfo.doctype
     context = etree.iterparse(StringIO(xml))
-    book_dict = {}
-    books = []
     for action, elem in context:
-    
       if not elem.text:
           text = "None"
       else:
@@ -78,6 +75,7 @@ def parseBookXML(xmlFile, verbose):
       if (verbose == 1):
         print elem.tag + " => " + text
       
+      # Get message context
       if (elem.tag == "FID"):
         v_lst[v_messages].fid = int(text, 0)
       elif  (elem.tag == "GID"):
@@ -94,30 +92,33 @@ def parseBookXML(xmlFile, verbose):
         v_lst[v_messages].tef = int(text, 0)
       elif  (elem.tag == "offs"):
         v_lst[v_messages].offs = int(text, 0)
-        
+      
+      # Search for the next message
       if (elem.tag == "id"):
         v_messages = v_messages + 1
-        
+      
+      # Search configuration parameters
       if (elem.tag == "starttime"):
         v_starttime = int(text, 0)
       elif (elem.tag == "rep"):
         v_rep = int(text, 0)
       elif (elem.tag == "period"):
         v_period = int(text, 0)
-    
-    print "Found start time:"
-    print v_starttime
-    print "Found repeatation count:"
-    print v_rep
-    print "Found period:"
-    print v_period
-    print "Found messages:"
-    print v_messages
-    print ""
+        
+    if (verbose == 1):
+      print "Found start time:"
+      print v_starttime
+      print "Found repeatation count:"
+      print v_rep
+      print "Found period:"
+      print v_period
+      print "Found messages:"
+      print v_messages
+      print ""
     
     for x in range(0, v_messages):
       v_lst[x].generate_event()
-
+    
     f = open('expected_events.txt', 'w')
     for x in range(0, v_rep):
       for y in range(0, v_messages):
@@ -125,9 +126,31 @@ def parseBookXML(xmlFile, verbose):
         f.write(str(tmp))
     f.close()
 
-if __name__ == "__main__":
-    parseBookXML("ring.xml",1)
+########################################################################################################################
 
+def main():
+  # Get arguments
+  cmdtotal = len(sys.argv)
+  cmdargs = str(sys.argv)
+  
+  # Plausibility check
+  if cmdtotal != 2:
+    print "Error: Arguments are {schedule.xml}"
+    sys.exit(1)
+  
+  # Settings
+  schedule_name = str(sys.argv[1])
+  
+  # Transform schedule
+  parse_schedule(schedule_name, 0)
+
+  # Done
+  sys.exit(0)
+
+########################################################################################################################
+
+if __name__ == "__main__":
+  main()
 
 
 
