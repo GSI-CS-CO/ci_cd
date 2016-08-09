@@ -28,7 +28,7 @@ while true ; do
     case "$1" in
         -h|--help) printf "$HELP"; shift; exit 1;;
 
-        -l|--local)
+        -l|--local)SH_LOG
             case "$2" in
                 "") shift 2 ;;
                 *) DIR=$2; OPT="local"; shift 2 ;;
@@ -71,6 +71,9 @@ fi
 WEB_SERVER=http://tsl002.acc.gsi.de/releases/$RELEASE/gateware
 DEVICE=http://tsl002.acc.gsi.de/releases
 DEV_LIST=device-list-$FACILITY.txt
+FLASH_LOG=/var/www/html/releases/devices_flashed.log
+temp_log=./flash.log
+log_seven_days=$(date --date="7 days ago" +%F)
 
 if [ "$OPT" = "web" ]; then
     	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
@@ -102,8 +105,15 @@ if [ "$input" == "exp" ] || [ "$input" == "all" ]; then
 		for i in {nightlyArray[2]}
 		do
 			sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/exploder5_csco_tr.rpd
-			echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
-			echo
+			if [ $? != 0 ]; then
+				echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+			else
+				echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+				echo
+				echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
+				grep -v "$log_seven_days" $FLASH_LOG > $temp_log
+				cp $temp_log $FLASH_LOG
+			fi
 		done
 	done < $temp
 else
@@ -120,8 +130,15 @@ if [ "$input" == "pex" ] || [ "$input" == "all" ]; then
         	for i in {nightlyArray[2]}
 	        do
 	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/pci_control.rpd
-                	echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest pci_control.rpd gateware"
-	                echo
+                	if [ $? != 0 ]; then
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                        else
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
+                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
+                                cp $temp_log $FLASH_LOG
+                     fi
         	done
 	done < $temp
 else
@@ -138,8 +155,15 @@ if [ "$input" == "vet" ] || [ "$input" == "all" ]; then
         	for i in {nightlyArray[2]}
 	        do
 	    	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/vetar2a.rpd
-                	echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest vetar2a.rpd gateware"
-	                echo
+			if [ $? != 0 ]; then
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                        else
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
+                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
+                                cp $temp_log $FLASH_LOG
+                      fi
         	done
 	done < $temp
 else
@@ -156,8 +180,15 @@ if [ "$input" == "scu3" ] || [ "$input" == "all" ]; then
         	for i in {nightlyArray[2]}
 	        do
  	  	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/scu_control3.rpd
-                	echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control3.rpd gateware"
-	                echo
+			if [ $? != 0 ]; then
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                        else
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
+                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
+                                cp $temp_log $FLASH_LOG
+                      fi
 	     	. ./scu_reset.sh ${nightlyArray[0]} ${nightlyArray[2]}
 		done
 	done < $temp
@@ -175,8 +206,15 @@ if [ "$input" == "scu2" ] || [ "$input" == "all" ]; then
         	for i in {nightlyArray[2]}
 	        do
 	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/scu_control2.rpd
-                	echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control2.rpd gateware"
-	                echo
+			if [ $? != 0 ]; then
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                        else
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
+                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
+                                cp $temp_log $FLASH_LOG
+                      fi
 		. ./scu_reset.sh ${nightlyArray[0]} ${nightlyArray[2]}
         	done
 	done < $temp
@@ -194,10 +232,16 @@ if [ "$input" == "dm" ] || [ "$input" == "all" ]; then
         	for i in {nightlyArray[2]}
 	        do
 	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/ftm.rpd
-	                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest ftm.rpd gateware"
-        	        echo
+			if [ $? != 0 ]; then
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                        else
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
+                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
+                                cp $temp_log $FLASH_LOG
+                      fi
 	        done
-
 	done < $temp
 else
 	echo -e "\e[33mKeyword used is $input, not flashing datamaster" 
@@ -206,3 +250,4 @@ fi
 if [ "$input" != "exp" ] && [ "$input" != "pex" ] && [ "$input" != "vet" ] && [ "$input" != "scu3" ] && [ "$input" != "scu2" ] && [ "$input" != "dm" ] && [ "$input" != "all" ]; then
 	echo -e "\e[31mIncorrect keyword. Please try again"
 fi
+rm $temp_log
