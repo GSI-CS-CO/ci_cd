@@ -3,9 +3,9 @@
 
 # Variables
 data_master=$1 # Data Master must be the first argument (dev/ttyUSBX, udp/192.168.0.1, ...)
-eca_pattern=0xffff000000000000 # FID=MAX & GRPID=MAX
+#eca_pattern=0xffff000000000000 # FID=MAX & GRPID=MAX
 schedule=$2
-schedule_next=temp.xml
+schedule_next=schedule.xml
 schedule_keyword="___STARTTIME___"
 #start_offset=0x0000000100000000
 start_offset=0x0000000050000000
@@ -14,7 +14,7 @@ period=1000000000
 wait_time=0
 
 # Copy old schedule
-cp "$schedule" "$schedule_next"
+#cp "$schedule" "$schedule_next"
 
 # Get time from ECA
 #time=`eca-ctl $data_master -n | grep time | cut -d: -f2` # Legacy ECA tools
@@ -22,7 +22,7 @@ time=`ftm-ctl $data_master -t | grep "ECA TIME" | cut -c 32-49`
 
 time="$(($time+0))" # To dec
 start_time="$(($time+$start_offset))" # Add offset
-start_time="$(((start_time+period+period-1)/period*period))" # Round up to the next second
+#start_time="$(((start_time+period+period-1)/period*period))" # Round up to the next second
 
 # Print debug infos
 printf "Current time at Data Master: 0x%x (%d)\n" $time $time

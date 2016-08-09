@@ -17,13 +17,13 @@ from xml.dom.minidom import Document
 
 def main():
   # Boundaries
-  max_events = 40 # Don't use a value beyond 50
+  max_events = 30 # Don't use a value beyond 30, this will lead to segfault
   max_period = 100000000
-  min_period = 100000
-  max_rep    = 10000
+  min_period = 10000000
+  max_rep    = 1000
   
   max_fid    = 0xf
-  max_gid    = 0xfff - 2 # -2 (PPS=0xfff, LATCH=0xffe, ...)
+  max_gid    = 0xfff - 3 # -2 (PPS=0xfff, LATCH=0xffe, SPECIAL=0xffd)
   max_evtno  = 0xfff
   max_sid    = 0xfff
   max_bpid   = 0x3fff
@@ -38,6 +38,12 @@ def main():
   rep      = rnd.randint(1, max_rep)
   max_offs = period - 1
   offs_lst = []
+
+  # Output parameters
+  print "Period:      " + str(period)
+  print "Events:      " + str(events)
+  print "Repetitions: " + str(rep)
+  print ""
   
   # Prepare schedule
   doc = Document()

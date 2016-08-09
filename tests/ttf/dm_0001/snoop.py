@@ -42,6 +42,12 @@ def main():
       # Remove PPS events from stream
       if (reception_string[3] == "0xffff000000000000"):
         pass
+      # Remove IO LATCH events from stream
+      elif (reception_string[3] == "0xfffe000000000000"):
+        pass
+      # Remove SPECIAL events from stream
+      elif (reception_string[3] == "0xfffd000000000000"):
+        pass
       else:
         # Write to log file
         f.write(str(reception_string[1]))
@@ -52,6 +58,7 @@ def main():
         f.write("\n")
         event_count = event_count + 1
     
+    # Done?
     if (event_count == number_of_events):
       break
     
