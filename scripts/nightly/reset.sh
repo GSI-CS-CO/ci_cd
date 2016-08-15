@@ -131,6 +131,7 @@ fi
 
 #Power cycle all the SCU connected to the power socket
 if [ "$keyword" == "scu" ]; then
+. ./scu_reset.sh
 	grep -ie "SCU" $list > $temp
         while IFS=$'\t' read -r -a pwrArray 
         do
@@ -163,6 +164,7 @@ if [ "$keyword" == "all" ]; then
                         	sleep 30
 				./egctl ${pwrArray[0]} off off off off
 			else
+				. ./scu_reset.sh
 				sleep 2
                         	./egctl ${pwrArray[0]} off off off off
 			fi

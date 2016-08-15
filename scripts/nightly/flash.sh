@@ -189,7 +189,6 @@ if [ "$input" == "scu3" ] || [ "$input" == "all" ]; then
                                 grep -v "$log_seven_days" $FLASH_LOG > $temp_log
                                 cp $temp_log $FLASH_LOG
                       fi
-	     	. ./scu_reset.sh ${nightlyArray[0]} ${nightlyArray[2]}
 		done
 	done < $temp
 else
@@ -215,7 +214,6 @@ if [ "$input" == "scu2" ] || [ "$input" == "all" ]; then
                                 grep -v "$log_seven_days" $FLASH_LOG > $temp_log
                                 cp $temp_log $FLASH_LOG
                       fi
-		. ./scu_reset.sh ${nightlyArray[0]} ${nightlyArray[2]}
         	done
 	done < $temp
 else
