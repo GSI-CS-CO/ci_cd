@@ -5,7 +5,7 @@
 #   [2]: file name (rpd)
 #   [3]: attempts (0=infinite)
 #
-# Example: ./flash-until-death dev/wbm0 10
+# Example: ./flash-until-death bitstream.rpd dev/wbm0 10
 
 device_name=$1;
 stream_name=$2;
@@ -15,7 +15,7 @@ attempt_cnt=0
 
 if [ $# -ne 3 ]; then
   echo "Sorry we need at least 3 parameters..."
-  echo "Example: ./flash-until-death dev/wbm0 10"
+  echo "Example: ./flash-until-death dev/wbm0 bitstream.rpd 10"
   exit 1
 fi
 
