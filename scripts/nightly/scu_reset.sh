@@ -60,6 +60,7 @@ scu_temp=./scu_temp.txt
 			        echo -e "\e[34mReset complete"
 	                done
         	done < $scu_temp
+rm $scu_list $scu_temp
 else
 	echo -e "\e[31mPass argument on command line as scu_name scu_IP or do not pass any argument"
 fi

@@ -37,8 +37,10 @@ done
 #Get the power socket list from the web server
 DEVICE=http://tsl002.acc.gsi.de/releases
 DEV_LIST=egctl-power-socket-list-$FACILITY.txt
+script_path=../../scripts/nightly
+egctl_path=../../tools/egctl/
 
-cd ../../tools/egctl/
+cd $egctl_path
 sudo cp egtab /etc
 make
 
@@ -92,15 +94,16 @@ fi
 #PCIe is connected to the IPC tsl011. Therefore, the PC will be put to HALT
 #using ssh command first and then the power socket will be turned off and on
 if [ "$keyword" == "pex" ]; then
+	echo -e "\e[91mPCIe cards are connected to IPC. IPC tsl011 going to HALT"
+	ssh -t -t gsi@tsl011.acc.gsi.de 'sudo halt'
+	sleep 30
+
 	grep -ie "PCI" $list > $temp
 	while IFS=$'\t' read -r -a pwrArray 
         do
                 for i in {pwrArray[0]}
-                do
-                        echo ${pwrArray[0]}
-			echo -e "\e[91mPowering OFF Industrial PC tsl011 with PCIe cards connected to ${pwrArray[0]} on ${pwrArray[1]}"
-			ssh gsi@tsl011.acc.gsi.de 'sudo halt'
-			sleep 30
+                do                        
+			echo -e "\e[91mPowering OFF PCIe cards connected to ${pwrArray[0]} on ${pwrArray[1]}"
                         ./egctl ${pwrArray[0]} left off left left
                         echo
                         sleep 3
@@ -125,13 +128,16 @@ if [ "$keyword" == "sw" ]; then
 			echo -e "\e[92mPowering ON network switches connected to ${pwrArray[0]} on ${pwrArray[1]}"
                         ./egctl ${pwrArray[0]} on left left left
                         echo
-                done
+               done
         done < $temp
 fi
 
 #Power cycle all the SCU connected to the power socket
 if [ "$keyword" == "scu" ]; then
-. ./scu_reset.sh
+	cd $script_path
+	. ./scu_reset.sh
+	cd $egctl_path
+
 	grep -ie "SCU" $list > $temp
         while IFS=$'\t' read -r -a pwrArray 
         do
@@ -150,6 +156,15 @@ fi
 
 #Power cycle all the devices at once
 if [ "$keyword" == "all" ]; then
+	echo -e "\e[91mIPC tsl011 going to HALT"
+	ssh gsi@tsl011.acc.gsi.de 'sudo halt'
+	sleep 30
+
+	echo -e "\e[91mAll SCUs will be reset"
+	cd $script_path
+	. ./scu_reset.sh
+	cd $egctl_path
+	
 	awk '{ print $1 }' $list > interm.txt
 	sort interm.txt | uniq -d > $temp
 	rm interm.txt
@@ -158,16 +173,8 @@ if [ "$keyword" == "all" ]; then
 	do
                 for i in {pwrArray[0]}
                 do
-                        echo -e "\e[91mPowering OFF all devices in test facility connected to ${pwrArray[0]}"
-			if [ "${pwrArray[0]}" == "eg-pwr2" ]; then
-                       	ssh gsi@tsl011.acc.gsi.de 'sudo halt'
-                        	sleep 30
-				./egctl ${pwrArray[0]} off off off off
-			else
-				. ./scu_reset.sh
-				sleep 2
-                        	./egctl ${pwrArray[0]} off off off off
-			fi
+			echo -e "\e[91mPowering OFF all devices in test facility connected to ${pwrArray[0]}"
+			./egctl ${pwrArray[0]} off off off off
                         echo
                         sleep 3
                         echo -e "\e[92mPowering ON all devices in test facility connected to ${pwrArray[0]}"
