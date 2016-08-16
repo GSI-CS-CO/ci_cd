@@ -94,24 +94,34 @@ fi
 #PCIe is connected to the IPC tsl011. Therefore, the PC will be put to HALT
 #using ssh command first and then the power socket will be turned off and on
 if [ "$keyword" == "pex" ]; then
-	echo -e "\e[91mPCIe cards are connected to IPC. IPC tsl011 going to HALT"
-	ssh -t -t gsi@tsl011.acc.gsi.de 'sudo halt'
-	sleep 30
 
-	grep -ie "PCI" $list > $temp
-	while IFS=$'\t' read -r -a pwrArray 
-        do
-                for i in {pwrArray[0]}
-                do                        
-			echo -e "\e[91mPowering OFF PCIe cards connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} left off left left
-                        echo
-                        sleep 3
-			echo -e "\e[92mPowering ON Industrial PC tsl011 with PCIe cards connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} left on left left
-                        echo
-                done
-        done < $temp
+echo -e "\e[96mEnter the user and IPC name to halt before performing power cycle"
+echo -e "\e[33mAccepted format is user_name@pc_name"
+
+read username
+
+	echo -e "\e[91mPCIe cards are connected to IPC. $username going to HALT"
+	ssh -t -t $username.acc.gsi.de 'sudo halt'
+	if [ $? != 0 ]; then
+		echo -e "\e[91mInvalid username. Check the format."
+		exit 1
+	else
+		sleep 30
+		grep -ie "PCI" $list > $temp
+		while IFS=$'\t' read -r -a pwrArray 
+	        do
+        	        for i in {pwrArray[0]}
+                	do                        
+				echo -e "\e[91mPowering OFF PCIe cards connected to ${pwrArray[0]} on ${pwrArray[1]}"
+	                        ./egctl ${pwrArray[0]} left off left left
+        	                echo
+                	        sleep 3
+				echo -e "\e[92mPowering ON $username with PCIe cards connected to ${pwrArray[0]} on ${pwrArray[1]}"
+	                        ./egctl ${pwrArray[0]} left on left left
+        	                echo
+                	done
+	        done < $temp
+	fi
 fi
 
 #Power cycle all the network switches connected to the power socket
@@ -156,31 +166,42 @@ fi
 
 #Power cycle all the devices at once
 if [ "$keyword" == "all" ]; then
-	echo -e "\e[91mIPC tsl011 going to HALT"
-	ssh gsi@tsl011.acc.gsi.de 'sudo halt'
-	sleep 30
 
-	echo -e "\e[91mAll SCUs will be reset"
-	cd $script_path
-	. ./scu_reset.sh
-	cd $egctl_path
+echo -e "\e[96mEnter the user and IPC name to halt before performing power cycle"
+echo -e "\e[33mAccepted format is user_name@pc_name"
+
+read username
+
+	echo -e "\e[91mIPC $username going to HALT"
+	ssh -t -t $username.acc.gsi.de 'sudo halt'
+	if [ $? != 0 ]; then
+                echo -e "\e[91mInvalid username. Check the format."
+                exit 1
+        else
+
+		sleep 30
+		echo -e "\e[91mAll SCUs will be reset"
+		cd $script_path
+		. ./scu_reset.sh
+		cd $egctl_path
 	
-	awk '{ print $1 }' $list > interm.txt
-	sort interm.txt | uniq -d > $temp
-	rm interm.txt
+		awk '{ print $1 }' $list > interm.txt
+		sort interm.txt | uniq -d > $temp
+		rm interm.txt
 
-	while IFS=$'\t' read -r -a pwrArray
-	do
-                for i in {pwrArray[0]}
-                do
-			echo -e "\e[91mPowering OFF all devices in test facility connected to ${pwrArray[0]}"
-			./egctl ${pwrArray[0]} off off off off
-                        echo
-                        sleep 3
-                        echo -e "\e[92mPowering ON all devices in test facility connected to ${pwrArray[0]}"
-                        ./egctl ${pwrArray[0]} on on on on
-                        echo
-		done
-	done < $temp
+		while IFS=$'\t' read -r -a pwrArray
+		do
+        	        for i in {pwrArray[0]}
+                	do
+				echo -e "\e[91mPowering OFF all devices in test facility connected to ${pwrArray[0]}"
+				./egctl ${pwrArray[0]} off off off off
+        	                echo
+                	        sleep 3
+                        	echo -e "\e[92mPowering ON all devices in test facility connected to ${pwrArray[0]}"
+	                        ./egctl ${pwrArray[0]} on on on on
+        	                echo
+			done
+		done < $temp
+	fi
 fi
 rm $list $temp
