@@ -17,9 +17,9 @@ from xml.dom.minidom import Document
 
 def main():
   # Boundaries
-  max_events = 30 # Don't use a value beyond 30, this will lead to segfault
-  max_period = 100000000
-  min_period = 10000000
+  max_events = 25 # <strike>Don't use a value beyond 40, this will cause a segfault</strike> 
+  max_period = 250000000
+  min_period = 50000000
   max_rep    = 1000
   
   max_fid    = 0xf
@@ -40,10 +40,20 @@ def main():
   offs_lst = []
 
   # Output parameters
-  print "Period:      " + str(period)
   print "Events:      " + str(events)
   print "Repetitions: " + str(rep)
+  print "Period:      " + str(period) + "ns"
+  print "Duration:    " + str((period*rep)) + "ns"
+  print "Rate~:       " + str((period/events)) + "ns"
+  print "Frequency~:  " + str((1.0/(period/events))*1000000000) + "Hz"
   print ""
+  
+  # Save events to XML file
+  f = open("log/duration.txt", "w")
+  try:
+    f.write(str(((period*rep*1.0)/1000000000)))
+  finally:
+    f.close()
   
   # Prepare schedule
   doc = Document()
@@ -171,7 +181,7 @@ def main():
     msg.appendChild(p)
     
   # Save events to XML file
-  f = open("schedule.xml", "w")
+  f = open("log/schedule.xml", "w")
   try:
     f.write(doc.toprettyxml(indent="  "))
   finally:

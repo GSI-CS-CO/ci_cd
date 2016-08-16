@@ -89,7 +89,7 @@ def parse_schedule(xmlFile, verbose):
       elif  (elem.tag == "par"):
         v_lst[v_messages].par = int(text, 16)
       elif  (elem.tag == "tef"):
-        v_lst[v_messages].tef = int(text, 10)
+        v_lst[v_messages].tef = int(text, 16)
       elif  (elem.tag == "offs"):
         v_lst[v_messages].offs = int(text, 10)
         v_messages = v_messages + 1
@@ -120,7 +120,7 @@ def parse_schedule(xmlFile, verbose):
     for x in range(0, v_messages):
       v_lst[x].generate_event()
     
-    f = open('expected_events.txt', 'w')
+    f = open('log/expected_events.txt', 'w')
     for x in range(0, v_rep):
       for y in range(0, v_messages):
         tmp = v_lst[y].print_cmp_line(x, v_starttime, v_period)
