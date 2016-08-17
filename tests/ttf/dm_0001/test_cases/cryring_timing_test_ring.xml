@@ -1,0 +1,92 @@
+<page>
+    <meta>
+        <startplan>A</startplan>
+        <altplan>B</altplan>
+    </meta>
+    <plan>
+        <meta>
+            <starttime>___STARTTIME___</starttime>
+            <lastjump>idle</lastjump>
+        </meta>
+        <chain>
+            <meta>
+                <rep>1000</rep>
+                <period>4550000000</period>
+                <branchpoint>yes</branchpoint>
+            </meta>
+            <msg>
+                <id>
+                    <FID>0</FID>
+                    <GID>210</GID>
+                    <EVTNO>257</EVTNO>
+                    <SID>1</SID>
+                    <BPID>1</BPID>
+                </id>
+                <par>0x0</par>
+                <tef>0x0</tef>
+                <offs>0</offs> <!-- CMD_SEQ_START -->
+            </msg>
+            <msg>
+                <id>
+                    <FID>0</FID>
+                    <GID>210</GID>
+                    <EVTNO>256</EVTNO>
+                    <SID>1</SID>
+                    <BPID>2</BPID>
+                </id>
+                <par>0x0</par>
+                <tef>0x0</tef>
+                <offs>600000000</offs> <!-- CMD_BP_START -->
+            </msg>
+            <msg>
+                <id>
+                    <FID>0</FID>
+                    <GID>210</GID>
+                    <EVTNO>256</EVTNO>
+                    <SID>1</SID>
+                    <BPID>3</BPID>
+                </id>
+                <par>0x0</par>
+                <tef>0x0</tef>
+                <offs>1570000000</offs> <!-- CMD_BP_START -->
+            </msg>
+            <msg>
+                <id>
+                    <FID>0</FID>
+                    <GID>210</GID>
+                    <EVTNO>256</EVTNO>
+                    <SID>1</SID>
+                    <BPID>4</BPID>
+                </id>
+                <par>0x0</par>
+                <tef>0x0</tef>
+                <offs>2080000000</offs> <!-- CMD_BP_START -->
+            </msg>
+            <msg>
+                <id>
+                    <FID>0</FID>
+                    <GID>210</GID>
+                    <EVTNO>257</EVTNO>
+                    <SID>2</SID>
+                    <BPID>5</BPID>
+                </id>
+                <par>0x0</par>
+                <tef>0x0</tef>
+                <offs>3050000000</offs> <!-- CMD_SEQ_START -->
+            </msg>
+            <msg>
+                <id>
+                    <FID>0</FID>
+                    <GID>210</GID>
+                    <EVTNO>256</EVTNO>
+                    <SID>2</SID>
+                    <BPID>6</BPID>
+                </id>
+                <par>0x0</par>
+                <tef>0x0</tef>
+                <offs>3800000000</offs> <!-- CMD_BP_START -->
+            </msg>
+
+        </chain>
+    </plan>
+</page>

@@ -1,0 +1,103 @@
+<page>
+    <meta>
+      <startplan>A</startplan>
+      <altplan>B</altplan>
+    </meta>
+    <plan>
+      <!-- Plan A, normal operation -->
+      <meta>
+         <starttime>___STARTTIME___</starttime>
+         <lastjump>idle</lastjump>
+      </meta>  
+      <chain>
+         <meta>
+            <rep>1000</rep>
+            <period>500000000</period>
+            <branchpoint>yes</branchpoint>
+         </meta>
+         <msg>
+             <!-- Msg A1A, EventA -->
+            <id>
+               <FID>0</FID>
+               <GID>4004</GID>
+               <EVTNO>32</EVTNO>
+               <SID>1</SID>
+               <BPID>1</BPID>
+            </id>
+            <par>0xfeedd0001</par>
+            <tef>000</tef>
+            <offs>001000016</offs>  <!-- First event at t = 0 ms -->
+         </msg>
+
+         <msg>
+             <!-- Msg A1B, EventB -->
+            <id>
+               <FID>0</FID>
+               <GID>4004</GID>
+               <EVTNO>1</EVTNO>
+               <SID>1</SID>
+               <BPID>1</BPID>
+            </id>
+            <par>0xfeed0132</par>
+            <tef>000</tef>
+            <offs>007000016</offs>  <!-- 6 ms -->
+         </msg>
+
+         <msg>
+             <!-- Msg A1C, EventC -->
+            <id>
+               <FID>0</FID>
+               <GID>4004</GID>
+               <EVTNO>2</EVTNO>
+               <SID>1</SID>
+               <BPID>1</BPID>
+            </id>
+            <par>0xfeed0132</par>
+            <tef>000</tef>
+            <offs>011000016</offs>  <!-- 10 ms -->
+         </msg>
+
+         <msg>
+             <!-- Msg A1D, EventD -->
+            <id>
+               <FID>0</FID>
+               <GID>4004</GID>
+               <EVTNO>3</EVTNO>
+               <SID>1</SID>
+               <BPID>1</BPID>
+            </id>
+            <par>0xfeed0132</par>
+            <tef>000</tef>
+            <offs>013500016</offs>  <!-- 12.5 ms -->
+         </msg>
+
+         <msg>
+             <!-- Msg A1E, EventE -->
+            <id>
+               <FID>0</FID>
+               <GID>4004</GID>
+               <EVTNO>4</EVTNO>
+               <SID>1</SID>
+               <BPID>1</BPID>
+            </id>
+            <par>0xfeed0132</par>
+            <tef>000</tef>
+            <offs>014000016</offs>  <!-- 13 ms -->
+         </msg>
+
+         <msg>
+             <!-- Msg A1F, EventF -->
+            <id>
+               <FID>0</FID>
+               <GID>4004</GID>
+               <EVTNO>5</EVTNO>
+               <SID>1</SID>
+               <BPID>1</BPID>
+            </id>
+            <par>0xfeed0132</par>
+            <tef>000</tef>
+            <offs>019000016</offs>  <!-- 18 ms -->
+         </msg>
+      </chain>
+   </plan>
+</page>
