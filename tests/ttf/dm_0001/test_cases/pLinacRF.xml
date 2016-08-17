@@ -1,29 +1,20 @@
 <page>
-   <meta>
+    <meta>
       <startplan>A</startplan>
       <altplan>B</altplan>
-   </meta>
-   
-   <plan>
+    </meta>
+    <plan>
       <!-- Plan A, normal operation -->
       <meta>
          <starttime>___STARTTIME___</starttime>
-         <lastjump>self</lastjump>
+         <lastjump>idle</lastjump>
       </meta>  
-      
-
       <chain>
-         <!-- 
-	    Cycle A1, for pLinac RF tests.
-	    For Events and their names (EventX) see "Timing Outline" in
-	    https://www-acc.gsi.de/wiki/FESA/FESA-Class-CryRingLinacRF
-	   -->
          <meta>
             <rep>1000</rep>
             <period>500000000</period>
             <branchpoint>yes</branchpoint>
          </meta>
-
          <msg>
              <!-- Msg A1A, EventA -->
             <id>
@@ -106,36 +97,6 @@
             <par>0xfeed0132</par>
             <tef>000</tef>
             <offs>019000016</offs>  <!-- 18 ms -->
-         </msg>
-      </chain>
-   </plan>
-   
-   <plan>
-      <meta>
-         <starttime>0</starttime>
-         <lastjump>idle</lastjump>
-      </meta> 
-      <!-- Plan B, abort and chill -->  
-      <chain>
-         <!-- Cycle B0 -->
-         <meta>
-            <rep>0</rep>
-            <period>100000</period>
-            <branchpoint>yes</branchpoint>
-         </meta>
-        
-         <msg>
-             <!-- Msg B0A -->
-            <id>
-               <FID>0</FID>
-               <GID>4095</GID>
-               <EVTNO>4095</EVTNO>
-               <SID>0</SID>
-               <BPID>0</BPID>
-            </id>
-            <par>0xdead0561</par>
-            <tef>000</tef>
-            <offs>1000</offs>
          </msg>
       </chain>
    </plan>

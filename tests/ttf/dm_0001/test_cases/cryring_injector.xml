@@ -6,7 +6,7 @@
     <plan>
         <meta>
             <starttime>___STARTTIME___</starttime>
-            <lastjump>self</lastjump>
+            <lastjump>idle</lastjump>
         </meta>
         <chain>
             <meta>
@@ -169,31 +169,6 @@
                 <par>0x0</par>
                 <tef>0x0</tef>
                 <offs>993000000</offs> <!-- CMD_BEAM_OFF -->
-            </msg>
-        </chain>
-    </plan>
-    <plan>
-        <meta>
-            <starttime>0</starttime>
-            <lastjump>idle</lastjump>
-        </meta>
-        <chain><!-- Cycle B0 -->
-            <meta>
-                <rep>1</rep>
-                <period>100000</period>
-                <branchpoint>yes</branchpoint>
-            </meta>
-            <msg>
-                <id>
-                    <FID>0</FID>
-                    <GID>4095</GID>
-                    <EVTNO>4095</EVTNO>
-                    <SID>0</SID>
-                    <BPID>0</BPID>
-                </id>
-                <par>0xdead0561</par>
-                <tef>0x0</tef>
-                <offs>1000</offs>
             </msg>
         </chain>
     </plan>

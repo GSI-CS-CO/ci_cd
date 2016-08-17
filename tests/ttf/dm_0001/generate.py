@@ -48,13 +48,6 @@ def main():
   print "Frequency~:  " + str((1.0/(period/events))*1000000000) + "Hz"
   print ""
   
-  # Save events to XML file
-  f = open("log/duration.txt", "w")
-  try:
-    f.write(str(((period*rep*1.0)/1000000000)))
-  finally:
-    f.close()
-  
   # Prepare schedule
   doc = Document()
   page = doc.createElement('page')

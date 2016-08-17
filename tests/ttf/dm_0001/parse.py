@@ -126,6 +126,13 @@ def parse_schedule(xmlFile, verbose):
         tmp = v_lst[y].print_cmp_line(x, v_starttime, v_period)
         f.write(str(tmp))
     f.close()
+    
+    # Save events to XML file
+    f = open("log/duration.txt", "w")
+    try:
+      f.write(str(((v_period*v_rep*1.0)/1000000000)))
+    finally:
+      f.close()
 
 ########################################################################################################################
 

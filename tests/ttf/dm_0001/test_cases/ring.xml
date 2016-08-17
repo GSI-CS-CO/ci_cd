@@ -3,7 +3,6 @@
       <startplan>A</startplan>
       <altplan>B</altplan>
    </meta>
-   
    <plan>
       <!-- Plan A, normal operation -->
       <meta>
@@ -29,7 +28,6 @@
                <always>yes</always>
             </signal>
          </meta>
-        
          <msg>
              <!-- Msg A0A, EVT_START_CYCLE, Mizar -->
             <id>
@@ -43,7 +41,6 @@
             <tef>000</tef>
             <offs>001000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0B, EVT_PREP_INJ -->
             <id>
@@ -57,7 +54,6 @@
             <tef>000</tef>
             <offs>005000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0C, EVT_MB_LOAD -->
             <id>
@@ -71,7 +67,6 @@
             <tef>000</tef>
             <offs>010000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0D, EVT_READY_TO_SIS (EXCEPTION: Alkor, linac) -->
             <id>
@@ -85,7 +80,6 @@
             <tef>000</tef>
             <offs>053000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0E, EVT_MB_TRIGGER -->
             <id>
@@ -99,7 +93,6 @@
             <tef>000</tef>
             <offs>054000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0F, EVT_RAMP_START -->
             <id>
@@ -127,7 +120,6 @@
             <tef>000</tef>
             <offs>170000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0H, EVT_EXTR_BUMP -->
             <id>
@@ -141,7 +133,6 @@
             <tef>000</tef>
             <offs>800000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0I, EVT_KICK_START_1 -->
             <id>
@@ -155,7 +146,6 @@
             <tef>000</tef>
             <offs>820000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0J, EVT_EXTR_END -->
             <id>
@@ -169,7 +159,6 @@
             <tef>000</tef>
             <offs>840000000</offs>
          </msg>
-
          <msg>
              <!-- Msg A0K, EVT_FLATTOP_END -->
             <id>
@@ -186,35 +175,4 @@
       </chain>
       
    </plan>
-
-   <plan>
-      <meta>
-         <starttime>999999</starttime>
-         <lastjump>idle</lastjump>
-      </meta> 
-      <!-- Plan B, abort and chill -->  
-      <chain>
-         <!-- Cycle B0 -->
-         <meta>
-            <rep>0</rep>
-            <period>100000</period>
-            <branchpoint>yes</branchpoint>
-         </meta>
-        
-         <msg>
-             <!-- Msg B0A -->
-            <id>
-               <FID>0</FID>
-               <GID>4095</GID>
-               <EVTNO>4095</EVTNO>
-               <SID>0</SID>
-               <BPID>0</BPID>
-            </id>
-            <par>0xdead0561</par>
-            <tef>000</tef>
-            <offs>1000</offs>
-         </msg>
-      </chain>
-   </plan>
-
 </page>

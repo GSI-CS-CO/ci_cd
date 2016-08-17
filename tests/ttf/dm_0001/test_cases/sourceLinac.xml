@@ -8,7 +8,7 @@
       <!-- Plan A, normal operation -->
       <meta>
          <starttime>___STARTTIME___</starttime>
-         <lastjump>self</lastjump>
+         <lastjump>idle</lastjump>
       </meta>  
       
 
@@ -26,7 +26,7 @@
             </condition>
          </meta>
 
-	 <msg>
+         <msg>
              <!-- Msg A1A, EVT_CYCLE_START Geminga (ion source)-->
             <id>
                <FID>0</FID>
@@ -40,7 +40,7 @@
             <offs>001000000</offs>
          </msg>
 
-	 <msg>
+          <msg>
              <!-- Msg A1B, EVT_CYCLE_START Alkor (linac) -->
             <id>
                <FID>0</FID>

@@ -3,7 +3,6 @@
       <startplan>A</startplan>
       <altplan>A</altplan>
    </meta>
-   
    <plan>
       <!-- Plan A, normal operation -->
       <meta>
@@ -17,8 +16,7 @@
             <period>1000000000</period>
             <branchpoint>yes</branchpoint>
          </meta>
-
-	      <msg>
+        <msg>
              <!-- Msg A0A -->
             <id>
                <FID>0</FID>
@@ -57,9 +55,6 @@
             <tef>000</tef>
             <offs>0003000000</offs>
          </msg>
-         
       </chain>
-
-      
    </plan>
 </page>
