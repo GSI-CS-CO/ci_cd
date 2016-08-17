@@ -54,8 +54,11 @@ echo -e "\e[96mEnter the keyword of devices to reset"
 echo -e "\e[33mAccepted keyword is exp,pex,vet,scu,sw,all"
 
 read keyword
+#keyword will be used by fpga_reset.sh script. Therefore, exporting the parameter keyword
+export keyword
 
 #Power cycle all the exploders connected to the power socket
+
 if [ "$keyword" == "exp" ]; then
 	grep -ie "EXP" $list > $temp
 	while IFS=$'\t' read -r -a pwrArray 
@@ -95,17 +98,21 @@ fi
 #using ssh command first and then the power socket will be turned off and on
 if [ "$keyword" == "pex" ]; then
 
-echo -e "\e[96mEnter the user and IPC name to halt the IPC, before performing power cycle"
-echo -e "\e[33mEnter the username"
-read username
-user=$username
+	cd $script_path
+	. ./fpga_reset.sh
+	cd $egctl_path
 
-echo -e "\e[33mEnter the PC name"
-read pcname
-pc=$pcname
+	echo -e "\e[96mEnter the user and IPC name to halt the IPC, before performing power cycle"
+	echo -e "\e[33mEnter the USERNAME for IPC connected to PCIe devices (ex:timing/gsi)"
+	read username
+	user=$username
 
+	echo -e "\e[33mEnter the IPC name (ex:tsl0xx)"
+	read pcname
+	pc=$pcname
 	echo -e "\e[91mPCIe cards are connected to IPC. $pc going to HALT"
 	ssh -t -t $user@$pc.acc.gsi.de 'sudo halt'
+
 	if [ $? != 0 ]; then
 		echo -e "\e[91mInvalid username. Check the format."
 		exit 1
@@ -149,37 +156,39 @@ fi
 #Power cycle all the SCU connected to the power socket
 if [ "$keyword" == "scu" ]; then
 	cd $script_path
-	. ./scu_reset.sh
+	. ./fpga_reset.sh
 	cd $egctl_path
 
 	grep -ie "SCU" $list > $temp
-        while IFS=$'\t' read -r -a pwrArray 
-        do
-                for i in {pwrArray[0]}
-                do
-                        echo -e "\e[91mPowering OFF all the SCU connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} off left left left
-                        echo
-                        sleep 3
-                        echo -e "\e[92mPowering ON all the SCU connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} on left left left
-                        echo
-                done
-        done < $temp
+	while IFS=$'\t' read -r -a pwrArray 
+	do
+		for i in {pwrArray[0]}
+	        do
+        		echo -e "\e[91mPowering OFF all the SCU connected to ${pwrArray[0]} on ${pwrArray[1]}"
+                	./egctl ${pwrArray[0]} off left left left
+	                echo
+        	        sleep 3
+                	echo -e "\e[92mPowering ON all the SCU connected to ${pwrArray[0]} on ${pwrArray[1]}"
+	                ./egctl ${pwrArray[0]} on left left left
+        	        echo
+	        done
+	done < $temp
 fi
 
 #Power cycle all the devices at once
 if [ "$keyword" == "all" ]; then
+	cd $script_path
+	. ./fpga_reset.sh
+	cd $egctl_path
 
-echo -e "\e[96mEnter the user and IPC name to halt before performing power cycle"
-echo -e "\e[33mEnter the username"
-read username
-user=$username
+	echo -e "\e[96mEnter the user and IPC name to halt the IPC, before performing power cycle"
+	echo -e "\e[33mEnter the USERNAME for IPC connected to PCIe devices (ex:timing/gsi)"
+	read username
+	user=$username
 
-echo -e "\e[33mEnter the PC name"
-read pcname
-pc=$pcname
-
+	echo -e "\e[33mEnter the IPC name (ex:tsl0xx)"
+	read pcname
+	pc=$pcname
 	echo -e "\e[91mIPC $pc going to HALT"
 	ssh -t -t $user@$pc.acc.gsi.de 'sudo halt'
 	if [ $? != 0 ]; then
@@ -187,11 +196,6 @@ pc=$pcname
                 exit 1
         else
 		sleep 30
-		echo -e "\e[91mAll SCUs will be reset"
-		cd $script_path
-		. ./scu_reset.sh
-		cd $egctl_path
-	
 		awk '{ print $1 }' $list > interm.txt
 		sort interm.txt | uniq -d > $temp
 		rm interm.txt
