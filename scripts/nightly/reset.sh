@@ -95,13 +95,17 @@ fi
 #using ssh command first and then the power socket will be turned off and on
 if [ "$keyword" == "pex" ]; then
 
-echo -e "\e[96mEnter the user and IPC name to halt before performing power cycle"
-echo -e "\e[33mAccepted format is user_name@pc_name"
-
+echo -e "\e[96mEnter the user and IPC name to halt the IPC, before performing power cycle"
+echo -e "\e[33mEnter the username"
 read username
+user=$username
 
-	echo -e "\e[91mPCIe cards are connected to IPC. $username going to HALT"
-	ssh -t -t $username.acc.gsi.de 'sudo halt'
+echo -e "\e[33mEnter the PC name"
+read pcname
+pc=$pcname
+
+	echo -e "\e[91mPCIe cards are connected to IPC. $pc going to HALT"
+	ssh -t -t $user@$pc.acc.gsi.de 'sudo halt'
 	if [ $? != 0 ]; then
 		echo -e "\e[91mInvalid username. Check the format."
 		exit 1
@@ -168,17 +172,20 @@ fi
 if [ "$keyword" == "all" ]; then
 
 echo -e "\e[96mEnter the user and IPC name to halt before performing power cycle"
-echo -e "\e[33mAccepted format is user_name@pc_name"
-
+echo -e "\e[33mEnter the username"
 read username
+user=$username
 
-	echo -e "\e[91mIPC $username going to HALT"
-	ssh -t -t $username.acc.gsi.de 'sudo halt'
+echo -e "\e[33mEnter the PC name"
+read pcname
+pc=$pcname
+
+	echo -e "\e[91mIPC $pc going to HALT"
+	ssh -t -t $user@$pc.acc.gsi.de 'sudo halt'
 	if [ $? != 0 ]; then
-                echo -e "\e[91mInvalid username. Check the format."
+                echo -e "\e[91mUsername or PC name incorrect. Please check and try again."
                 exit 1
         else
-
 		sleep 30
 		echo -e "\e[91mAll SCUs will be reset"
 		cd $script_path
