@@ -28,7 +28,7 @@ while true ; do
     case "$1" in
         -h|--help) printf "$HELP"; shift; exit 1;;
 
-        -l|--local)SH_LOG
+        -l|--local)
             case "$2" in
                 "") shift 2 ;;
                 *) DIR=$2; OPT="local"; shift 2 ;;
