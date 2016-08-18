@@ -1,19 +1,7 @@
 #!/bin/bash
 
-# Devices and hosts under test
-ttf_pexaria_names=(pexaria5_18t pexaria5_27t pexaria5_41t pexaria5_15t pexaria5_14t pexaria5_43t)
-ttf_pexaria_host=tsl011
-ttf_pexaria_user=root
-
-ttf_scu_names=(scuxl0001t scuxl0099t scuxl0007t scuxl0085t scuxl0088t scuxl0133t)
-ttf_scu_hosts=(scuxl0001 scuxl0099 scuxl0007 scuxl0085 scuxl0088 scuxl0133)
-ttf_scu_user=root
-
-ttf_vetar_names=(vetar14t)
-ttf_vetar_hosts=(kp1cx01)
-ttf_vetar_user=root
-
-tff_postfix="acc.gsi.de"
+# Get all ttf devices
+source ../probe_0001/devices.sh
 
 # Settings
 duration=0
@@ -27,24 +15,25 @@ schedule_given=0
 duts=0
 
 # Data master settings
-data_master="udp/192.168.191.96"
 schedule="schedule.xml"
 schedule_ts="schedule_ts.xml"
 dm_schedule_keyword="___STARTTIME___"
 dm_start_offset=0x00000000200000000
 dm_start_time=0x0
 
-# Stop/start logging ($1 = 0/1 (stop/start)
+# Stop/start logging ($1 = 0/1 (stop/start_and_configure), $2 = 0/1 (configure saftlib/configure LEDs)
 function control_logging()
 {
   if [ $1 -eq 0 ]; then
     # Stop logging
     # Pexarias
+    pex_id=0
     for i in ${ttf_pexaria_names[@]}; do
-      echo "Stopping logging... ($i@$ttf_pexaria_host)"
-      #ssh $ttf_pexaria_user@$ttf_pexaria_host.$tff_postfix "saft-io-ctl $i -x" > /dev/null 2>&1
+      echo "Stopping logging... ($i@${ttf_pexaria_hosts[$pex_id]})"
+      ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "killall saft-ctl" > /dev/null 2>&1
+      pex_id=$((pex_id+1))
     done
-    ssh $ttf_pexaria_user@$ttf_pexaria_host.$tff_postfix "killall saft-ctl" > /dev/null 2>&1
+    # SCUs
     scu_id=0
     for i in ${ttf_scu_names[@]}; do
       echo "Stopping logging... ($i@${ttf_scu_hosts[$scu_id]})"
@@ -55,58 +44,71 @@ function control_logging()
     vetar_id=0
     for i in ${ttf_vetar_names[@]}; do
       echo "Stopping logging... ($i@${ttf_vetar_hosts[$vetar_id]})"
-      #ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -x" > /dev/null 2>&1
       ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "killall saft-ctl" > /dev/null 2>&1
       vetar_id=$((vetar_id+1))
     done
   else
     # Start logging, remove old log files and filter PPS events
     # Pexarias
+    pex_id=0
     for i in ${ttf_pexaria_names[@]}; do
-      echo "Starting logging... ($i@$ttf_pexaria_host)"
-      rm log/snooped_events_$i.txt
-      #ssh $ttf_pexaria_user@$ttf_pexaria_host.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                      saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 31250000 0xf 0 -u;\
-      #                                                      saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                      saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 62500000 0xf 0 -u;\
-      #                                                      saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                      saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 125000000 0xf 0 -u;\
-      #                                                      saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                      saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 250000000 0xf 0 -u;\
-      #                                                      saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                      saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 31250000 0xf 0 -u;\
-      #                                                      saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                      saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 62500000 0xf 0 -u;\
-      #                                                      saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                      saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 125000000 0xf 0 -u;\
-      #                                                      saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                      saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 250000000 0xf 0 -u;"
-      ssh $ttf_pexaria_user@$ttf_pexaria_host.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      if [ $2 -eq 0 ]; then
+        echo "Starting logging... ($i@${ttf_pexaria_hosts[$pex_id]})"
+        rm log/snooped_events_$i.txt
+        ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      else
+        echo "Configuring LEDs... ($i@${ttf_pexaria_hosts[$pex_id]})"
+        ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 0 0xf 1 -u;\
+                                                                          saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 31250000 0xf 0 -u;\
+                                                                          saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 0 0xf 1 -u;\
+                                                                          saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 62500000 0xf 0 -u;\
+                                                                          saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 0 0xf 1 -u;\
+                                                                          saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 125000000 0xf 0 -u;\
+                                                                          saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 0 0xf 1 -u;\
+                                                                          saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 250000000 0xf 0 -u;\
+                                                                          saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 0 0xf 1 -u;\
+                                                                          saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 31250000 0xf 0 -u;\
+                                                                          saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 0 0xf 1 -u;\
+                                                                          saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 62500000 0xf 0 -u;\
+                                                                          saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 0 0xf 1 -u;\
+                                                                          saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 125000000 0xf 0 -u;\
+                                                                          saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 0 0xf 1 -u;\
+                                                                          saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 250000000 0xf 0 -u;"
+      fi
+      pex_id=$((pex_id+1))
     done
     # SCUs
     scu_id=0
     for i in ${ttf_scu_names[@]}; do
-      echo "Starting logging... ($i@${ttf_scu_hosts[$scu_id]})"
-      rm log/snooped_events_$i.txt
-      ssh $ttf_scu_user@${ttf_scu_hosts[$scu_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      if [ $2 -eq 0 ]; then
+        echo "Starting logging... ($i@${ttf_scu_hosts[$scu_id]})"
+        rm log/snooped_events_$i.txt
+        ssh $ttf_scu_user@${ttf_scu_hosts[$scu_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      else
+        echo "Configuring LEDs... ($i@${ttf_scu_hosts[$scu_id]})"
+      fi
       scu_id=$((scu_id+1))
     done
     # Vetars
     vetar_id=0
     for i in ${ttf_vetar_names[@]}; do
-      echo "Starting logging... ($i@${ttf_vetar_hosts[$vetar_id]})"
-      rm log/snooped_events_$i.txt
-      #ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                                saft-io-ctl baseboard -n LED9 -c 0x0 0x0 31250000 0xf 0 -u;\
-      #                                                                saft-io-ctl baseboard -n LED10 -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                                saft-io-ctl baseboard -n LED10 -c 0x0 0x0 62500000 0xf 0 -u;\
-      #                                                                saft-io-ctl baseboard -n LED11 -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                                saft-io-ctl baseboard -n LED11 -c 0x0 0x0 125000000 0xf 0 -u;\
-      #                                                                saft-io-ctl baseboard -n LED12 -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                                saft-io-ctl baseboard -n LED12 -c 0x0 0x0 250000000 0xf 0 -u;\
-      #                                                                saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 0 0xf 1 -u;\
-      #                                                                saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 31250000 0xf 0 -u;"
-      ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      if [ $2 -eq 0 ]; then
+        echo "Starting logging... ($i@${ttf_vetar_hosts[$vetar_id]})"
+        rm log/snooped_events_$i.txt
+        ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      else
+        echo "Configuring LEDs... ($i@${ttf_vetar_hosts[$vetar_id]})"
+        ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl baseboard -n LED9 -c 0x0 0x0 31250000 0xf 0 -u;\
+                                                                        saft-io-ctl baseboard -n LED10 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl baseboard -n LED10 -c 0x0 0x0 62500000 0xf 0 -u;\
+                                                                        saft-io-ctl baseboard -n LED11 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl baseboard -n LED11 -c 0x0 0x0 125000000 0xf 0 -u;\
+                                                                        saft-io-ctl baseboard -n LED12 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl baseboard -n LED12 -c 0x0 0x0 250000000 0xf 0 -u;\
+                                                                        saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 31250000 0xf 0 -u;"
+      fi
       vetar_id=$((vetar_id+1))
     done
   fi
@@ -158,7 +160,7 @@ function start_data_master()
   cp "log/$schedule" "log/$schedule_ts"
   
   # Get time from ECA
-  dm_time=`ftm-ctl $data_master -t | grep "ECA TIME" | cut -c 32-49`
+  dm_time=`ftm-ctl $ttf_data_master -t | grep "ECA TIME" | cut -c 32-49`
   dm_time="$(($dm_time+0))" # To dec
   dm_start_time="$(($dm_time+$dm_start_offset))" # Add offset
   echo $dm_start_time > log/start_time.txt
@@ -171,13 +173,13 @@ function start_data_master()
   sed -i "s/$dm_schedule_keyword/$dm_start_time/g" "log/$schedule_ts"
   
   # Finally set up the Data Master
-  ftm-ctl $data_master -c 1 preptime 500000
+  ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id preptime 500000
   echo "DM Set Preptime 500000..."
-  ftm-ctl $data_master -c 1 put log/$schedule_ts
+  ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id put log/$schedule_ts
   echo "DM Put..."
-  ftm-ctl $data_master -c 1 swap
+  ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id swap
   echo "DM Swap..."
-  ftm-ctl $data_master -c 1 run
+  ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id run
   echo "DM Run..."
 }
 
@@ -185,7 +187,7 @@ function start_data_master()
 function poll_dm_time()
 {
   # Get time from ECA
-  dm_time_now=`ftm-ctl $data_master -t | grep "ECA TIME" | cut -c 32-49`
+  dm_time_now=`ftm-ctl $ttf_data_master -t | grep "ECA TIME" | cut -c 32-49`
   dm_time_now="$(($dm_time_now+0))" # To dec
   dm_duration_ns="$((${duration%.*}*1000000000))"
   dm_end_time="$(($dm_start_time+$dm_duration_ns))"
@@ -195,7 +197,7 @@ function poll_dm_time()
   while [ $time_left -ge 0 ]; do
     sleep 0.5
     printf "\rTest will finish in: %dns..." "$time_left"
-    dm_time_now=`ftm-ctl $data_master -t | grep "ECA TIME" | cut -c 32-49`
+    dm_time_now=`ftm-ctl $ttf_data_master -t | grep "ECA TIME" | cut -c 32-49`
     dm_time_now="$(($dm_time_now+0))" # To dec
     time_left="$(($dm_end_time-$dm_time_now))"
   done
@@ -240,6 +242,9 @@ else
   exit 1
 fi
 
+# Setup LEDs
+control_logging 1 1
+
 while [ $end_test -eq 0 ]; do
   echo "Date:"
   date
@@ -247,7 +252,7 @@ while [ $end_test -eq 0 ]; do
   uptime
   echo ""
   # Clean up
-  control_logging 0
+  control_logging 0 0
   # Generate new or copy given schedule
   if [ $schedule_given -eq 0 ]; then
     ./generate.py
@@ -256,14 +261,14 @@ while [ $end_test -eq 0 ]; do
   fi
   start_data_master
   ./parse.py log/$schedule_ts
-  control_logging 1
+  control_logging 1 0
   sleep 5
   
   # Wait until all events were send
   duration=`cat log/duration.txt`
   poll_dm_time
   sleep 5
-  control_logging 0
+  control_logging 0 0
   sleep 5
   
   # Sort event lists
