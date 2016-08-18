@@ -4,8 +4,7 @@
 
 FACILITY="testing"
 
-HELP="$(basename "$0") [-h] [-f deployment target] -- script to reset SCU
-
+HELP="$(basename "$0") [-h] [-f deployment target] -- script to reset timing devices
 
 where:
     -h  show this help text
@@ -38,7 +37,7 @@ LIST=device-list-$FACILITY.txt
 wget $DEV/$LIST -O ./$LIST
 
 reset_list=./$LIST
-reset_temp=./temp.txt
+reset_temp=./reset_temp.txt
 
 function reset(){
 while IFS=$'\t' read -r -a devArray
@@ -78,7 +77,22 @@ elif [ $# == 0 ]; then
         	grep -ie "pexarria" $reset_list > $reset_temp
         	reset
 	fi
+
+	if [ "$keyword" == "exp" ] || [ "$keyword" == "all" ]; then
+                grep -ie "exploder" $reset_list > $reset_temp
+                reset
+        fi
+
+	if [ "$keyword" == "vme" ] || [ "$keyword" == "all" ]; then
+                grep -ie "vetar" $reset_list > $reset_temp
+                reset
+        fi
+
+	if [ "$keyword" == "dm" ] || [ "$keyword" == "all" ]; then
+                grep -ie "datamaster" $reset_list > $reset_temp
+                reset
+        fi
+rm $reset_list $reset_temp
 else
 	echo -e "\e[31mPass argument on command line as device_name device_IP or do not pass any argument"
 fi
-rm $reset_list $reset_temp
