@@ -58,6 +58,14 @@ function control_logging()
         ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       else
         echo "Configuring LEDs... ($i@${ttf_pexaria_hosts[$pex_id]})"
+        #ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -x;\
+        #                                                                  saft-io-ctl $i -n LED2_ADD_B -x;\
+        #                                                                  saft-io-ctl $i -n LED3_ADD_G -x;\
+        #                                                                  saft-io-ctl $i -n LED4_ADD_W -x;\
+        #                                                                  saft-io-ctl $i -n LED1_BASE_R -x;\
+        #                                                                  saft-io-ctl $i -n LED2_BASE_B -x;\
+        #                                                                  saft-io-ctl $i -n LED3_BASE_G -x;\
+        #                                                                  saft-io-ctl $i -n LED4_BASE_W -x;"
         ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 0 0xf 1 -u;\
                                                                           saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 31250000 0xf 0 -u;\
                                                                           saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 0 0xf 1 -u;\
@@ -98,6 +106,11 @@ function control_logging()
         ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       else
         echo "Configuring LEDs... ($i@${ttf_vetar_hosts[$vetar_id]})"
+        #ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -x;\
+        #                                                                saft-io-ctl baseboard -n LED10 -x;\
+        #                                                                saft-io-ctl baseboard -n LED11 -x;\
+        #                                                                saft-io-ctl baseboard -n LED12 -x;\
+        #                                                                saft-io-ctl baseboard -n LED_DACK -x;"
         ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -c 0x0 0x0 0 0xf 1 -u;\
                                                                         saft-io-ctl baseboard -n LED9 -c 0x0 0x0 31250000 0xf 0 -u;\
                                                                         saft-io-ctl baseboard -n LED10 -c 0x0 0x0 0 0xf 1 -u;\

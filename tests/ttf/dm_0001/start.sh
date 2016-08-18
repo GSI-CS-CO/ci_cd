@@ -10,4 +10,4 @@
 ./run.sh 1 0 "test_cases/pLinacRF.xml"
 ./run.sh 1 0 "test_cases/ring.xml"
 ./run.sh 1 0 "test_cases/sourceLinac.xml"
-./run.sh 1 0
+./run.sh 0 1
