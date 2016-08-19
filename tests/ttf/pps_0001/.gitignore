@@ -1,0 +1,4 @@
+syncmon
+log/*
+!log/dummy
+
