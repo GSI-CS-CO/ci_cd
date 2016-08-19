@@ -71,6 +71,60 @@ wget $DEVICE/$DEV_LIST -O ./$DEV_LIST
 list=./$DEV_LIST
 temp=./temp.txt
 
+function pwr_cycle(){
+while IFS=$'\t' read -r -a pwrArray 
+do
+	for i in {pwrArray[0]}
+        do
+        	echo -e "\e[91mPowering OFF all $keyword connected to ${pwrArray[0]} on Socket ${pwrArray[1]}"
+		case ${pwrArray[1]} in
+		
+		1)
+                	./egctl ${pwrArray[0]} off left left left
+		;;
+
+		2)
+                        ./egctl ${pwrArray[0]} left off left left
+                ;;
+
+		3)
+                        ./egctl ${pwrArray[0]} left left off left
+                ;;
+
+		4)
+                        ./egctl ${pwrArray[0]} left left left off
+                ;;
+		esac
+
+                echo
+                sleep 3
+                echo -e "\e[92mPowering ON all $keyword connected to ${pwrArray[0]} on Socket ${pwrArray[1]}"
+
+		case ${pwrArray[1]} in
+
+                1)
+                        ./egctl ${pwrArray[0]} on left left left
+                ;;
+
+                2)
+                        ./egctl ${pwrArray[0]} left on left left
+                ;;
+
+                3)
+                       ./egctl ${pwrArray[0]} left left on left
+                ;;
+
+                4)
+                        ./egctl ${pwrArray[0]} left left left on
+                ;;
+		
+		esac
+                echo
+        done
+done < $temp
+
+}
+
 echo -e "\e[96mEnter the keyword of devices to reset"
 echo -e "\e[33mAccepted keyword is exp,pex,vet,scu,sw,all"
 
@@ -82,37 +136,13 @@ export keyword
 
 if [ "$keyword" == "exp" ]; then
 	grep -ie "EXP" $list > $temp
-	while IFS=$'\t' read -r -a pwrArray 
-        do
-                for i in {pwrArray[0]}
-                do
-			echo -e "\e[91mPowering OFF all exploder connected to ${pwrArray[0]} on ${pwrArray[1]}"
-			./egctl ${pwrArray[0]} left off left left
-			echo
-			sleep 3
-			echo -e "\e[92mPowering ON all exploder connected to ${pwrArray[0]} on ${pwrArray[1]}"
-			./egctl ${pwrArray[0]} left on left left
-			echo
-                done
-        done < $temp
+	pwr_cycle
 fi
 
 #Power cycle the VME Crate connected to the power socket
 if [ "$keyword" == "vet" ]; then
         grep -ie "VME" $list > $temp
-        while IFS=$'\t' read -r -a pwrArray 
-        do
-                for i in {pwrArray[0]}
-                do
-			echo -e "\e[91mPowering OFF VME Crate connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} left left off left
-			echo
-                        sleep 3
-			echo -e "\e[92mPowering ON VME Crate connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} left left on left
-                        echo
-                done
-        done < $temp
+	pwr_cycle
 fi
 
 #PCIe is connected to the IPC tsl011. Therefore, the PC will be put to HALT
@@ -123,37 +153,13 @@ if [ "$keyword" == "pex" ]; then
 	pchalt
 	cd $egctl_path
 	grep -ie "PCI" $list > $temp
-	while IFS=$'\t' read -r -a pwrArray 
-        do
-       	        for i in {pwrArray[0]}
-               	do                        
-			echo -e "\e[91mPowering OFF PCIe cards connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} left off left left
-       	                echo
-               	        sleep 3
-			echo -e "\e[92mPowering ON $username with PCIe cards connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} left on left left
-       	                echo
-               	done
-        done < $temp
+	pwr_cycle
 fi
 
 #Power cycle all the network switches connected to the power socket
 if [ "$keyword" == "sw" ]; then
 	grep -ie "NW" $list > $temp
-        while IFS=$'\t' read -r -a pwrArray 
-        do
-                for i in {pwrArray[0]}
-                do
-			echo -e "\e[91mPowering OFF network switches connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} off left left left
-                        echo
-                        sleep 3
-			echo -e "\e[92mPowering ON network switches connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                        ./egctl ${pwrArray[0]} on left left left
-                        echo
-               done
-        done < $temp
+	pwr_cycle
 fi
 
 #Power cycle all the SCU connected to the power socket
@@ -163,19 +169,7 @@ if [ "$keyword" == "scu" ]; then
 	cd $egctl_path
 
 	grep -ie "SCU" $list > $temp
-	while IFS=$'\t' read -r -a pwrArray 
-	do
-		for i in {pwrArray[0]}
-	        do
-        		echo -e "\e[91mPowering OFF all the SCU connected to ${pwrArray[0]} on ${pwrArray[1]}"
-                	./egctl ${pwrArray[0]} off left left left
-	                echo
-        	        sleep 3
-                	echo -e "\e[92mPowering ON all the SCU connected to ${pwrArray[0]} on ${pwrArray[1]}"
-	                ./egctl ${pwrArray[0]} on left left left
-        	        echo
-	        done
-	done < $temp
+	pwr_cycle
 fi
 
 #Power cycle all the devices at once
@@ -186,21 +180,20 @@ if [ "$keyword" == "all" ]; then
 	cd $egctl_path
 
 	awk '{ print $1 }' $list > interm.txt
-		sort interm.txt | uniq -d > $temp
-		rm interm.txt
-
-		while IFS=$'\t' read -r -a pwrArray
-		do
-        	        for i in {pwrArray[0]}
-                	do
-				echo -e "\e[91mPowering OFF all devices in test facility connected to ${pwrArray[0]}"
-				./egctl ${pwrArray[0]} off off off off
-        	                echo
-                	        sleep 3
-                        	echo -e "\e[92mPowering ON all devices in test facility connected to ${pwrArray[0]}"
-	                        ./egctl ${pwrArray[0]} on on on on
-        	                echo
-			done
-		done < $temp
+	sort interm.txt | uniq -d > $temp
+	rm interm.txt
+	while IFS=$'\t' read -r -a pwrArray
+	do
+       	        for i in {pwrArray[0]}
+               	do
+			echo -e "\e[91mPowering OFF all devices in test facility connected to ${pwrArray[0]}"
+			./egctl ${pwrArray[0]} off off off off
+       	                echo
+               	        sleep 3
+                       	echo -e "\e[92mPowering ON all devices in test facility connected to ${pwrArray[0]}"
+                        ./egctl ${pwrArray[0]} on on on on
+       	                echo
+		done
+	done < $temp
 fi
 rm $list $temp
