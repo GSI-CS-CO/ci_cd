@@ -162,6 +162,10 @@ function ctrl_c()
   echo "\n*** Trapped CTRL-C***\n"
   end_test=1
   trap=1
+  echo "Stopping data master..."
+  ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id idle
+  ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id stop
+  echo "Stopping devices..."
   control_logging 0
   exit 1
 }

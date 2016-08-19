@@ -1,0 +1,31 @@
+<page>
+   <meta>
+      <startplan>A</startplan>
+      <altplan>A</altplan>
+   </meta>
+   <plan>
+      <meta>
+         <starttime>___STARTTIME___</starttime>
+         <lastjump>idle</lastjump>
+      </meta>  
+      <chain>
+         <meta>
+            <rep>1</rep>
+            <period>1000000000</period>
+            <branchpoint>yes</branchpoint>
+         </meta>
+         <msg>
+           <id>
+             <FID>0xf</FID>
+             <GID>0xfff</GID>
+             <EVTNO>0xfff</EVTNO>
+             <SID>0xfff</SID>
+             <BPID>0x3fff</BPID>
+           </id>
+           <par>0x01234567890abcdef</par>
+           <tef>0</tef>
+           <offs>0</offs>
+         </msg> 
+      </chain>
+   </plan>
+</page>
