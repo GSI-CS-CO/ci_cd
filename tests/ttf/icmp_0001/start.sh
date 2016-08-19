@@ -33,8 +33,7 @@ while [ $end_test -eq 0 ]; do
   for i in ${devices_by_name[@]}; do
     ip=${devices_by_ipv4[$dev_id]}
     sleep 0.1
-    echo "Checking device ($i@$ip)"
-    echo "$ttf_gateway_user@$ttf_gateway_host.$tff_postfix"
+    echo "Checking device ($i@$ip) -> Using gateway s$ttf_gateway_host.$tff_postfix"
     ssh $ttf_gateway_user@$ttf_gateway_host.$tff_postfix "ping $ip -c $count -i $interval 2>&1" > log/$i.txt &
     dev_id=$((dev_id+1))
   done
