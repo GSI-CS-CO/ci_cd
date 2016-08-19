@@ -82,7 +82,7 @@ if [ "$OPT" = "web" ]; then
     	wget $WEB_SERVER/vetar2a.rpd -O $NIGHTLY/vetar2a.rpd
     	wget $WEB_SERVER/scu_control3.rpd -O $NIGHTLY/scu_control3.rpd
     	wget $WEB_SERVER/scu_control2.rpd -O $NIGHTLY/scu_control2.rpd
-    	wget $WEB_SERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
+    	wget $WEB_Sexploder5a_19tERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
 else 
     	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
 fi
@@ -133,7 +133,7 @@ if [ "$input" == "pex" ] || [ "$input" == "all" ]; then
                 	if [ $? != 0 ]; then
                                 echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
                         else
-                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest pci_control.rpd gateware"
                                 echo
                                 echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
                                 grep -v "$log_seven_days" $FLASH_LOG > $temp_log
@@ -158,7 +158,7 @@ if [ "$input" == "vet" ] || [ "$input" == "all" ]; then
 			if [ $? != 0 ]; then
                                 echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
                         else
-                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest vetar2a.rpd gateware"
                                 echo
                                 echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
                                 grep -v "$log_seven_days" $FLASH_LOG > $temp_log
@@ -183,7 +183,7 @@ if [ "$input" == "scu3" ] || [ "$input" == "all" ]; then
 			if [ $? != 0 ]; then
                                 echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
                         else
-                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control3.rpd gateware"
                                 echo
                                 echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
                                 grep -v "$log_seven_days" $FLASH_LOG > $temp_log
@@ -208,7 +208,7 @@ if [ "$input" == "scu2" ] || [ "$input" == "all" ]; then
 			if [ $? != 0 ]; then
                                 echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
                         else
-                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control2.rpd gateware"
                                 echo
                                 echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
                                 grep -v "$log_seven_days" $FLASH_LOG > $temp_log
@@ -233,7 +233,7 @@ if [ "$input" == "dm" ] || [ "$input" == "all" ]; then
 			if [ $? != 0 ]; then
                                 echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
                         else
-                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
+                                echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest ftm.rpd gateware"
                                 echo
                                 echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
                                 grep -v "$log_seven_days" $FLASH_LOG > $temp_log
@@ -249,3 +249,7 @@ if [ "$input" != "exp" ] && [ "$input" != "pex" ] && [ "$input" != "vet" ] && [ 
 	echo -e "\e[31mIncorrect keyword. Please try again"
 fi
 rm $temp_log
+
+if [ -z "$DIR" ]; then
+        rm -rf $NIGHTLY
+fi
