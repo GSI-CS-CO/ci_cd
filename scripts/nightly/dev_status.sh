@@ -48,7 +48,7 @@ while IFS=$'\t' read -r -a devArray
 do
         for i in {devArray[2]}
         do
-		ping -c5 ${devArray[2]}
+		sudo eb-info udp/${devArray[2]}
                	if [ $? == 0 ]; then
                         echo -e "\e[34mDevice ${devArray[0]} Active"
 			echo -e "\e[32m"
@@ -83,7 +83,7 @@ fi
 }
 
 echo -e "\e[96mEnter the keyword of device name to check the status"
-echo -e "\e[33mAccepted keyword is exp,pex,vet,scu2,scu3,dm,all"
+echo -e "\e[33mAccepted keyword is exp,pex,vet,scu,dm,all"
 
 read keyword
 
@@ -98,7 +98,7 @@ if [ "$keyword" == "pex" ] || [ "$keyword" == "all" ]; then
 		pcreboot
 fi
 
-if [ "$keyword" == "vme" ] || [ "$keyword" == "all" ]; then
+if [ "$keyword" == "vet" ] || [ "$keyword" == "all" ]; then
         grep -ie "vetar" $list > $temp
                 pinging
 fi
