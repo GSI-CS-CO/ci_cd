@@ -82,7 +82,7 @@ if [ "$OPT" = "web" ]; then
     	wget $WEB_SERVER/vetar2a.rpd -O $NIGHTLY/vetar2a.rpd
     	wget $WEB_SERVER/scu_control3.rpd -O $NIGHTLY/scu_control3.rpd
     	wget $WEB_SERVER/scu_control2.rpd -O $NIGHTLY/scu_control2.rpd
-    	wget $WEB_Sexploder5a_19tERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
+    	wget $WEB_SERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
 else 
     	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
 fi
