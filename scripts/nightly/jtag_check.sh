@@ -47,4 +47,4 @@ if (grep -q $DM_DEVICEID $jtagfile); then
 else
         echo "Datamaster unavailable"
 fi
-
+rm $jtagfile

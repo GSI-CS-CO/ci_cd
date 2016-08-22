@@ -36,7 +36,6 @@ done
 
 function pchalt(){
 
-echo -e "\e[96mEnter the user and IPC name to halt the IPC, before performing power cycle"
 echo -e "\e[33mEnter the USERNAME for IPC connected to PCIe devices (ex:timing/gsi)"
 read username
 user=$username
@@ -56,7 +55,7 @@ fi
 
 
 #Get the power socket list from the web server
-DEVICE=http://tsl002.acc.gsi.de/releases
+DEVICE=http://tsl002.acc.gsi.de/config_files
 DEV_LIST=egctl-power-socket-list-$FACILITY.txt
 script_path=../../scripts/nightly
 egctl_path=../../tools/egctl/
@@ -149,7 +148,6 @@ fi
 #using ssh command first and then the power socket will be turned off and on
 if [ "$keyword" == "pex" ]; then
 	cd $script_path
-	. ./fpga_reset.sh
 	pchalt
 	cd $egctl_path
 	grep -ie "PCI" $list > $temp

@@ -34,7 +34,7 @@ while true ; do
 done
 
 #Get the power socket list from the web server
-DEVICE=http://tsl002.acc.gsi.de/releases
+DEVICE=http://tsl002.acc.gsi.de/config_files
 DEV_LIST=device-list-$FACILITY.txt
 
 wget $DEVICE/$DEV_LIST -O ./$DEV_LIST

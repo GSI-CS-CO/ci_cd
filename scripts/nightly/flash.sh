@@ -69,7 +69,7 @@ else
 fi
 
 WEB_SERVER=http://tsl002.acc.gsi.de/releases/$RELEASE/gateware
-DEVICE=http://tsl002.acc.gsi.de/releases
+DEVICE=http://tsl002.acc.gsi.de/config_files
 DEV_LIST=device-list-$FACILITY.txt
 FLASH_LOG=/var/www/html/releases/devices_flashed.log
 temp_log=./flash.log

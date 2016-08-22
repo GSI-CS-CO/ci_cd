@@ -32,7 +32,7 @@ while true ; do
     esac
 done
 
-DEV=http://tsl002.acc.gsi.de/releases
+DEV=http://tsl002.acc.gsi.de/config_files
 LIST=device-list-$FACILITY.txt
 wget $DEV/$LIST -O ./$LIST
 
@@ -73,25 +73,6 @@ elif [ $# == 0 ]; then
 		reset
 	fi
 
-	if [ "$keyword" == "pex" ] || [ "$keyword" == "all" ]; then
-        	grep -ie "pexarria" $reset_list > $reset_temp
-        	reset
-	fi
-
-	if [ "$keyword" == "exp" ] || [ "$keyword" == "all" ]; then
-                grep -ie "exploder" $reset_list > $reset_temp
-                reset
-        fi
-
-	if [ "$keyword" == "vme" ] || [ "$keyword" == "all" ]; then
-                grep -ie "vetar" $reset_list > $reset_temp
-                reset
-        fi
-
-	if [ "$keyword" == "dm" ] || [ "$keyword" == "all" ]; then
-                grep -ie "datamaster" $reset_list > $reset_temp
-                reset
-        fi
 rm $reset_list $reset_temp
 else
 	echo -e "\e[31mPass argument on command line as device_name device_IP or do not pass any argument"
