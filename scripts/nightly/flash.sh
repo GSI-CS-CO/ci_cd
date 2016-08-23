@@ -77,12 +77,22 @@ log_seven_days=$(date --date="7 days ago" +%F)
 
 if [ "$OPT" = "web" ]; then
     	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
-    	wget $WEB_SERVER/exploder5_csco_tr.rpd -O $NIGHTLY/exploder5_csco_tr.rpd
-    	wget $WEB_SERVER/pci_control.rpd -O $NIGHTLY/pci_control.rpd
-    	wget $WEB_SERVER/vetar2a.rpd -O $NIGHTLY/vetar2a.rpd
-    	wget $WEB_SERVER/scu_control3.rpd -O $NIGHTLY/scu_control3.rpd
-    	wget $WEB_SERVER/scu_control2.rpd -O $NIGHTLY/scu_control2.rpd
-    	wget $WEB_SERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
+	if [ "$RELEASE" = "nightly" ] || [ "$RELEASE" = "golden_image" ];then
+    		wget $WEB_SERVER/exploder5_csco_tr.rpd -O $NIGHTLY/exploder5_csco_tr.rpd
+	    	wget $WEB_SERVER/pci_control.rpd -O $NIGHTLY/pci_control.rpd
+    		wget $WEB_SERVER/vetar2a.rpd -O $NIGHTLY/vetar2a.rpd
+	    	wget $WEB_SERVER/scu_control3.rpd -O $NIGHTLY/scu_control3.rpd
+    		wget $WEB_SERVER/scu_control2.rpd -O $NIGHTLY/scu_control2.rpd
+	    	wget $WEB_SERVER/ftm.rpd -O $NIGHTLY/ftm.rpd
+	elif [ "$RELEASE" = "balloon" ];then
+        	wget $WEB_SERVER/exploder5_csco_tr.$(date +%Y-%m-%d).rpd -O $NIGHTLY/exploder5_csco_tr.$(date +%Y-%m-%d).rpd
+	        wget $WEB_SERVER/pci_control.$(date +%Y-%m-%d).rpd -O $NIGHTLY/pci_control.$(date +%Y-%m-%d).rpd
+        	wget $WEB_SERVER/vetar2a.$(date +%Y-%m-%d).rpd -O $NIGHTLY/vetar2a.$(date +%Y-%m-%d).rpd
+	        wget $WEB_SERVER/scu_control3.$(date +%Y-%m-%d).rpd -O $NIGHTLY/scu_control3.$(date +%Y-%m-%d).rpd
+        	wget $WEB_SERVER/scu_control2.$(date +%Y-%m-%d).rpd -O $NIGHTLY/scu_control2.$(date +%Y-%m-%d).rpd
+	        wget $WEB_SERVER/ftm.$(date +%Y-%m-%d).rpd -O $NIGHTLY/ftm.$(date +%Y-%m-%d).rpd
+        fi
+
 else 
     	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
 fi
