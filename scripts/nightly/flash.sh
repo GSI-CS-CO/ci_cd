@@ -4,7 +4,7 @@ OPT="web"
 FACILITY="testing"
 RELEASE="nightly"
 
-HELP="$(basename "$0") [-h] [-w directory] [-l directory] [-f deployment target] [-r release] -- script to flash Timing Receivers
+HELP="$(basename "$0") [-h] [-w directory] [-l directory] [-f deployment target] [-r release] [-d device] -- script to flash Timing Receivers
 
 
 where:
@@ -18,9 +18,11 @@ where:
     -r  which release bitstream you want to use
         balloon
 	golden_image
-	nightly(default)\n"
+	nightly(default)
+    -d  which device you want to flash
+	Use exp/pex/vet/scu2/scu3/dm/all as options\n"
 
-TEMP=`getopt -o hl:w:f:r: --long help,local:,web:,facility:,release: -n 'flash.sh' -- "$@"`
+TEMP=`getopt -o hl:w:f:r:d: --long help,local:,web:,facility:,release:,device: -n 'flash.sh' -- "$@"`
 eval set -- "$TEMP"
 
 # extract options and their arguments into variables.
@@ -47,6 +49,11 @@ while true ; do
             case "$2" in
                 "") shift 2 ;;
                 *) RELEASE=$2; shift 2 ;;
+            esac ;;
+	-d|--device)
+            case "$2" in
+                "") shift 2 ;;
+                *) device_name=$2; shift 2 ;;
             esac ;;
         --) shift ; break ;;
         *) echo "Internal error!" ; exit 1 ;;
@@ -100,10 +107,18 @@ fi
 list=$NIGHTLY/$DEV_LIST
 temp=$NIGHTLY/tmp.txt
 
+if [ "$device_name" != ""  ]; then
+
+input=$device_name
+
+else
+
 echo -e "\e[96mEnter the keyword of device name to flash"
 echo -e "\e[33mAccepted keyword is exp,pex,vet,scu2,scu3,dm,all"
 
 read input 
+
+fi
 
 if [ "$input" == "exp" ] || [ "$input" == "all" ]; then
 	#Search for keyword exploder in the device list and store the value to a text file
