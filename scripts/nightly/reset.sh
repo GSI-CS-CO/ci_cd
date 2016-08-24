@@ -44,13 +44,7 @@ read pcname
 pc=$pcname
 echo -e "\e[91mPCIe cards are connected to IPC. $pc going to HALT"
 ssh -t -t $user@$pc.acc.gsi.de 'sudo halt'
-
-if [ $? != 0 ]; then
-        echo -e "\e[91mInvalid username. Check the format."
-        exit 1
-else
-        sleep 30
-fi
+sleep 30
 }
 
 
