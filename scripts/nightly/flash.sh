@@ -104,6 +104,7 @@ else
     	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
 fi
 
+#Function to create a log file of the devices flashed
 function log_copy(){
 inter_log=`cat $temp_log`
 if [ "$(hostname)" == "tsl002" ]; then
@@ -276,7 +277,22 @@ fi
 if [ "$input" != "exp" ] && [ "$input" != "pex" ] && [ "$input" != "vet" ] && [ "$input" != "scu3" ] && [ "$input" != "scu2" ] && [ "$input" != "dm" ] && [ "$input" != "all" ]; then
 	echo -e "\e[31mIncorrect keyword. Please try again"
 fi
-rm $temp_log
+
+#Below lines are to limit the log data for 7 days.
+#Devices flashed within 7 days will be logged. Data greater than this will be erased
+
+LOG=http://tsl002.acc.gsi.de/releases/devices_flashed.log
+LOG1=./flash1.log
+wget $LOG -O $NIGHTLY/flash.log
+grep -v "$log_seven_days" $NIGHTLY/flash.log > $LOG1
+inter_log=`cat $LOG1`
+if [ "$(hostname)" == "tsl002" ]; then
+        cat $LOG1 > $FLASH_LOG
+else
+        echo "$inter_log" | ssh timing@tsl002.acc.gsi.de "cat > $FLASH_LOG"
+fi
+
+rm $temp_log $LOG1
 
 if [ -z "$DIR" ]; then
         rm -rf $NIGHTLY
