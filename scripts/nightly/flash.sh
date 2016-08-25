@@ -104,6 +104,15 @@ else
     	wget $DEVICE/$DEV_LIST -O $NIGHTLY/$DEV_LIST
 fi
 
+function log_copy(){
+inter_log=`cat $temp_log`
+if [ "$(hostname)" == "tsl002" ]; then
+	cat $temp_log >> $FLASH_LOG
+else
+	echo "$inter_log" | ssh timing@tsl002.acc.gsi.de "cat >> $FLASH_LOG"
+fi
+}
+
 list=$NIGHTLY/$DEV_LIST
 temp=$NIGHTLY/tmp.txt
 
@@ -135,9 +144,8 @@ if [ "$input" == "exp" ] || [ "$input" == "all" ]; then
 			else
 				echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
 				echo
-				echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
-				grep -v "$log_seven_days" $FLASH_LOG > $temp_log
-				cp $temp_log $FLASH_LOG
+				echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" > $temp_log
+				log_copy
 			fi
 		done
 	done < $temp
@@ -160,10 +168,9 @@ if [ "$input" == "pex" ] || [ "$input" == "all" ]; then
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest pci_control.rpd gateware"
                                 echo
-                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
-                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
-                                cp $temp_log $FLASH_LOG
-                     fi
+				echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" > $temp_log
+                                log_copy
+                    fi
         	done
 	done < $temp
 else
@@ -185,10 +192,9 @@ if [ "$input" == "vet" ] || [ "$input" == "all" ]; then
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest vetar2a.rpd gateware"
                                 echo
-                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
-                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
-                                cp $temp_log $FLASH_LOG
-                      fi
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" > $temp_log
+				log_copy
+                     fi
         	done
 	done < $temp
 else
@@ -210,10 +216,9 @@ if [ "$input" == "scu3" ] || [ "$input" == "all" ]; then
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control3.rpd gateware"
                                 echo
-                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
-                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
-                                cp $temp_log $FLASH_LOG
-                      fi
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" > $temp_log
+                                log_copy
+                     fi
 		done
 	done < $temp
 else
@@ -235,10 +240,9 @@ if [ "$input" == "scu2" ] || [ "$input" == "all" ]; then
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control2.rpd gateware"
                                 echo
-                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
-                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
-                                cp $temp_log $FLASH_LOG
-                      fi
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" > $temp_log
+                                log_copy
+                     fi
         	done
 	done < $temp
 else
@@ -260,10 +264,9 @@ if [ "$input" == "dm" ] || [ "$input" == "all" ]; then
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest ftm.rpd gateware"
                                 echo
-                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" >> $FLASH_LOG
-                                grep -v "$log_seven_days" $FLASH_LOG > $temp_log
-                                cp $temp_log $FLASH_LOG
-                      fi
+                                echo "Device ${nightlyArray[0]} flashed using $RELEASE release on $(date +%F) at $(date +%T)" > $temp_log
+                                log_copy
+                     fi
 	        done
 	done < $temp
 else
