@@ -5,7 +5,7 @@
 #powered on and off remotely by using the IP address configured for it
 
 GLOBAL_VAR=1
-export $GLOBAL_VAR
+export GLOBAL_VAR
 FACILITY="testing"
 
 HELP="$(basename "$0") [-h] [-f deployment target] -- script to check device active status
