@@ -11,7 +11,7 @@ HELP="$(basename "$0") [-h] [-f deployment target] -- script to reset Timing Rec
 
 where:
     -h  show this help text
-    -f  where you want to deploy the bitstreams:
+    -f  Timing receivers in which facility you want to reset:
         prod (production)
         testing(default)
         cicd (continous integration)\n"
@@ -49,8 +49,8 @@ sleep 30
 
 
 #Get the power socket list from the web server
-DEVICE=http://tsl002.acc.gsi.de/config_files
-DEV_LIST=egctl-power-socket-list-$FACILITY.txt
+RST_DEVICE=http://tsl002.acc.gsi.de/config_files
+RST_DEV_LIST=egctl-power-socket-list-$FACILITY.txt
 script_path=../../scripts/nightly
 egctl_path=../../tools/egctl/
 
@@ -58,11 +58,11 @@ cd $egctl_path
 sudo cp egtab /etc
 make
 
-wget $DEVICE/$DEV_LIST -O ./$DEV_LIST
+wget $RST_DEVICE/$RST_DEV_LIST -O ./$RST_DEV_LIST
 
 #Temporary files that will be deleted after the reset operation
-list=./$DEV_LIST
-temp=./temp.txt
+rst_list=./$RST_DEV_LIST
+rst_temp=./rst_temp.txt
 
 function pwr_cycle(){
 while IFS=$'\t' read -r -a pwrArray 
@@ -114,27 +114,29 @@ do
 		esac
                 echo
         done
-done < $temp
+done < $rst_temp
 
 }
 
-echo -e "\e[96mEnter the keyword of devices to reset"
-echo -e "\e[33mAccepted keyword is exp,pex,vet,scu,sw,all"
-
-read keyword
+if [ "$GLOBAL_VAR" == "1" ]; then
+	keyword=$keyword
+else
+	echo -e "\e[96mEnter the keyword of devices to reset"
+	echo -e "\e[33mAccepted keyword is exp,pex,vet,scu,sw,all"
+	read keyword
 #keyword will be used by fpga_reset.sh script. Therefore, exporting the parameter keyword
-export keyword
-
+	export keyword
+fi
 #Power cycle all the exploders connected to the power socket
 
 if [ "$keyword" == "exp" ]; then
-	grep -ie "EXP" $list > $temp
+	grep -ie "EXP" $rst_list > $rst_temp
 	pwr_cycle
 fi
 
 #Power cycle the VME Crate connected to the power socket
 if [ "$keyword" == "vet" ]; then
-        grep -ie "VME" $list > $temp
+        grep -ie "VME" $rst_list > $rst_temp
 	pwr_cycle
 fi
 
@@ -144,13 +146,13 @@ if [ "$keyword" == "pex" ]; then
 	cd $script_path
 	pchalt
 	cd $egctl_path
-	grep -ie "PCI" $list > $temp
+	grep -ie "PCI" $rst_list > $rst_temp
 	pwr_cycle
 fi
 
 #Power cycle all the network switches connected to the power socket
 if [ "$keyword" == "sw" ]; then
-	grep -ie "NW" $list > $temp
+	grep -ie "NW" $rst_list > $rst_temp
 	pwr_cycle
 fi
 
@@ -160,7 +162,7 @@ if [ "$keyword" == "scu" ]; then
 	. ./fpga_reset.sh
 	cd $egctl_path
 
-	grep -ie "SCU" $list > $temp
+	grep -ie "SCU" $rst_list > $rst_temp
 	pwr_cycle
 fi
 
@@ -171,8 +173,8 @@ if [ "$keyword" == "all" ]; then
 	pchalt
 	cd $egctl_path
 
-	awk '{ print $1 }' $list > interm.txt
-	sort interm.txt | uniq -d > $temp
+	awk '{ print $1 }' $rst_list > interm.txt
+	sort interm.txt | uniq -d > $rst_temp
 	rm interm.txt
 	while IFS=$'\t' read -r -a pwrArray
 	do
@@ -186,6 +188,7 @@ if [ "$keyword" == "all" ]; then
                         ./egctl ${pwrArray[0]} on on on on
        	                echo
 		done
-	done < $temp
+	done < $rst_temp
 fi
-rm $list $temp
+rm $rst_list $rst_temp
+cd $script_path

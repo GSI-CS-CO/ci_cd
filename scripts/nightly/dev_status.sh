@@ -4,6 +4,8 @@
 #Energenie LAN controlled power socket. This power socket can be
 #powered on and off remotely by using the IP address configured for it
 
+GLOBAL_VAR=1
+export $GLOBAL_VAR
 FACILITY="testing"
 
 HELP="$(basename "$0") [-h] [-f deployment target] -- script to check device active status
@@ -56,36 +58,17 @@ do
                         echo -e "\e[31mDevice ${devArray[0]} not available"
 			echo -e "\e[31mReset operation will be performed on ${devArray[0]}"
 			echo -e "\e[32m"
-			. ./fpga_reset.sh ${devArray[0]} ${devArray[2]}
+			. ./reset.sh -f $FACILITY
                 fi
        done
 done < $temp
-}
-
-function pcreboot(){
-
-echo -e "\e[96mEnter the user and IPC name to halt the IPC, before performing power cycle"
-echo -e "\e[33mEnter the USERNAME for IPC connected to PCIe devices (ex:timing/gsi)"
-read username
-user=$username
-echo -e "\e[33mEnter the IPC name (ex:tsl0xx)"
-read pcname
-pc=$pcname
-echo -e "\e[91mPCIe cards are connected to IPC. $pc going to HALT"
-ssh -t -t $user@$pc.acc.gsi.de 'sudo shutdown -r now'
-
-if [ $? != 0 ]; then
-        echo -e "\e[91mInvalid username. Check the format."
-        exit 1
-else
-        sleep 30
-fi
 }
 
 echo -e "\e[96mEnter the keyword of device name to check the status"
 echo -e "\e[33mAccepted keyword is exp,pex,vet,scu,dm,all"
 
 read keyword
+export keyword
 
 if [ "$keyword" == "exp" ] || [ "$keyword" == "all" ]; then
 	grep -ie "exploder" $list > $temp
@@ -95,7 +78,6 @@ fi
 if [ "$keyword" == "pex" ] || [ "$keyword" == "all" ]; then
         grep -ie "pexarria" $list > $temp
                 pinging
-		pcreboot
 fi
 
 if [ "$keyword" == "vet" ] || [ "$keyword" == "all" ]; then
@@ -113,4 +95,5 @@ if [ "$keyword" == "dm" ] || [ "$keyword" == "all" ]; then
                 pinging
 fi
 
+GLOBAL_VAR=0
 rm $list $temp
