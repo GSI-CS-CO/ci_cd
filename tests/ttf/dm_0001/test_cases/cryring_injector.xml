@@ -34,7 +34,7 @@
                     <SID>2</SID>
                     <BPID>2</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x1</par>
                 <tef>0x0</tef>
                 <offs>8</offs> <!-- CMD_SEQ_START -->
             </msg>
@@ -46,7 +46,7 @@
                     <SID>3</SID>
                     <BPID>3</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x2</par>
                 <tef>0x0</tef>
                 <offs>16</offs> <!-- CMD_SEQ_START -->
             </msg>
@@ -58,7 +58,7 @@
                     <SID>3</SID>
                     <BPID>3</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x3</par>
                 <tef>0x0</tef>
                 <offs>989000000</offs> <!-- CMD_RF_PREP_PAUSE -->
             </msg>
@@ -70,7 +70,7 @@
                     <SID>3</SID>
                     <BPID>3</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x4</par>
                 <tef>0x0</tef>
                 <offs>990500000</offs> <!-- CMD_RF_STOP_PAUSE -->
             </msg>
@@ -82,7 +82,7 @@
                     <SID>3</SID>
                     <BPID>3</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x5</par>
                 <tef>0x0</tef>
                 <offs>991500000</offs> <!-- CMD_RF_PREP -->
             </msg>
@@ -94,7 +94,7 @@
                     <SID>2</SID>
                     <BPID>2</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x6</par>
                 <tef>0x0</tef>
                 <offs>991750000</offs> <!-- CMD_BI_TRIGGER -->
             </msg>
@@ -106,7 +106,7 @@
                     <SID>3</SID>
                     <BPID>3</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x7</par>
                 <tef>0x0</tef>
                 <offs>992000000</offs> <!-- CMD_BEAM_ON -->
             </msg>
@@ -118,7 +118,7 @@
                     <SID>2</SID>
                     <BPID>2</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x8</par>
                 <tef>0x0</tef>
                 <offs>992000000</offs> <!-- CMD_BEAM_ON -->
             </msg>
@@ -130,7 +130,7 @@
                     <SID>2</SID>
                     <BPID>2</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0x9</par>
                 <tef>0x0</tef>
                 <offs>992100000</offs> <!-- CMD_BI_MEAS1 -->
             </msg>
@@ -142,7 +142,7 @@
                     <SID>2</SID>
                     <BPID>2</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0xa</par>
                 <tef>0x0</tef>
                 <offs>992300000</offs> <!-- CMD_BI_MEAS2 -->
             </msg>
@@ -154,7 +154,7 @@
                     <SID>2</SID>
                     <BPID>2</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0xb</par>
                 <tef>0x0</tef>
                 <offs>993000000</offs> <!-- CMD_BEAM_OFF -->
             </msg>
@@ -166,7 +166,7 @@
                     <SID>3</SID>
                     <BPID>3</BPID>
                 </id>
-                <par>0x0</par>
+                <par>0xc</par>
                 <tef>0x0</tef>
                 <offs>993000000</offs> <!-- CMD_BEAM_OFF -->
             </msg>
