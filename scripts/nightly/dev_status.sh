@@ -59,6 +59,8 @@ do
 			echo -e "\e[31mReset operation will be performed on ${devArray[0]}"
 			echo -e "\e[32m"
 			. ./reset.sh -f $FACILITY
+			sleep 5
+			sudo eb-info udp/${devArray[2]}
                 fi
        done
 done < $temp
