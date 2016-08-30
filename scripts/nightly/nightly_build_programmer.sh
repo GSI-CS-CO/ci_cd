@@ -3,6 +3,7 @@
 #Change ttyUSBx number after connecting the device
 #Check the switch number connected to the device for auto start
 
+script_path=/home/timing/ci_cd/scripts/nightly
 export WEB_SERVER=/var/www/html/releases/nightly/gateware
 export G_IMAGE_PATH=/var/www/html/releases/golden_image/gateware
 
@@ -13,11 +14,9 @@ export scu3_job_path=/var/lib/jenkins/jobs/nightly_build_scu3
 export scu2_job_path=/var/lib/jenkins/jobs/nightly_build_scu2
 export dm_job_path=/var/lib/jenkins/jobs/nightly_build_datamaster
 
-jtagchk_output=~/shell_scripts/temp.txt
+jtagchk_output=$script_path/temp.txt
 
-. ~/shell_scripts/jtag_check.sh > $jtagchk_output
-
-cd ~/shell_scripts
+. ./jtag_check.sh > $jtagchk_output
 
 if (grep -q "Exploder-5a connected" $jtagchk_output); then
 
@@ -27,13 +26,15 @@ if (grep -q "Exploder-5a connected" $jtagchk_output); then
                 . ~/shell_scripts/quartus16.sh
                 ./quartus_pgm -c 1 -m jtag -o 'p;$G_IMAGE_PATH/exploder5_csco_tr.sof'
                 sleep 5
+		echo "Golden"
                 sudo eb-flash dev/ttyUSB0 $G_IMAGE_PATH/exploder5_csco_tr.rpd
 	else
 		cd /opt/quartus/quartus/bin
 		. ~/shell_scripts/quartus16.sh
 		./quartus_pgm -c 1 -m jtag -o 'p;$WEB_SERVER/exploder5_csco_tr.sof'
 		sleep 5
-		sudo eb-flash dev/ttyUSB0 $WEB_SERVER/exploder5_csco_tr.rpd
+		echo "nightly"
+		sudo eb-flash udp/192.168.16.171 $WEB_SERVER/exploder5_csco_tr.rpd
 		echo -e "\e[34mExploder flashed with latest exploder5_csco_tr.rpd file"
 		echo
 	fi

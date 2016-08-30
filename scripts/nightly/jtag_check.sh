@@ -2,7 +2,7 @@
 
 cd /opt/quartus/quartus/bin
 
-jtagfile=~/shell_scripts/jtagchk.txt
+jtagfile=./jtagchk.txt
 
 ./jtagconfig > $jtagfile
 EXP_DEVICEID="02A010DD"
