@@ -28,10 +28,6 @@ if (grep -q "Exploder-5a connected" $jtagchk_output); then
                 ./quartus_pgm -c 1 -m jtag -o 'p;$G_IMAGE_PATH/exploder5_csco_tr.sof'
                 sleep 5
                 sudo eb-flash dev/ttyUSB0 $G_IMAGE_PATH/exploder5_csco_tr.rpd
-                sudo sispmctl -f 1
-                sleep 5
-                sudo sispmctl -o 1
-		echo
 	else
 		cd /opt/quartus/quartus/bin
 		. ~/shell_scripts/quartus16.sh
@@ -39,9 +35,6 @@ if (grep -q "Exploder-5a connected" $jtagchk_output); then
 		sleep 5
 		sudo eb-flash dev/ttyUSB0 $WEB_SERVER/exploder5_csco_tr.rpd
 		echo -e "\e[34mExploder flashed with latest exploder5_csco_tr.rpd file"
-		sudo sispmctl -f 1
-		sleep 5
-		sudo sispmctl -o 1
 		echo
 	fi
 else
@@ -58,21 +51,13 @@ if (grep -q "Pexarria-5 connected" $jtagchk_output); then
                 ./quartus_pgm -c 1 -m jtag -o 'p;$G_IMAGE_PATH/pci_control.sof'
                 sleep 5
                 sudo eb-flash dev/ttyUSB0 $G_IMAGE_PATH/pci_control.rpd
-                sudo sispmctl -f 2
-                sleep 5
-                sudo sispmctl -o 2
-		echo
-	else
+        else
         	cd /opt/quartus/quartus/bin
 	        . ~/shell_scripts/quartus16.sh
         	./quartus_pgm -c 1 -m jtag -o 'p;$WEB_SERVER/pci_control.sof'
 	        sleep 5
         	sudo eb-flash dev/ttyUSB0 $WEB_SERVER/pci_control.rpd
 		echo -e "\e[34mPexarria flashed with latest pci_control.rpd file"
-	        sudo sispmctl -f 2
-        	sleep 5
-	        sudo sispmctl -o 2
-		echo
 	fi
 else
         echo -e "\e[31mPexarria-5 not connected"
@@ -88,10 +73,6 @@ if (grep -q "Vetar2a connected" $jtagchk_output); then
                 ./quartus_pgm -c 1 -m jtag -o 'p;$G_IMAGE_PATH/vetar2a.sof'
                 sleep 5
                 sudo eb-flash dev/ttyUSB0 $G_IMAGE_PATH/vetar2a.rpd
-                sudo sispmctl -f 3
-                sleep 5
-                sudo sispmctl -o 3
-		echo
 	else
 	        cd /opt/quartus/quartus/bin
         	. ~/shell_scripts/quartus16.sh
@@ -99,11 +80,7 @@ if (grep -q "Vetar2a connected" $jtagchk_output); then
         	sleep 5
 	        sudo eb-flash dev/ttyUSB0 $WEB_SERVER/vetar2a.rpd
 		echo -e "\e[34mVetar2a flashed with latest vetar2a.rpd file"
-        	sudo sispmctl -f 3
-	        sleep 5
-        	sudo sispmctl -o 3
-		echo
-	fi
+       	fi
 else
         echo -e "\e[31mVetar2a not connected"
 	echo
@@ -118,22 +95,14 @@ if (grep -q "SCU3 connected" $jtagchk_output); then
                 ./quartus_pgm -c 1 -m jtag -o 'p;$G_IMAGE_PATH/scu3_control.sof'
                 sleep 5
                 sudo eb-flash dev/ttyUSB0 $G_IMAGE_PATH/scu3_control.rpd
-                sudo sispmctl -f 4
-                sleep 5
-                sudo sispmctl -o 4
-		echo
-	else
+       else
 	        cd /opt/quartus/quartus/bin
         	. ~/shell_scripts/quartus16.sh
 	        ./quartus_pgm -c 1 -m jtag -o 'p;$WEB_SERVER/scu_control3.sof'
         	sleep 5
 	        sudo eb-flash dev/ttyUSB0 $WEB_SERVER/scu_control3.rpd
 		echo -e "\e[34mSCU3 flashed with latest scu_control3.rpd file"
-        	sudo sispmctl -f 4
-	        sleep 5
-        	sudo sispmctl -o 4
-		echo
-	fi
+       fi
 else
         echo -e "\e[31mSCU3 not connected"
 	echo
@@ -148,22 +117,14 @@ if (grep -q "SCU2 connected" $jtagchk_output); then
                 ./quartus_pgm -c 1 -m jtag -o 'p;$G_IMAGE_PATH/scu2_control.sof'
                 sleep 5
                 sudo eb-flash dev/ttyUSB0 $G_IMAGE_PATH/scu2_control.rpd
-                sudo sispmctl -f 4
-                sleep 5
-                sudo sispmctl -o 4
-                echo
-        else
+       else
                 cd /opt/quartus/quartus/bin
                 . ~/shell_scripts/quartus16.sh
                 ./quartus_pgm -c 1 -m jtag -o 'p;$WEB_SERVER/scu_control2.sof'
                 sleep 5
                 sudo eb-flash dev/ttyUSB0 $WEB_SERVER/scu_control2.rpd
 		echo -e "\e[34mSCU2 flashed with latest scu_control2.rpd file"
-                sudo sispmctl -f 4
-                sleep 5
-                sudo sispmctl -o 4
-                echo
-        fi
+       fi
 else
         echo -e "\e[31mSCU2 not connected"
         echo
@@ -178,22 +139,14 @@ if (grep -q "Datamaster connected" $jtagchk_output); then
                 ./quartus_pgm -c 1 -m jtag -o 'p;$G_IMAGE_PATH/ftm.sof'
                 sleep 5
                 sudo eb-flash dev/ttyUSB0 $G_IMAGE_PATH/ftm.rpd
-                sudo sispmctl -f 4
-                sleep 5
-                sudo sispmctl -o 4
-                echo
-        else
+       else
                 cd /opt/quartus/quartus/bin
                 . ~/shell_scripts/quartus16.sh
                 ./quartus_pgm -c 1 -m jtag -o 'p;$WEB_SERVER/ftm.sof'
                 sleep 5
                 sudo eb-flash dev/ttyUSB0 $WEB_SERVER/ftm.rpd
 		echo -e "\e[34mDatamaster flashed with latest ftm.rpd file"
-                sudo sispmctl -f 4
-                sleep 5
-                sudo sispmctl -o 4
-                echo
-        fi
+       fi
 else
         echo -e "\e[31mDatamaster not connected"
         echo
