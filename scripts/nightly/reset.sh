@@ -118,7 +118,7 @@ done < $rst_temp
 
 }
 
-if [ "$GLOBAL_VAR" == "1" ]; then
+if [ "$GLOBAL_VAR1" == "1" ]; then
 	keyword=$keyword
 else
 	echo -e "\e[96mEnter the keyword of devices to reset"

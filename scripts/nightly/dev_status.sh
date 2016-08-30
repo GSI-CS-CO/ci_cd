@@ -4,8 +4,10 @@
 #Energenie LAN controlled power socket. This power socket can be
 #powered on and off remotely by using the IP address configured for it
 
-GLOBAL_VAR=1
-export GLOBAL_VAR
+GLOBAL_VAR1=1
+GLOBAL_VAR2=1
+export GLOBAL_VAR1
+export GLOBAL_VAR2
 FACILITY="testing"
 
 HELP="$(basename "$0") [-h] [-f deployment target] -- script to check device active status
@@ -61,6 +63,11 @@ do
 			. ./reset.sh -f $FACILITY
 			sleep 5
 			sudo eb-info udp/${devArray[2]}
+			if [ $? != 0 ]; then
+				GLOBAL_VAR2=0
+			else
+				GLOBAL_VAR2=1
+			fi
                 fi
        done
 done < $temp
@@ -97,5 +104,5 @@ if [ "$keyword" == "dm" ] || [ "$keyword" == "all" ]; then
                 pinging
 fi
 
-GLOBAL_VAR=0
+GLOBAL_VAR1=0
 rm $list $temp
