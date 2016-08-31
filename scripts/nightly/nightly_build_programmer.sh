@@ -47,8 +47,8 @@ export dm_job_path=/var/lib/jenkins/jobs/nightly_build_datamaster
 DEVICE=http://tsl002.acc.gsi.de/config_files
 DEV_LIST=device-list-$FACILITY.txt
 wget $DEVICE/$DEV_LIST -O ./$DEV_LIST
-list=./$DEV_LIST
-temp=./temp.txt
+list=$script_path/$DEV_LIST
+temp=$script_path/temp.txt
 
 jtagchk_output=$script_path/temp1.txt
 
@@ -68,7 +68,7 @@ if (grep -q "Exploder-5a connected" $jtagchk_output); then
         	        	sleep 5
 	        	        sudo eb-flash udp/${nightlyArray[2]} $G_IMAGE_PATH/exploder5_csco_tr.rpd
 				echo -e "\e[34mExploder flashed with golden image of exploder5_csco_tr.rpd file"
-                                echo
+                                echo -e "\e[32m"
 			else
 				cd /opt/quartus/quartus/bin
 				. ~/shell_scripts/quartus16.sh
@@ -76,13 +76,13 @@ if (grep -q "Exploder-5a connected" $jtagchk_output); then
 				sleep 5
 				sudo eb-flash udp/${nightlyArray[2]} $WEB_SERVER/exploder5_csco_tr.rpd
 				echo -e "\e[34mExploder flashed with latest exploder5_csco_tr.rpd file"
-				echo
+				echo -e "\e[32m"
 			fi
 		done
 	done < $temp
 else
 	echo -e "\e[31mExploder-5a not connected"
-	echo
+	echo -e "\e[32m"
 fi
 
 if (grep -q "Pexarria-5 connected" $jtagchk_output); then
@@ -99,7 +99,7 @@ if (grep -q "Pexarria-5 connected" $jtagchk_output); then
 		                sleep 5
                 		sudo eb-flash udp/${nightlyArray[2]} $G_IMAGE_PATH/pci_control.rpd
 				echo -e "\e[34mPexarria flashed with golden image of pci_control.rpd file"
-                                echo
+                                echo -e "\e[32m"
         		else
 		        	cd /opt/quartus/quartus/bin
 	        		. ~/shell_scripts/quartus16.sh
@@ -107,13 +107,13 @@ if (grep -q "Pexarria-5 connected" $jtagchk_output); then
 	        		sleep 5
 		        	sudo eb-flash udp/${nightlyArray[2]} $WEB_SERVER/pci_control.rpd
 				echo -e "\e[34mPexarria flashed with latest pci_control.rpd file"
-				echo
+				echo -e "\e[32m"
 			fi
                 done
         done < $temp
 else
         echo -e "\e[31mPexarria-5 not connected"
-	echo
+	echo -e "\e[32m"
 fi
 
 if (grep -q "Vetar2a connected" $jtagchk_output); then
@@ -130,7 +130,7 @@ if (grep -q "Vetar2a connected" $jtagchk_output); then
 		                sleep 5
                 		sudo eb-flash udp/${nightlyArray[2]} $G_IMAGE_PATH/vetar2a.rpd
 				echo -e "\e[34mVetar2a flashed with golden image of vetar2a.rpd file"
-                                echo
+                                echo -e "\e[32m"
 			else
 	        		cd /opt/quartus/quartus/bin
 		        	. ~/shell_scripts/quartus16.sh
@@ -138,13 +138,13 @@ if (grep -q "Vetar2a connected" $jtagchk_output); then
 		        	sleep 5
 	        		sudo eb-flash udp/${nightlyArray[2]} $WEB_SERVER/vetar2a.rpd
 				echo -e "\e[34mVetar2a flashed with latest vetar2a.rpd file"
-				echo
+				echo -e "\e[32m"
        			fi
                 done
         done < $temp
 else
         echo -e "\e[31mVetar2a not connected"
-	echo
+	echo -e "\e[32m"
 fi
 
 if (grep -q "SCU3 connected" $jtagchk_output); then
@@ -161,7 +161,7 @@ if (grep -q "SCU3 connected" $jtagchk_output); then
                 		sleep 5
 		                sudo eb-flash udp/${nightlyArray[2]} $G_IMAGE_PATH/scu3_control.rpd
 				echo -e "\e[34mSCU3 flashed with golden image of scu_control3.rpd file"
-                                echo
+                                echo -e "\e[32m"
 			else
 	        		cd /opt/quartus/quartus/bin
 		        	. ~/shell_scripts/quartus16.sh
@@ -169,13 +169,13 @@ if (grep -q "SCU3 connected" $jtagchk_output); then
 		        	sleep 5
 	        		sudo eb-flash udp/${nightlyArray[2]} $WEB_SERVER/scu_control3.rpd
 				echo -e "\e[34mSCU3 flashed with latest scu_control3.rpd file"
-				echo
+				echo -e "\e[32m"
 			fi
                 done
         done < $temp
 else
         echo -e "\e[31mSCU3 not connected"
-	echo
+	echo -e "\e[32m"
 fi
 
 if (grep -q "SCU2 connected" $jtagchk_output); then
@@ -192,7 +192,7 @@ if (grep -q "SCU2 connected" $jtagchk_output); then
 		                sleep 5
                 		sudo eb-flash udp/${nightlyArray[2]} $G_IMAGE_PATH/scu2_control.rpd
 				echo -e "\e[34mSCU2 flashed with golden image of scu_control2.rpd file"
-                                echo
+                                echo -e "\e[32m"
 		       	else
 		                cd /opt/quartus/quartus/bin
                 		. ~/shell_scripts/quartus16.sh
@@ -200,13 +200,13 @@ if (grep -q "SCU2 connected" $jtagchk_output); then
                 		sleep 5
 		                sudo eb-flash udp/${nightlyArray[2]} $WEB_SERVER/scu_control2.rpd
 				echo -e "\e[34mSCU2 flashed with latest scu_control2.rpd file"
-				echo
+				echo -e "\e[32m"
        			fi
 		done
         done < $temp
 else
         echo -e "\e[31mSCU2 not connected"
-        echo
+        echo -e "\e[32m"
 fi
 
 if (grep -q "Datamaster connected" $jtagchk_output); then
@@ -223,7 +223,7 @@ if (grep -q "Datamaster connected" $jtagchk_output); then
                 		sleep 5
 		                sudo eb-flash udp/${nightlyArray[2]} $G_IMAGE_PATH/ftm.rpd
                                 echo -e "\e[34mDatamaster flashed with golden image of ftm.rpd file"
-                                echo
+                                echo -e "\e[32m"
 			else
                 		cd /opt/quartus/quartus/bin
 		                . ~/shell_scripts/quartus16.sh
@@ -231,13 +231,13 @@ if (grep -q "Datamaster connected" $jtagchk_output); then
 		                sleep 5
                 		sudo eb-flash udp/${nightlyArray[2]} $WEB_SERVER/ftm.rpd
 				echo -e "\e[34mDatamaster flashed with latest ftm.rpd file"
-				echo
+				echo -e "\e[32m"
        			fi
                 done
         done < $temp
 else
         echo -e "\e[31mDatamaster not connected"
-        echo
+        echo -e "\e[32m"
 fi
 
 rm $jtagchk_output $list $temp
