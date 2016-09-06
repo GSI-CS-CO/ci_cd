@@ -146,6 +146,7 @@ if [ "$keyword" == "exp" ]; then
 		grep -ive "IPC" $rst_exp_pcie > $rst_temp
                	pwr_cycle
 	fi
+rm -rf $rst_exp_pcie
 fi
 
 #Power cycle the VME Crate connected to the power socket
@@ -204,5 +205,5 @@ if [ "$keyword" == "all" ]; then
 		done
 	done < $rst_temp
 fi
-rm $rst_list $rst_temp $rst_exp_pcie
+rm $rst_list $rst_temp
 cd $script_path
