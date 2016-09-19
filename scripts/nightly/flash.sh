@@ -141,7 +141,8 @@ if [ "$input" == "exp" ] || [ "$input" == "all" ]; then
 		do
 			sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/exploder5_csco_tr.rpd
 			if [ $? != 0 ]; then
-				echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+				echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} on $(date +%F) at $(date +%T) was interrupted" > $temp_log
+				log_copy
 			else
 				echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest exploder5_csco_tr.rpd gateware"
 				echo
@@ -165,7 +166,8 @@ if [ "$input" == "pex" ] || [ "$input" == "all" ]; then
 	        do
 	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/pci_control.rpd
                 	if [ $? != 0 ]; then
-                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+				echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} on $(date +%F) at $(date +%T) was interrupted" > $temp_log
+                                log_copy
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest pci_control.rpd gateware"
                                 echo
@@ -189,7 +191,8 @@ if [ "$input" == "vet" ] || [ "$input" == "all" ]; then
 	        do
 	    	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/vetar2a.rpd
 			if [ $? != 0 ]; then
-                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} on $(date +%F) at $(date +%T) was interrupted" > $temp_log
+                                log_copy
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest vetar2a.rpd gateware"
                                 echo
@@ -213,7 +216,8 @@ if [ "$input" == "scu3" ] || [ "$input" == "all" ]; then
 	        do
  	  	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/scu_control3.rpd
 			if [ $? != 0 ]; then
-                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} on $(date +%F) at $(date +%T) was interrupted" > $temp_log
+                                log_copy
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control3.rpd gateware"
                                 echo
@@ -237,7 +241,8 @@ if [ "$input" == "scu2" ] || [ "$input" == "all" ]; then
 	        do
 	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/scu_control2.rpd
 			if [ $? != 0 ]; then
-                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} on $(date +%F) at $(date +%T) was interrupted" > $temp_log
+                                log_copy
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest scu_control2.rpd gateware"
                                 echo
@@ -261,7 +266,8 @@ if [ "$input" == "dm" ] || [ "$input" == "all" ]; then
 	        do
 	       	        sudo eb-flash udp/${nightlyArray[2]} $NIGHTLY/ftm.rpd
 			if [ $? != 0 ]; then
-                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} was interrupted"
+                                echo -e "\e[34mFlashing ${nightlyArray[0]} with IP ${nightlyArray[2]} on $(date +%F) at $(date +%T) was interrupted" > $temp_log
+                                log_copy
                         else
                                 echo -e "\e[34m${nightlyArray[0]} with IP ${nightlyArray[2]} flashed with latest ftm.rpd gateware"
                                 echo
