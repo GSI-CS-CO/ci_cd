@@ -78,7 +78,7 @@ fi
 WEB_SERVER=http://tsl002.acc.gsi.de/releases/$RELEASE/gateware
 DEVICE=http://tsl002.acc.gsi.de/config_files
 DEV_LIST=device-list-$FACILITY.txt
-FLASH_LOG=/var/www/html/releases/devices_flashed.log
+FLASH_LOG=/var/www/html/releases/log/devices_flashed.log
 temp_log=./flash.log
 log_seven_days=$(date --date="7 days ago" +%F)
 
@@ -293,7 +293,7 @@ fi
 #Below lines are to limit the log data for 7 days.
 #Devices flashed within 7 days will be logged. Data greater than this will be erased
 
-LOG=http://tsl002.acc.gsi.de/releases/devices_flashed.log
+LOG=http://tsl002.acc.gsi.de/releases/log/devices_flashed.log
 LOG1=./flash1.log
 wget $LOG -O $NIGHTLY/flash.log
 grep -v "$log_seven_days" $NIGHTLY/flash.log > $LOG1
