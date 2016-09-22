@@ -283,7 +283,7 @@ while [ $end_test -eq 0 ]; do
   start_data_master
   ./parse.py log/$schedule_ts
   control_logging 1 0
-  ./capture.sh &
+  ./capture_dev.sh &
   sleep 5
   
   # Wait until all events were send
@@ -291,7 +291,7 @@ while [ $end_test -eq 0 ]; do
   poll_dm_time
   sleep 5
   control_logging 0 0
-  killall tcpdump # !!!
+  killall tcpdump
   sleep 5
   
   #Sort event lists
@@ -303,20 +303,20 @@ while [ $end_test -eq 0 ]; do
   #sleep 5  # !!!
   # Wait for capture.sh script
   while [ $gateway_capture_done -eq 0 ]; do
-    ps | grep capture.sh > /dev/null
+    ps | grep capture_dev.sh > /dev/null
     if [ $? -eq 1 ]; then
       gateway_capture_done=1
-      echo "Gateway capture process done!"
+      echo "Gateway $ttf_gateway_host capture process done!"
     fi
   done
   
   cmp log/s_cmp_$ttf_gateway_host.txt log/e_cmp.txt  # !!!
   if [ $? -eq 0 ]; then
     gateway_success_count=$((gateway_success_count+1))
-    echo "Gateway got all expected events!"
+    echo "Gateway $ttf_gateway_host got all expected events!"
   else
     gateway_fail_count=$((gateway_fail_count+1))
-    echo "Gateway missed or got different events!"
+    echo "Gateway $ttf_gateway_host missed or got different events!"
   fi
   
   # Check for other errors
