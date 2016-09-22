@@ -10,7 +10,7 @@
       </meta>  
       <chain>
          <meta>
-            <rep>1</rep>
+            <rep>25</rep>
             <period>1000000000</period>
             <branchpoint>yes</branchpoint>
          </meta>

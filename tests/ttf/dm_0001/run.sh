@@ -13,6 +13,9 @@ fail_count=0
 iter_count=0
 schedule_given=0
 duts=0
+gateway_fail_count=0
+gateway_success_count=0
+gateway_capture_done=0
 
 # Data master settings
 schedule="schedule.xml"
@@ -66,22 +69,22 @@ function control_logging()
         #                                                                  saft-io-ctl $i -n LED2_BASE_B -x;\
         #                                                                  saft-io-ctl $i -n LED3_BASE_G -x;\
         #                                                                  saft-io-ctl $i -n LED4_BASE_W -x;"
-        ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 0 0xf 1 -u;\
-                                                                          saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 31250000 0xf 0 -u;\
-                                                                          saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 0 0xf 1 -u;\
-                                                                          saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 62500000 0xf 0 -u;\
-                                                                          saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 0 0xf 1 -u;\
-                                                                          saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 125000000 0xf 0 -u;\
-                                                                          saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 0 0xf 1 -u;\
-                                                                          saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 250000000 0xf 0 -u;\
-                                                                          saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 0 0xf 1 -u;\
-                                                                          saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 31250000 0xf 0 -u;\
-                                                                          saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 0 0xf 1 -u;\
-                                                                          saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 62500000 0xf 0 -u;\
-                                                                          saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 0 0xf 1 -u;\
-                                                                          saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 125000000 0xf 0 -u;\
-                                                                          saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 0 0xf 1 -u;\
-                                                                          saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 250000000 0xf 0 -u;"
+        #ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                  saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 31250000 0xf 0 -u;\
+        #                                                                  saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                  saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 62500000 0xf 0 -u;\
+        #                                                                  saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                  saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 125000000 0xf 0 -u;\
+        #                                                                  saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                  saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 250000000 0xf 0 -u;\
+        #                                                                  saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                  saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 31250000 0xf 0 -u;\
+        #                                                                  saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                  saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 62500000 0xf 0 -u;\
+        #                                                                  saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                  saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 125000000 0xf 0 -u;\
+        #                                                                  saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                  saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 250000000 0xf 0 -u;"
       fi
       pex_id=$((pex_id+1))
     done
@@ -111,16 +114,16 @@ function control_logging()
         #                                                                saft-io-ctl baseboard -n LED11 -x;\
         #                                                                saft-io-ctl baseboard -n LED12 -x;\
         #                                                                saft-io-ctl baseboard -n LED_DACK -x;"
-        ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -c 0x0 0x0 0 0xf 1 -u;\
-                                                                        saft-io-ctl baseboard -n LED9 -c 0x0 0x0 31250000 0xf 0 -u;\
-                                                                        saft-io-ctl baseboard -n LED10 -c 0x0 0x0 0 0xf 1 -u;\
-                                                                        saft-io-ctl baseboard -n LED10 -c 0x0 0x0 62500000 0xf 0 -u;\
-                                                                        saft-io-ctl baseboard -n LED11 -c 0x0 0x0 0 0xf 1 -u;\
-                                                                        saft-io-ctl baseboard -n LED11 -c 0x0 0x0 125000000 0xf 0 -u;\
-                                                                        saft-io-ctl baseboard -n LED12 -c 0x0 0x0 0 0xf 1 -u;\
-                                                                        saft-io-ctl baseboard -n LED12 -c 0x0 0x0 250000000 0xf 0 -u;\
-                                                                        saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 0 0xf 1 -u;\
-                                                                        saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 31250000 0xf 0 -u;"
+        #ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                saft-io-ctl baseboard -n LED9 -c 0x0 0x0 31250000 0xf 0 -u;\
+        #                                                                saft-io-ctl baseboard -n LED10 -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                saft-io-ctl baseboard -n LED10 -c 0x0 0x0 62500000 0xf 0 -u;\
+        #                                                                saft-io-ctl baseboard -n LED11 -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                saft-io-ctl baseboard -n LED11 -c 0x0 0x0 125000000 0xf 0 -u;\
+        #                                                                saft-io-ctl baseboard -n LED12 -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                saft-io-ctl baseboard -n LED12 -c 0x0 0x0 250000000 0xf 0 -u;\
+        #                                                                saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 0 0xf 1 -u;\
+        #                                                                saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 31250000 0xf 0 -u;"
       fi
       vetar_id=$((vetar_id+1))
     done
@@ -167,6 +170,7 @@ function ctrl_c()
   ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id stop
   echo "Stopping devices..."
   control_logging 0
+  killall tcpdump # !!!
   exit 1
 }
 
@@ -279,6 +283,7 @@ while [ $end_test -eq 0 ]; do
   start_data_master
   ./parse.py log/$schedule_ts
   control_logging 1 0
+  ./capture_dev.sh &
   sleep 5
   
   # Wait until all events were send
@@ -286,13 +291,33 @@ while [ $end_test -eq 0 ]; do
   poll_dm_time
   sleep 5
   control_logging 0 0
+  killall tcpdump
   sleep 5
   
-  # Sort event lists
+  #Sort event lists
   sort -k1 -n log/expected_events.txt > log/e_cmp.txt
   
   # Finally compare the lists
   compare_log_files
+  
+  #sleep 5  # !!!
+  # Wait for capture.sh script
+  while [ $gateway_capture_done -eq 0 ]; do
+    ps | grep capture_dev.sh > /dev/null
+    if [ $? -eq 1 ]; then
+      gateway_capture_done=1
+      echo "Gateway $ttf_gateway_host capture process done!"
+    fi
+  done
+  
+  cmp log/s_cmp_$ttf_gateway_host.txt log/e_cmp.txt  # !!!
+  if [ $? -eq 0 ]; then
+    gateway_success_count=$((gateway_success_count+1))
+    echo "Gateway $ttf_gateway_host got all expected events!"
+  else
+    gateway_fail_count=$((gateway_fail_count+1))
+    echo "Gateway $ttf_gateway_host missed or got different events!"
+  fi
   
   # Check for other errors
   if [ $trap -eq 1 ]; then
@@ -313,13 +338,15 @@ while [ $end_test -eq 0 ]; do
   fi
   
   # Small report
-  echo "Iteration count:    $iter_count"
-  echo "Devices under test: $duts"
-  echo "Success count:      $success_count"
-  echo "Fail count:         $fail_count"
+  echo "Iteration count:       $iter_count"
+  echo "Devices under test:    $duts"
+  echo "Success count:         $success_count"
+  echo "Fail count:            $fail_count"
+  echo "Gateway success count: $gateway_success_count"
+  echo "Gateway fail count:    $gateway_fail_count"
   echo "Test done!"
   echo ""
   echo "======================================================================"
   echo ""
-  sleep 2
+  sleep 3
 done

@@ -29,5 +29,6 @@ ttf_data_master_traffic_core_id=1
 # Other defines and constants
 ttf_gateway_host="tsl011"
 ttf_gateway_user="root"
+ttf_gateway_interface="eth5"
 tff_postfix="acc.gsi.de"
 ttf_default_saft_dev="baseboard"
