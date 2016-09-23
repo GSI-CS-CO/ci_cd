@@ -21,7 +21,9 @@ ttf_vetar_user=root
 
 # Data master(s)
 ttf_data_master="udp/192.168.191.92"
+ttf_data_master_ip="192.168.191.92"
 ttf_data_master_backup="udp/192.168.191.96"
+ttf_data_master_backup_ip="192.168.191.96"
 ttf_data_master_host="tsl010"
 ttf_data_master_pps_core_id=0
 ttf_data_master_traffic_core_id=1

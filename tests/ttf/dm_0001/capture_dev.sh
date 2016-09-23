@@ -10,15 +10,9 @@
 # Get all ttf devices
 source ../probe_0001/devices.sh
 
-function align_word_count
-{
-  wc=word_count
-  wc=$(($wc%9))
-  if [ $wc -eq 0 ]; then
-    wc=$((wc+2))
-  fi
-  echo $wc
-}
+# Arguments
+snoop_interface=$1
+dm_addr=$2
 
 # Internals
 sub_line_count=0
@@ -26,12 +20,11 @@ word_count=0
 length=0
 num_of_packets=0
 header_passed=0
-state="wb_addr"
 eventid=""
 parameter=""
 timestamp=""
 rm log/raw.txt
-tcpdump -i $ttf_gateway_interface -n "src host 192.168.191.92 and dst host 255.255.255.255" -x > log/raw.txt
+tcpdump -i $snoop_interface -n "src host $dm_addr and dst host 255.255.255.255" -x > log/raw.txt
 sync
 sleep 0.5
 
@@ -43,6 +36,7 @@ touch log/$ttf_gateway_host.txt
 rm log/raw_one_line.txt
 touch log/raw_one_line.txt
 
+# Transform log file format into "one line" format
 while read line
 do
   inspect=`echo $line | awk '{print $2}'`
@@ -76,6 +70,7 @@ timestamp_hl=0
 timestamp_lh=0
 timestamp_ll=0
 
+# Parse each line for eventid, parameter and timestamp
 while read line
 do
   #echo $line

@@ -283,7 +283,7 @@ while [ $end_test -eq 0 ]; do
   start_data_master
   ./parse.py log/$schedule_ts
   control_logging 1 0
-  ./capture_dev.sh &
+  ./capture_dev.sh $ttf_data_master_ip $ttf_gateway_interface &
   sleep 5
   
   # Wait until all events were send
