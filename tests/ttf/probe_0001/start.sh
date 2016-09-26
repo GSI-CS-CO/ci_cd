@@ -104,6 +104,81 @@ function control_saftd()
   done
 }
 
+# Configure LEDs (will react to all events) ($1 = 0/1 (enable/disable))
+function config_leds()
+{
+  # Start logging, remove old log files and filter PPS events
+  # Pexarias
+  pex_id=0
+  for i in ${ttf_pexaria_names[@]}; do
+    if [ $1 -eq 0 ]; then
+      echo "Disabling LEDs... ($i@${ttf_pexaria_hosts[$pex_id]})"
+      ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -x;\
+                                                                        saft-io-ctl $i -n LED2_ADD_B -x;\
+                                                                        saft-io-ctl $i -n LED3_ADD_G -x;\
+                                                                        saft-io-ctl $i -n LED4_ADD_W -x;\
+                                                                        saft-io-ctl $i -n LED1_BASE_R -x;\
+                                                                        saft-io-ctl $i -n LED2_BASE_B -x;\
+                                                                        saft-io-ctl $i -n LED3_BASE_G -x;\
+                                                                        saft-io-ctl $i -n LED4_BASE_W -x;"
+    else
+      echo "Enabling LEDs... ($i@${ttf_pexaria_hosts[$pex_id]})"
+      ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 31250000 0xf 0 -u;\
+                                                                        saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 62500000 0xf 0 -u;\
+                                                                        saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 125000000 0xf 0 -u;\
+                                                                        saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 250000000 0xf 0 -u;\
+                                                                        saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 31250000 0xf 0 -u;\
+                                                                        saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 62500000 0xf 0 -u;\
+                                                                        saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 125000000 0xf 0 -u;\
+                                                                        saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 0 0xf 1 -u;\
+                                                                        saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 250000000 0xf 0 -u;"
+    fi
+    pex_id=$((pex_id+1))
+  done
+  # SCUs
+  scu_id=0
+  for i in ${ttf_scu_names[@]}; do
+    if [ $1 -eq 0 ]; then
+      echo "Disabling LEDs... ($i@${ttf_scu_hosts[$scu_id]})"
+    else
+      echo "Enabling LEDs... ($i@${ttf_scu_hosts[$scu_id]})"
+    fi
+    scu_id=$((scu_id+1))
+  done
+  # Vetars
+  vetar_id=0
+  for i in ${ttf_vetar_names[@]}; do
+    if [ $1 -eq 0 ]; then
+      echo "Disabling LEDs... ($i@${ttf_vetar_hosts[$vetar_id]})"
+      ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -x;\
+                                                                      saft-io-ctl baseboard -n LED10 -x;\
+                                                                      saft-io-ctl baseboard -n LED11 -x;\
+                                                                      saft-io-ctl baseboard -n LED12 -x;\
+                                                                      saft-io-ctl baseboard -n LED_DACK -x;"
+    else
+      echo "Enabling LEDs... ($i@${ttf_vetar_hosts[$vetar_id]})"
+      ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED9 -c 0x0 0x0 31250000 0xf 0 -u;\
+                                                                      saft-io-ctl baseboard -n LED10 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED10 -c 0x0 0x0 62500000 0xf 0 -u;\
+                                                                      saft-io-ctl baseboard -n LED11 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED11 -c 0x0 0x0 125000000 0xf 0 -u;\
+                                                                      saft-io-ctl baseboard -n LED12 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED12 -c 0x0 0x0 250000000 0xf 0 -u;\
+                                                                      saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 31250000 0xf 0 -u;"
+    fi
+    vetar_id=$((vetar_id+1))
+  done
+}
+
 # Start configuration
 case "$1" in
   "stop")
@@ -120,9 +195,15 @@ case "$1" in
    "probe")
     control_saftd 2
     ;;
+    "led_init")
+    config_leds 1
+    ;;
+    "led_deinit")
+    config_leds 0
+    ;;
   *)
     echo "You have failed to specify what to do correctly!"
-    echo "Possible arguments are: stop/start/restart/probe"
+    echo "Possible arguments are: stop/start/restart/probe/led_init/led_deinit"
     exit 1
     ;;
 esac
