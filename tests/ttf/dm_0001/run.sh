@@ -244,9 +244,9 @@ while [ $end_test -eq 0 ]; do
   # Finally compare the lists
   compare_log_files
   
-  #sleep 5  # !!!
   # Wait for capture.sh script
   echo "Waiting for capture process (on gateway, this will take a minute)..."
+  gateway_capture_done=0
   while [ $gateway_capture_done -eq 0 ]; do
     #ps -ax | grep capture_dev.sh
     ps -ax | grep capture_dev.sh | grep -v "grep" >> /dev/null

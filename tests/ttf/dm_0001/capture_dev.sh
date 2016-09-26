@@ -24,8 +24,9 @@ eventid=""
 parameter=""
 timestamp=""
 rm log/raw.txt
-tcpdump -i $snoop_interface -n "src host $dm_addr and dst host 255.255.255.255" -x > log/raw.txt
 rm log/capture.txt
+echo "tcpdump started" >> log/capture.txt; date >> log/capture.txt
+tcpdump -i $snoop_interface -n "src host $dm_addr and dst host 255.255.255.255" -x > log/raw.txt
 echo "tcpdump done" >> log/capture.txt; date >> log/capture.txt
 sync
 sleep 0.5
