@@ -246,14 +246,13 @@ while [ $end_test -eq 0 ]; do
   
   #sleep 5  # !!!
   # Wait for capture.sh script
-  while [ $gateway_capture_done -eq 1 ]; do
+  echo "Waiting for capture process (on gateway, this will take a minute)..."
+  while [ $gateway_capture_done -eq 0 ]; do
     #ps -ax | grep capture_dev.sh
     ps -ax | grep capture_dev.sh | grep -v "grep" >> /dev/null
-    if [ $? -ne 0 ]; then
+    if [ $? -eq 1 ]; then
       gateway_capture_done=1
       echo "Gateway $ttf_gateway_host capture process done!"
-    else
-      echo "Waiting for capture...."
     fi
   done
   

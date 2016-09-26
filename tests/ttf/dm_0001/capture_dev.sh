@@ -26,7 +26,7 @@ timestamp=""
 rm log/raw.txt
 tcpdump -i $snoop_interface -n "src host $dm_addr and dst host 255.255.255.255" -x > log/raw.txt
 rm log/capture.txt
-echo "tcpdump done" >> log/capture.txt
+echo "tcpdump done" >> log/capture.txt; date >> log/capture.txt
 sync
 sleep 0.5
 
@@ -38,6 +38,7 @@ touch log/$ttf_gateway_host.txt
 rm log/raw_one_line.txt
 touch log/raw_one_line.txt
 
+# To be done: Speed this up
 # Transform log file format into "one line" format
 while read line
 do
@@ -55,7 +56,7 @@ do
   fi
 done <log/raw.txt
 
-echo "oneline done" >> log/capture.txt
+echo "oneline done" >> log/capture.txt; date >> log/capture.txt
 
 item_count=0
 frame_word=0
@@ -128,13 +129,13 @@ do
   item_count=0
 done <log/raw_one_line.txt
 
-echo "parser done" >> log/capture.txt
+echo "parser done" >> log/capture.txt; date >> log/capture.txt
 
 # Remove PPS and sort events
 cat log/$ttf_gateway_host.txt | grep -v "0xffff000000000000" > log/$ttf_gateway_host_no_pps.txt
-echo "pps remover done" >> log/capture.txt
+echo "pps remover done" >> log/capture.txt; date >> log/capture.txt
 
 sort -k1 -n log/$ttf_gateway_host_no_pps.txt > log/s_cmp_$ttf_gateway_host.txt
-echo "sort done" >> log/capture.txt
+echo "sort done" >> log/capture.txt; date >> log/capture.txt
 sync
 sleep 0.5
