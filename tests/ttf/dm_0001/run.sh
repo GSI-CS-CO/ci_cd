@@ -24,7 +24,7 @@ dm_schedule_keyword="___STARTTIME___"
 dm_start_offset=0x00000000200000000
 dm_start_time=0x0
 
-# Stop/start logging ($1 = 0/1 (stop/start_and_configure), $2 = 0/1 (configure saftlib/configure LEDs)
+# Stop/start logging ($1 = 0/1 (stop/start_and_configure)
 function control_logging()
 {
   if [ $1 -eq 0 ]; then
@@ -55,76 +55,25 @@ function control_logging()
     # Pexarias
     pex_id=0
     for i in ${ttf_pexaria_names[@]}; do
-      if [ $2 -eq 0 ]; then
-        echo "Starting logging... ($i@${ttf_pexaria_hosts[$pex_id]})"
-        rm log/snooped_events_$i.txt
-        ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
-      else
-        echo "Configuring LEDs... ($i@${ttf_pexaria_hosts[$pex_id]})"
-        #ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -x;\
-        #                                                                  saft-io-ctl $i -n LED2_ADD_B -x;\
-        #                                                                  saft-io-ctl $i -n LED3_ADD_G -x;\
-        #                                                                  saft-io-ctl $i -n LED4_ADD_W -x;\
-        #                                                                  saft-io-ctl $i -n LED1_BASE_R -x;\
-        #                                                                  saft-io-ctl $i -n LED2_BASE_B -x;\
-        #                                                                  saft-io-ctl $i -n LED3_BASE_G -x;\
-        #                                                                  saft-io-ctl $i -n LED4_BASE_W -x;"
-        #ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                  saft-io-ctl $i -n LED1_ADD_R -c 0x0 0x0 31250000 0xf 0 -u;\
-        #                                                                  saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                  saft-io-ctl $i -n LED2_ADD_B -c 0x0 0x0 62500000 0xf 0 -u;\
-        #                                                                  saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                  saft-io-ctl $i -n LED3_ADD_G -c 0x0 0x0 125000000 0xf 0 -u;\
-        #                                                                  saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                  saft-io-ctl $i -n LED4_ADD_W -c 0x0 0x0 250000000 0xf 0 -u;\
-        #                                                                  saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                  saft-io-ctl $i -n LED1_BASE_R -c 0x0 0x0 31250000 0xf 0 -u;\
-        #                                                                  saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                  saft-io-ctl $i -n LED2_BASE_B -c 0x0 0x0 62500000 0xf 0 -u;\
-        #                                                                  saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                  saft-io-ctl $i -n LED3_BASE_G -c 0x0 0x0 125000000 0xf 0 -u;\
-        #                                                                  saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                  saft-io-ctl $i -n LED4_BASE_W -c 0x0 0x0 250000000 0xf 0 -u;"
-      fi
+      echo "Starting logging... ($i@${ttf_pexaria_hosts[$pex_id]})"
+      rm log/snooped_events_$i.txt
+      ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       pex_id=$((pex_id+1))
     done
     # SCUs
     scu_id=0
     for i in ${ttf_scu_names[@]}; do
-      if [ $2 -eq 0 ]; then
-        echo "Starting logging... ($i@${ttf_scu_hosts[$scu_id]})"
-        rm log/snooped_events_$i.txt
-        ssh $ttf_scu_user@${ttf_scu_hosts[$scu_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
-      else
-        echo "Configuring LEDs... ($i@${ttf_scu_hosts[$scu_id]})"
-      fi
+      echo "Starting logging... ($i@${ttf_scu_hosts[$scu_id]})"
+      rm log/snooped_events_$i.txt
+      ssh $ttf_scu_user@${ttf_scu_hosts[$scu_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       scu_id=$((scu_id+1))
     done
     # Vetars
     vetar_id=0
     for i in ${ttf_vetar_names[@]}; do
-      if [ $2 -eq 0 ]; then
-        echo "Starting logging... ($i@${ttf_vetar_hosts[$vetar_id]})"
-        rm log/snooped_events_$i.txt
-        ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
-      else
-        echo "Configuring LEDs... ($i@${ttf_vetar_hosts[$vetar_id]})"
-        #ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -x;\
-        #                                                                saft-io-ctl baseboard -n LED10 -x;\
-        #                                                                saft-io-ctl baseboard -n LED11 -x;\
-        #                                                                saft-io-ctl baseboard -n LED12 -x;\
-        #                                                                saft-io-ctl baseboard -n LED_DACK -x;"
-        #ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-io-ctl baseboard -n LED9 -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                saft-io-ctl baseboard -n LED9 -c 0x0 0x0 31250000 0xf 0 -u;\
-        #                                                                saft-io-ctl baseboard -n LED10 -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                saft-io-ctl baseboard -n LED10 -c 0x0 0x0 62500000 0xf 0 -u;\
-        #                                                                saft-io-ctl baseboard -n LED11 -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                saft-io-ctl baseboard -n LED11 -c 0x0 0x0 125000000 0xf 0 -u;\
-        #                                                                saft-io-ctl baseboard -n LED12 -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                saft-io-ctl baseboard -n LED12 -c 0x0 0x0 250000000 0xf 0 -u;\
-        #                                                                saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 0 0xf 1 -u;\
-        #                                                                saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 31250000 0xf 0 -u;"
-      fi
+      echo "Starting logging... ($i@${ttf_vetar_hosts[$vetar_id]})"
+      rm log/snooped_events_$i.txt
+      ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       vetar_id=$((vetar_id+1))
     done
   fi
@@ -170,7 +119,7 @@ function ctrl_c()
   ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id stop
   echo "Stopping devices..."
   control_logging 0
-  killall tcpdump # !!!
+  killall tcpdump
   exit 1
 }
 
@@ -263,17 +212,12 @@ else
   exit 1
 fi
 
-# Setup LEDs
-control_logging 1 1
-
 while [ $end_test -eq 0 ]; do
   echo "Date:"
   date
-  echo "Uptime:"
-  uptime
   echo ""
   # Clean up
-  control_logging 0 0
+  control_logging 0
   # Generate new or copy given schedule
   if [ $schedule_given -eq 0 ]; then
     ./generate.py
@@ -282,15 +226,15 @@ while [ $end_test -eq 0 ]; do
   fi
   start_data_master
   ./parse.py log/$schedule_ts
-  control_logging 1 0
-  ./capture_dev.sh &
+  control_logging 1
+  ./capture_dev.sh $ttf_gateway_interface $ttf_data_master_ip &
   sleep 5
   
   # Wait until all events were send
   duration=`cat log/duration.txt`
   poll_dm_time
   sleep 5
-  control_logging 0 0
+  control_logging 0
   killall tcpdump
   sleep 5
   
@@ -302,15 +246,17 @@ while [ $end_test -eq 0 ]; do
   
   #sleep 5  # !!!
   # Wait for capture.sh script
+  echo "Waiting for capture process (on gateway, this will take a minute)..."
   while [ $gateway_capture_done -eq 0 ]; do
-    ps | grep capture_dev.sh > /dev/null
+    #ps -ax | grep capture_dev.sh
+    ps -ax | grep capture_dev.sh | grep -v "grep" >> /dev/null
     if [ $? -eq 1 ]; then
       gateway_capture_done=1
       echo "Gateway $ttf_gateway_host capture process done!"
     fi
   done
   
-  cmp log/s_cmp_$ttf_gateway_host.txt log/e_cmp.txt  # !!!
+  cmp log/s_cmp_$ttf_gateway_host.txt log/e_cmp.txt
   if [ $? -eq 0 ]; then
     gateway_success_count=$((gateway_success_count+1))
     echo "Gateway $ttf_gateway_host got all expected events!"
@@ -345,8 +291,6 @@ while [ $end_test -eq 0 ]; do
   echo "Gateway success count: $gateway_success_count"
   echo "Gateway fail count:    $gateway_fail_count"
   echo "Test done!"
-  echo ""
-  echo "======================================================================"
   echo ""
   sleep 3
 done

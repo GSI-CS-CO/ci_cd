@@ -10,15 +10,9 @@
 # Get all ttf devices
 source ../probe_0001/devices.sh
 
-function align_word_count
-{
-  wc=word_count
-  wc=$(($wc%9))
-  if [ $wc -eq 0 ]; then
-    wc=$((wc+2))
-  fi
-  echo $wc
-}
+# Arguments
+snoop_interface=$1
+dm_addr=$2
 
 # Internals
 sub_line_count=0
@@ -26,12 +20,13 @@ word_count=0
 length=0
 num_of_packets=0
 header_passed=0
-state="wb_addr"
 eventid=""
 parameter=""
 timestamp=""
 rm log/raw.txt
-tcpdump -i $ttf_gateway_interface -n "src host 192.168.191.92 and dst host 255.255.255.255" -x > log/raw.txt
+tcpdump -i $snoop_interface -n "src host $dm_addr and dst host 255.255.255.255" -x > log/raw.txt
+rm log/capture.txt
+echo "tcpdump done" >> log/capture.txt; date >> log/capture.txt
 sync
 sleep 0.5
 
@@ -43,6 +38,8 @@ touch log/$ttf_gateway_host.txt
 rm log/raw_one_line.txt
 touch log/raw_one_line.txt
 
+# To be done: Speed this up
+# Transform log file format into "one line" format
 while read line
 do
   inspect=`echo $line | awk '{print $2}'`
@@ -58,6 +55,8 @@ do
     echo $line | tr '\n' ' ' | sed 's/0x....: //g' >> log/raw_one_line.txt
   fi
 done <log/raw.txt
+
+echo "oneline done" >> log/capture.txt; date >> log/capture.txt
 
 item_count=0
 frame_word=0
@@ -76,6 +75,7 @@ timestamp_hl=0
 timestamp_lh=0
 timestamp_ll=0
 
+# Parse each line for eventid, parameter and timestamp
 while read line
 do
   #echo $line
@@ -129,8 +129,13 @@ do
   item_count=0
 done <log/raw_one_line.txt
 
+echo "parser done" >> log/capture.txt; date >> log/capture.txt
+
 # Remove PPS and sort events
 cat log/$ttf_gateway_host.txt | grep -v "0xffff000000000000" > log/$ttf_gateway_host_no_pps.txt
+echo "pps remover done" >> log/capture.txt; date >> log/capture.txt
+
 sort -k1 -n log/$ttf_gateway_host_no_pps.txt > log/s_cmp_$ttf_gateway_host.txt
+echo "sort done" >> log/capture.txt; date >> log/capture.txt
 sync
 sleep 0.5
