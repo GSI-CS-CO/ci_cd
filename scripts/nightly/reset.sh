@@ -174,7 +174,7 @@ fi
 #Power cycle all the SCU connected to the power socket
 if [ "$keyword" == "scu" ]; then
 	cd $script_path
-	. ./fpga_reset.sh
+	. ./fpga_reset.sh -f $FACILITY
 	cd $egctl_path
 
 	grep -ie "SCU" $rst_list > $rst_temp
@@ -184,7 +184,7 @@ fi
 #Power cycle all the devices at once
 if [ "$keyword" == "all" ]; then
 	cd $script_path
-	. ./fpga_reset.sh
+	. ./fpga_reset.sh -f $FACILITY
 	pchalt
 	cd $egctl_path
 
