@@ -18,7 +18,7 @@ where:
     -u  which user is running on IPC (timing/gsi/root)
     -p  name of the IPC where test is being performed(tsl***)
     -d  which device you want to flash
-        Use exp/pex/vet/scu2/scu3/dm/all as options\n"
+        Use exp/pex/vet/scu/dm/all as options\n"
 
 TEMP=`getopt -o hf:u:p:d: --long help,facility:,user:,pcname:,device: -n 'reset.sh' -- "$@"`
 eval set -- "$TEMP"
