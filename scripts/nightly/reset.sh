@@ -6,7 +6,7 @@
 
 FACILITY="testing"
 
-HELP="$(basename "$0") [-h] [-f deployment target] -- script to reset Timing Receivers
+HELP="$(basename "$0") [-h] [-f deployment target] [-u user] [-p pcname] [-d device] -- script to reset Timing Receivers
 
 
 where:
@@ -14,9 +14,13 @@ where:
     -f  Timing receivers in which facility you want to reset:
         prod (production)
         testing(default)
-        cicd (continous integration)\n"
+        cicd (continous integration)
+    -u  which user is running on IPC (timing/gsi/root)
+    -p  name of the IPC where test is being performed(tsl***)
+    -d  which device you want to flash
+        Use exp/pex/vet/scu2/scu3/dm/all as options\n"
 
-TEMP=`getopt -o hf: --long help,facility: -n 'reset.sh' -- "$@"`
+TEMP=`getopt -o hf:u:p:d: --long help,facility:,user:,pcname:,device: -n 'reset.sh' -- "$@"`
 eval set -- "$TEMP"
 
 # extract options and their arguments into variables.
@@ -29,6 +33,25 @@ while true ; do
                 "") shift 2 ;;
                 *) FACILITY=$2; shift 2 ;;
             esac ;;
+
+       -u|--user)
+            case "$2" in
+                "") shift 2 ;;
+                *) username=$2; shift 2 ;;
+            esac ;;
+
+       -p|--pcname)
+            case "$2" in
+                "") shift 2 ;;
+                *) pcname=$2; shift 2 ;;
+            esac ;;
+
+       -d|--device)
+            case "$2" in
+                "") shift 2 ;;
+                *) device_name=$2; shift 2 ;;
+            esac ;;
+
        --) shift ; break ;;
         *) echo "Internal error!" ; exit 1 ;;
     esac
@@ -36,12 +59,21 @@ done
 
 function pchalt(){
 
-echo -e "\e[33mEnter the USERNAME for IPC connected to PCIe devices (ex:timing/gsi)"
-read username
-user=$username
-echo -e "\e[33mEnter the IPC name (ex:tsl0xx)"
-read pcname
-pc=$pcname
+if [ "$username" != ""  ]; then
+        user=$username
+else
+	echo -e "\e[33mEnter the USERNAME for IPC connected to PCIe devices (ex:timing/gsi)"
+	read username
+	user=$username
+fi
+
+if [ "$pcname" != ""  ]; then
+        pc=$pcname
+else
+	echo -e "\e[33mEnter the IPC name (ex:tsl0xx)"
+	read pcname
+	pc=$pcname
+fi
 echo -e "\e[91mPC supplies power to the device through PCIe slot. $pc going to HALT"
 ssh -t -t $user@$pc.acc.gsi.de 'sudo halt'
 sleep 30
@@ -119,8 +151,8 @@ done < $rst_temp
 
 }
 
-if [ "$GLOBAL_VAR1" == "1" ]; then
-	keyword=$keyword
+if [ "$device_name" != ""  ]; then
+	keyword=$device_name
 else
 	echo -e "\e[96mEnter the keyword of devices to reset"
 	echo -e "\e[33mAccepted keyword is exp,pex,vet,scu,sw,all"

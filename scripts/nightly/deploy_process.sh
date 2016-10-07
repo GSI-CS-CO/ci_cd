@@ -10,7 +10,7 @@ else
 	. ./nightly_build_programmer.sh
 fi
 
-. ./reset.sh -f cicd
+. ./reset.sh -f cicd -u timing -p tsl004 -d $keyword
 
 . ./dev_status.sh -f cicd
 
