@@ -39,6 +39,9 @@ case "$1" in
   "ping")
     ./run.sh 1 1 "test_cases/ping.xml"
     ;;
+  "endless_ping")
+    ./run.sh 0 0 "test_cases/ping.xml"
+    ;;
   *)
     echo "You have failed to specify what to do correctly!"
     echo "Available test cases are:"
@@ -49,6 +52,7 @@ case "$1" in
     echo "  - random"
     echo "  - endless_random"
     echo "  - ping"
+    echo "  - endless_ping"
     exit 1
     ;;
 esac

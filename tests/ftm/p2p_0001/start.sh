@@ -1,18 +1,17 @@
 #!/bin/bash
-set -e
 
 # Dynamic settings
 p2p_interface=eth3
-p2p_ip_addr=10.10.10.1 # sudo ifconfig eth3 10.10.10.1 
-ftm_access=dev/ttyUSB0
+p2p_ip_addr=10.10.10.1 # sudo ifconfig $p2p_interface 10.10.10.1 
+ftm_access=dev/wbm0
 ftm_schedule=../../ttf/dm_0001/test_cases/cryring_injector.xml
-ftm_ip_addr=10.10.10.2 # eb-console dev/ttyUSB0 => set ip 10.10.10.2
+ftm_ip_addr=10.10.10.2 # eb-console $ftm_access => ip set 10.10.10.2
 
 # Fixed settings
 dm_schedule_keyword="___STARTTIME___"
 dm_start_offset=0x00000000200000000
 dm_start_time=0x0
-dm_schedule_ts_name="test_schedule.xml"
+dm_schedule_ts_name="ping.xml"
 glue_path=../../ttf/dm_0001
 sub_line_count=0
 eventid=""
@@ -80,7 +79,10 @@ sleep 2
 killall tcpdump
 sleep 2
 
-rm log/host.txt
+if [ -e log/host.txt ]
+then
+  rm log/host.txt
+fi
 touch log/host.txt
 while read line
 do

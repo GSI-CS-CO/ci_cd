@@ -42,7 +42,7 @@ user=$username
 echo -e "\e[33mEnter the IPC name (ex:tsl0xx)"
 read pcname
 pc=$pcname
-echo -e "\e[91mPCIe cards are connected to IPC. $pc going to HALT"
+echo -e "\e[91mPC supplies power to the device through PCIe slot. $pc going to HALT"
 ssh -t -t $user@$pc.acc.gsi.de 'sudo halt'
 sleep 30
 }
@@ -63,6 +63,7 @@ wget $RST_DEVICE/$RST_DEV_LIST -O ./$RST_DEV_LIST
 #Temporary files that will be deleted after the reset operation
 rst_list=./$RST_DEV_LIST
 rst_temp=./rst_temp.txt
+rst_exp_pcie=./rst_exp_pcie.txt
 
 function pwr_cycle(){
 while IFS=$'\t' read -r -a pwrArray 
@@ -131,7 +132,21 @@ fi
 
 if [ "$keyword" == "exp" ]; then
 	grep -ie "EXP" $rst_list > $rst_temp
-	pwr_cycle
+	if grep -q "IPC-" $rst_temp ; then
+		grep -ie "IPC" $rst_temp > $rst_exp_pcie
+		cd $script_path
+	        pchalt
+        	cd $egctl_path
+                grep -ie "IPC" $rst_exp_pcie > $rst_temp
+		pwr_cycle
+	fi
+	grep -ie "EXP" $rst_list > $rst_temp
+	if grep -vq "IPC-" $rst_temp ; then
+		grep -ive "IPC" $rst_temp > $rst_exp_pcie
+		grep -ive "IPC" $rst_exp_pcie > $rst_temp
+               	pwr_cycle
+	fi
+rm -rf $rst_exp_pcie
 fi
 
 #Power cycle the VME Crate connected to the power socket
@@ -159,7 +174,7 @@ fi
 #Power cycle all the SCU connected to the power socket
 if [ "$keyword" == "scu" ]; then
 	cd $script_path
-	. ./fpga_reset.sh
+	. ./fpga_reset.sh -f $FACILITY
 	cd $egctl_path
 
 	grep -ie "SCU" $rst_list > $rst_temp
@@ -169,7 +184,7 @@ fi
 #Power cycle all the devices at once
 if [ "$keyword" == "all" ]; then
 	cd $script_path
-	. ./fpga_reset.sh
+	. ./fpga_reset.sh -f $FACILITY
 	pchalt
 	cd $egctl_path
 
