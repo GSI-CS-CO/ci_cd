@@ -59,13 +59,13 @@ done < $reset_temp
 if [ $# == 2 ]; then
         reset_add=$(eb-find udp/$2 0x0000000000000651 0x3a362063)
         echo "RESET address= $reset_add for $1 having IP $2"
-        sudo eb-write dev/$2 $reset_add/4 0xDEADBEEF
+        sudo eb-write udp/$2 $reset_add/4 0xDEADBEEF
 	if [ $? == 0 ]; then
         	echo -e "\e[34mReset complete"
 	else
 		echo -e "\e[31mCould not perform eb-write to Reset device"
 	fi
-
+rm $reset_list
 elif [ $# == 0 ]; then
 
 	if [ "$keyword" == "scu" ] || [ "$keyword" == "all" ]; then
