@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # Create/change to workspace directory
 if [ -d workspace ]; then
   mkdir workspace
