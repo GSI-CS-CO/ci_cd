@@ -6,7 +6,7 @@ device="dut"
 # Select test case
 case "$1" in
   "short")
-    timeout 30m ./test.py $device 5 50
+    timeout 30m ./test.py $device 50 5
     ;;
   "log")
     timeout 30m ./test.py $device 10 1000
