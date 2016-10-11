@@ -194,7 +194,7 @@ class IOMeasurement(object):
   def compare(self, mode, param1, param2):
     # Calculate or get the phases
     if mode == 0:
-      high_phase_cmp = (int((1.0/int(param1))*1000000000.0))/2
+      high_phase_cmp = int((((1.0/int(param1))*1000000000.0))/2)
       low_phase_cmp = int(high_phase_cmp)
     else:
       high_phase_cmp = int(param1)
@@ -233,13 +233,16 @@ def main():
   cmdtotal = len(sys.argv)
   cmdargs = str(sys.argv)
   app_name = str(sys.argv[0])
-  cmp_type = 0
   high_phase_or_frequency = 0
+  cmp_type = 0
   low_phase = 0
   result = 0
+  plot = 0
   
   # Plausibility check
-  if cmdtotal == 3: # Compare frequency
+  if cmdtotal == 2: # Just plot
+    plot = 1
+  elif cmdtotal == 3: # Compare frequency
     high_phase_or_frequency = str(sys.argv[2])
   elif cmdtotal == 4: # Compare phases
     high_phase_or_frequency = str(sys.argv[2])
@@ -250,6 +253,8 @@ def main():
     print cmdtotal
     print ""
     print "Usage:"
+    print "%s {log_file_name.txt} to plot the edges" % app_name
+    print "or"
     print "%s {log_file_name.txt} {expected frequency [Hz]}" % app_name
     print "or"
     print "%s {log_file_name.txt} {expected high and low phase [ns]}" % app_name    
@@ -261,7 +266,8 @@ def main():
   # Evaluate log file
   data = IOMeasurement(log_file_name)
   data.display()
-  data.generate_plot(0)
+  if plot == 1:
+    data.generate_plot(1)
   result = data.compare(cmp_type, high_phase_or_frequency, low_phase)
   
   # Done
