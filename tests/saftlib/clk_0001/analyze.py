@@ -10,13 +10,16 @@
 #                  1 8231
 #
 # Note: Number of falling and rising edges must be equal.
+# 
+# Issue(s):
+# Problem: ImportError: No module named matplotlib.pyplot
+# Solution: sudo apt-get install python-matplotlib
 
 # Imports
 # ==================================================================================================
 import sys
 import numpy as np
 import matplotlib.pyplot as plt
-from scipy import fft, arange
 from numpy import sin, linspace, pi
 from pylab import plot, show, title, xlabel, ylabel, subplot
 
@@ -43,7 +46,7 @@ class IOMeasurement(object):
   high_phases             =[]
   timestamps              =[]
   timestamps_diff         =[]
-  allowed_uncertainty_ns  = 1
+  allowed_uncertainty_ns  = 3
   
   # Initialize Class
   # ------------------------------------------------------------------------------------------------
@@ -198,20 +201,29 @@ class IOMeasurement(object):
       low_phase_cmp = int(param2)
       
     # Check if phases are fine
-    if self.shortest_low_phase <= (low_phase_cmp-self.allowed_uncertainty_ns):
+    if self.shortest_low_phase < (low_phase_cmp-self.allowed_uncertainty_ns):
+      print "%d" % self.shortest_low_phase
+      print "%d" % (low_phase_cmp-self.allowed_uncertainty_ns)
       print "Low phase to short!"
       return 1
-    if self.highest_low_phase >= (low_phase_cmp+self.allowed_uncertainty_ns):
+    if self.longest_low_phase > (low_phase_cmp+self.allowed_uncertainty_ns):
+      print "%d" % self.longest_low_phase
+      print "%d" % (low_phase_cmp+self.allowed_uncertainty_ns)
       print "Low phase to long!"
       return 1
-    if self.shortest_high_phase <= (high_phase_cmp-self.alhighed_uncertainty_ns):
+    if self.shortest_high_phase < (high_phase_cmp-self.allowed_uncertainty_ns):
+      print "%d" % self.shortest_high_phase
+      print "%d" % (high_phase_cmp-self.alhighed_uncertainty_ns)
       print "High phase to short!"
       return 1
-    if self.highest_high_phase >= (high_phase_cmp+self.alhighed_uncertainty_ns):
+    if self.longest_high_phase > (high_phase_cmp+self.allowed_uncertainty_ns):
+      print "%d" % self.longest_low_phase
+      print "%d" % (low_phase_cmp+self.allowed_uncertainty_ns)
       print "High phase to long!"
       return 1
     
     # Results are fine
+    print "Test case successfully finished!"
     return 0
   
 # Main
