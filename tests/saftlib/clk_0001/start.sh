@@ -6,12 +6,16 @@ function fixed_test()
   # Pattern <frequeny Hz> <newline> <high phase ns> <low phase ns>
   timeout 2m ./run.sh 125
   timeout 2m ./run.sh 4000000 4000000
+  timeout 2m ./run.sh 6000000 2000000
   timeout 2m ./run.sh 250
   timeout 2m ./run.sh 2000000 2000000
+  timeout 2m ./run.sh 1000000 3000000
   timeout 2m ./run.sh 500
   timeout 2m ./run.sh 1000000 1000000
+  timeout 2m ./run.sh 100 1999900
   timeout 2m ./run.sh 1000
   timeout 2m ./run.sh 500000 500000
+  timeout 2m ./run.sh 999900 100
 }
 
 function short_test()
