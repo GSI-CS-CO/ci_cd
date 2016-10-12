@@ -8,7 +8,7 @@ case "$1" in
   "short")
     timeout 30m ./test.py $device 50 5
     ;;
-  "log")
+  "long")
     timeout 30m ./test.py $device 10 1000
     timeout 30m ./test.py $device 100 100
     timeout 30m ./test.py $device 1000 10
