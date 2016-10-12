@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Device
-device="dut"
+device=$(cat /tmp/saftlib_test | grep name | awk {'print $2}')
 
 # Select test case
 case "$1" in

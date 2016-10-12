@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # Settings
-clock_io="IO2"
-measure_io="IO3"
-device="dut"
+clock_io=$(cat /tmp/saftlib_test | grep output | awk {'print $2}')
+measure_io=$(cat /tmp/saftlib_test | grep input | awk {'print $2}')
+device=$(cat /tmp/saftlib_test | grep name | awk {'print $2}')
 
 # Internals
 max_samples=5000
@@ -12,6 +12,7 @@ first_edge=0
 found_edge=0
 file_iter_count=0
 sample_count=0
+config_ios=0
 mode=0
 
 # Get arguments
@@ -31,12 +32,13 @@ fi
 echo "Clock generator test started..."
 sample_count=0
 file_iter_count=0
- 
-echo "Configuring $clock_io as output..."
-saft-io-ctl $device -n $clock_io -o 1 -t 0
 
-echo "Configuring $measure_io as input..."
-saft-io-ctl $device -n $measure_io -o 0 -t 1
+if [ $config_ios -eq 1 ]; then
+  echo "Configuring $clock_io as output..."
+  saft-io-ctl $device -n $clock_io -o 1 -t 0
+  echo "Configuring $measure_io as input..."
+  saft-io-ctl $device -n $measure_io -o 0 -t 1
+fi
 
 echo "Starting measurement..."
 if [ -f log/raw.txt ]; then
@@ -65,8 +67,10 @@ printf "Test finished!\n"
 echo "Stopping clock..."
 saft-clk-gen $device -n $clock_io -s
 
-echo "Configuring $measure_io as input..."
-saft-io-ctl $device -n $clock_io -o 0 -t 1
+if [ $config_ios -eq 1 ]; then
+  echo "Configuring $measure_io as input again..."
+  saft-io-ctl $device -n $clock_io -o 0 -t 1
+fi
 
 echo "Stopping measurement..."
 kill $sample_pid >/dev/null 2>&1
