@@ -33,3 +33,5 @@ do
         fi
 	let i++
 done
+
+rm $expIO
