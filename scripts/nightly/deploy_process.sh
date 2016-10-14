@@ -2,7 +2,7 @@
 
 . ./dev_status.sh -f cicd
 if [ "$GLOBAL_VAR2" == "1" ]; then
-	for i in 1 2 3
+	for i in 1 2 
 	do
 		. ./flash.sh -f cicd -d $keyword 
 	done
@@ -12,7 +12,7 @@ fi
 
 . ./reset.sh -f cicd -u timing -p tsl004 -d $keyword
 
-. ./dev_status.sh -f cicd
+. ./dev_status.sh -f cicd 
 
 centos_nfs_path=/common/usr/nfs/centos7
 debian_nfs_path=/common/usr/nfs/debian_316
