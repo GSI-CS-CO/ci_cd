@@ -2,6 +2,7 @@
 
 exp_IO1_log1=./exp_IO1_log1.log
 exp_IO1_log=./exp_IO1_log.log
+pex_IO1_log1=./pex_IO1_log1.log
 
 saft-io-ctl exp -w
 saft-io-ctl pex -w
@@ -37,3 +38,4 @@ if [ "$exp_IO1_count" -ge "60" ]; then
 	sed '203,$d' $exp_IO1_log1 > $exp_IO1_log
 	rm $exp_IO1_log1
 fi
+rm $pex_IO1_log1
