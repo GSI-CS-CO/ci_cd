@@ -25,6 +25,14 @@ do
 		echo
 	fi
 
+	if [ "${port[i]}" == "IO2" ] && [ "${port[i+2]}" == "IO1" ] ; then
+                difference=$(( ${var[i+2]} - ${var[i]}))
+                num=`echo "obase=10; $difference" | bc`
+                echo "${var[i+2]} ${port[i+2]} ---- ${var[i]} ${port[i]} Diff= $num ns Switch vs pex"
+                echo
+        fi
+
+
 	if [ "${port[i]}" == "IO3" ] && [ "${port[i+1]}" == "IO1" ] ; then
                 difference=$(( ${var[i+1]} - ${var[i]}))
                 num=`echo "obase=10; $difference" | bc`
