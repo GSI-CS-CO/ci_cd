@@ -28,7 +28,7 @@ saft-io-ctl exp -s > $exp_IO1_log1 &
 ssh root@scuxl0097.acc.gsi.de '
 saft-io-ctl baseboard -w
 saft-pps-gen baseboard -s &
-sleep 20
+sleep 60
 
 echo $!
 kill $!

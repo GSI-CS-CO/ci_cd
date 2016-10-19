@@ -51,7 +51,7 @@ do
 		echo
 	fi
 
-	if [ "${port[i]}" == "IO2" ] && [ "${port[i+2]}" == "IO1" ] ; then
+	if [ "${port[i]}" == "IO2" ] && [ "${port[i+2]}" == "IO1" ] && [ "${port[i+1]}" != "IO1" ]; then
                 difference=$(( ${var[i+2]} - ${var[i]}))
                 num=$((10#$difference))
 #Appending the value to an array
@@ -70,6 +70,16 @@ do
                 echo "${var[i+1]} ${port[i+1]} ---- ${var[i]} ${port[i]} Diff= $num ns Switch vs scu"
                 echo
         fi
+
+        if [ "${port[i]}" == "IO3" ] && [ "${port[i+2]}" == "IO1" ] && [ "${port[i+1]}" != "IO1" ]; then
+                difference=$(( ${var[i+2]} - ${var[i]}))
+                num=$((10#$difference))
+#Appending the value to an array
+                newnum+=( $num )
+                echo "${var[i+2]} ${port[i+2]} ---- ${var[i]} ${port[i]} Diff= $num ns Switch vs scu"
+                echo
+        fi
+
 #Increment count value to check all the values from the log file
 	let i++
 done
@@ -82,7 +92,7 @@ do
 done
 
 if [ "$j" != "0" ]; then
-echo "Difference greater than 200 ns exists" | mail -s “pps_test_delay_error” a.suresh@gsi.de
+echo "PPS test result: Time difference between switch and timing receiver greater than 200 ns exists" | mail -s “pps_test_delay_error” a.suresh@gsi.de
 fi
 
 #Remove the log file after all the operation is complete
