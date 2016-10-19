@@ -1,10 +1,10 @@
 #!/bin/bash
 
 # Devices and hosts under test
-ttf_pexaria_names=(pexaria5_27t pexaria5_41t pexaria5_15t pexaria5_14t pexaria5_43t)
-ttf_pexaria_ipv4=(192.168.191.91 192.168.191.110 192.168.191.79 192.168.191.78 192.168.191.112)
-ttf_pexaria_dev_ids=(dev/wbm0 dev/wbm1 dev/wbm2 dev/wbm3 dev/wbm4 dev/wbm5)
-ttf_pexaria_hosts=(tsl011 tsl011 tsl011 tsl011 tsl011 tsl011)
+ttf_pexaria_names=(pexaria5_27t pexaria5_41t pexaria5_15t pexaria5_43t)
+ttf_pexaria_ipv4=(192.168.191.91 192.168.191.110 192.168.191.79 192.168.191.112)
+ttf_pexaria_dev_ids=(dev/wbm0 dev/wbm1 dev/wbm2 dev/wbm3)
+ttf_pexaria_hosts=(tsl011 tsl011 tsl011 tsl011)
 ttf_pexaria_user=root
 
 ttf_scu_names=(scuxl0001t scuxl0099t scuxl0007t scuxl0085t scuxl0088t scuxl0133t)
