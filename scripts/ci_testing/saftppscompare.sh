@@ -31,6 +31,7 @@ i=0
 k=0
 j=0
 
+
 #Calculating time difference between network switch and timing receivers
 # Both Pexarria and SCU3 should refer to the PPS time stamp value from network switch
 #Therefore, the difference is calculated between Pexarria (IO2) and network switch (IO1) and
@@ -41,42 +42,42 @@ while [[ $i -lt $n ]]
 do
 
 #Calculating the difference in time between network switch and Pexarria
-	if [ "${port[i]}" == "IO2" ] && [ "${port[i+1]}" == "IO1" ] ; then
+	if [ "${port[i]}" == $ref2 ] && [ "${port[i+1]}" == $ref1 ] ; then
 		difference=$(( ${var[i+1]} - ${var[i]}))
 #Converting the hexadecimal value to decimal value
 		num=$((10#$difference))
 #Appending the value to an array
 		newnum+=( $num )
-        	echo "${var[i+1]} ${port[i+1]} ---- ${var[i]} ${port[i]} Diff= $num ns Switch vs pex"
+        	echo -e "\e[34m${var[i+1]} ${port[i+1]} ---- ${var[i]} ${port[i]} Diff= $num ns $device1 vs $device2"
 		echo
 	fi
 
-	if [ "${port[i]}" == "IO2" ] && [ "${port[i+2]}" == "IO1" ] && [ "${port[i+1]}" != "IO1" ]; then
+	if [ "${port[i]}" == $ref2 ] && [ "${port[i+2]}" == $ref1 ] && [ "${port[i+1]}" != $ref1 ]; then
                 difference=$(( ${var[i+2]} - ${var[i]}))
                 num=$((10#$difference))
 #Appending the value to an array
 		newnum+=( $num )
-                echo "${var[i+2]} ${port[i+2]} ---- ${var[i]} ${port[i]} Diff= $num ns Switch vs pex"
+                echo -e "\e[34m${var[i+2]} ${port[i+2]} ---- ${var[i]} ${port[i]} Diff= $num ns $device1 vs $device2"
                 echo
         fi
 
 #Calculating the difference in time between network switch and SCU3
-	if [ "${port[i]}" == "IO3" ] && [ "${port[i+1]}" == "IO1" ] ; then
+	if [ "${port[i]}" == $ref3 ] && [ "${port[i+1]}" == $ref1 ] ; then
                 difference=$(( ${var[i+1]} - ${var[i]}))
 #Converting the hexadecimal value to decimal value
                 num=$((10#$difference))
 #Appending the value to an array
 		newnum+=( $num )
-                echo "${var[i+1]} ${port[i+1]} ---- ${var[i]} ${port[i]} Diff= $num ns Switch vs scu"
+                echo -e "\e[93m${var[i+1]} ${port[i+1]} ---- ${var[i]} ${port[i]} Diff= $num ns $device1 vs $device3"
                 echo
         fi
 
-        if [ "${port[i]}" == "IO3" ] && [ "${port[i+2]}" == "IO1" ] && [ "${port[i+1]}" != "IO1" ]; then
+        if [ "${port[i]}" == $ref3 ] && [ "${port[i+2]}" == $ref1 ] && [ "${port[i+1]}" != $ref1 ]; then
                 difference=$(( ${var[i+2]} - ${var[i]}))
                 num=$((10#$difference))
 #Appending the value to an array
                 newnum+=( $num )
-                echo "${var[i+2]} ${port[i+2]} ---- ${var[i]} ${port[i]} Diff= $num ns Switch vs scu"
+                echo -e "\e[93m${var[i+2]} ${port[i+2]} ---- ${var[i]} ${port[i]} Diff= $num ns $device1 vs $device3"
                 echo
         fi
 
