@@ -9,6 +9,7 @@ schedule_ts="pps_ts.xml"
 dm_schedule_keyword="___STARTTIME___"
 dm_start_offset=0x00000000050000000
 dm_start_time=0x0
+period=1000000000
 
 # Start or stop data master
 function control_data_master()
@@ -22,6 +23,7 @@ function control_data_master()
     dm_time=`ftm-ctl $ttf_data_master -t | grep "ECA TIME" | cut -c 32-49`
     dm_time="$(($dm_time+0))" # To dec
     dm_start_time="$(($dm_time+$dm_start_offset))" # Add offset
+    dm_start_time="$(((dm_start_time+period+period-1)/period*period))" # Round up to the next second
     echo $dm_start_time > log/start_time.txt
     # Get right start time in the schedule
     sed -i "s/$dm_schedule_keyword/$dm_start_time/g" "log/$schedule_ts"
