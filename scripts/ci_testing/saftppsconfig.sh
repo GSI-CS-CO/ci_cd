@@ -15,16 +15,17 @@ pex_IO1_log1=./pex_IO1_log1.log
 expIOtemp1=./exp_IO1_log.log1
 expIOtemp2=./exp_IO1_log.log2
 
-#Devices that are connected to the IO ports of Exploder5a_19t
 #Network switch PPS signal port connected to IO1 of Exploder
 #Difference in time is calculated with this signal as reference.
 ref1="IO1"
-device1="Network switch"
 
-#Timing receiver connected to IO2 of Exploder
-ref2="IO2"
-device2="pexaria5_40t"
+#Available ports in Exploder5a_19t
+ref=( IO1 IO2 IO3 IO4 IO5 IO6 IO7 IO8 )
 
-#Timing receiver connected to IO3 of Exploder
-ref3="IO3"
-device3="scuxl0097t"
+#Devices that are connected to the IO ports of Exploder5a_19t
+#in the order from port 1 to 8
+dev=( Nw_switch pexaria5_40t scuxl0097t no_device no_device no_device no_device no_device )
+
+#Email address to send error information
+#Add addresses by giving a space between each email address
+mail="a.suresh@gsi.de"
