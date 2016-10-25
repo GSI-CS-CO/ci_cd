@@ -26,75 +26,100 @@ var=( $(awk '{print $6}' $exp_IO1_log) )
 
 #variable n defines the length of the array "var"
 n=${#var[@]}
+
 #Initial value for variables
 i=0
 k=0
 j=0
 
+#Temporary files to store intermediate results. These files are deleted after the test is complete.
+temp_file=./check.txt
+temp_file1=./check1.txt
 
 #Calculating time difference between network switch and timing receivers
-# Both Pexarria and SCU3 should refer to the PPS time stamp value from network switch
-#Therefore, the difference is calculated between Pexarria (IO2) and network switch (IO1) and
+#The timing receivers refer to the PPS time stamp value from network switch
+#Currently, the difference is calculated between Pexarria (IO2) and network switch (IO1) and
 #SCU3 (IO3) and network switch (IO1) 
 
-#Conditional check. Stay inside the loop until variable 'i' is less than array length
-while [[ $i -lt $n ]]
+for (( i=0; i<=$n; i++ ))
 do
-
-#Calculating the difference in time between network switch and Pexarria
-	if [ "${port[i]}" == $ref2 ] && [ "${port[i+1]}" == $ref1 ] ; then
-		difference=$(( ${var[i+1]} - ${var[i]}))
-#Converting the hexadecimal value to decimal value
-		num=$((10#$difference))
-#Appending the value to an array
-		newnum+=( $num )
-        	echo -e "\e[34m${var[i+1]} ${port[i+1]} ---- ${var[i]} ${port[i]} Diff= $num ns $device1 vs $device2"
-		echo
+	if [ "${port[i]}" == $ref1 ]; then
+		j="$(($i-1))"
+		for (( j="$(($i-1))"; j>0; j-- ))
+		do
+			if [ "${port[j]}" == $ref1 ]; then
+				j=0
+			else
+				difference=$(( ${var[i]} - ${var[j]}))
+				num=$((10#$difference))
+				newnum+=( $num )
+				echo "${var[i]} ${port[i]} ---- ${var[j]} ${port[j]} Diff= $num ns" >> $temp_file
+			fi
+		done
 	fi
-
-	if [ "${port[i]}" == $ref2 ] && [ "${port[i+2]}" == $ref1 ] && [ "${port[i+1]}" != $ref1 ]; then
-                difference=$(( ${var[i+2]} - ${var[i]}))
-                num=$((10#$difference))
-#Appending the value to an array
-		newnum+=( $num )
-                echo -e "\e[34m${var[i+2]} ${port[i+2]} ---- ${var[i]} ${port[i]} Diff= $num ns $device1 vs $device2"
-                echo
-        fi
-
-#Calculating the difference in time between network switch and SCU3
-	if [ "${port[i]}" == $ref3 ] && [ "${port[i+1]}" == $ref1 ] ; then
-                difference=$(( ${var[i+1]} - ${var[i]}))
-#Converting the hexadecimal value to decimal value
-                num=$((10#$difference))
-#Appending the value to an array
-		newnum+=( $num )
-                echo -e "\e[93m${var[i+1]} ${port[i+1]} ---- ${var[i]} ${port[i]} Diff= $num ns $device1 vs $device3"
-                echo
-        fi
-
-        if [ "${port[i]}" == $ref3 ] && [ "${port[i+2]}" == $ref1 ] && [ "${port[i+1]}" != $ref1 ]; then
-                difference=$(( ${var[i+2]} - ${var[i]}))
-                num=$((10#$difference))
-#Appending the value to an array
-                newnum+=( $num )
-                echo -e "\e[93m${var[i+2]} ${port[i+2]} ---- ${var[i]} ${port[i]} Diff= $num ns $device1 vs $device3"
-                echo
-        fi
-
-#Increment count value to check all the values from the log file
-	let i++
 done
 
-for k in "${newnum[@]}"
+#Retaining all the difference values less than 1500 ns.
+#Other values are discarded
+cat $temp_file | awk ' $7 <= 1500 ' > $temp_file1
+
+#Referring to the IO ports to get the device name
+port1=( $(awk '{print $2}' $temp_file1) )
+port2=( $(awk '{print $5}' $temp_file1) )
+
+#Referring to the hexadecimal time value of PPS signal generation
+timediff1=( $(awk '{print $1}' $temp_file1) )
+timediff2=( $(awk '{print $4}' $temp_file1) )
+
+#Referring to the time difference value
+value=( $(awk '{print $7}' $temp_file1) )
+
+#Length of the array
+m=${#value[@]}
+
+#Initial value for variables
+a=0
+b=0
+
+#Loop to get the device name by checking the respective port name.
+#The loop will get the device name from the array of device names.
+#The order should be same as the port order. Refer saftppsconfig file
+for (( a=0; a<$m; a++ ))
 do
-    if [ "$k" -ge "200" ] ; then
-        let j++
-    fi
+	for (( b=0; b<8; b++ ))
+	do
+		if [ "${port1[a]}" == "${ref[b]}" ]; then
+        		printf "${dev[b]} vs "
+	                for (( b=0; b<8; b++ ))
+        	        do
+                		if [ "${port2[a]}" == "${ref[b]}" ]; then
+                        		printf "${dev[b]} "
+	                        fi
+        	        done
+	        fi
+	done
+	echo -e "\e[93m${timediff1[a]} ${port1[a]} ---- ${timediff2[a]} ${port2[a]} Diff= ${value[a]} ns"
 done
 
-if [ "$j" != "0" ]; then
-echo "PPS test result: Time difference between switch and timing receiver greater than 200 ns exists" | mail -s “pps_test_delay_error” a.suresh@gsi.de
+#Initial value for variables
+l=0
+p=0
+
+#Loop to check if the any time difference value is greater than 200ns
+for (( l=0; l<=$m; l++ ))
+do
+	if [[ ${value[l]} -ge 200 ]]; then
+		p="$(($p+1))"
+	fi
+done
+
+#If a value greater than 200ns exists, then send an error email to the recipients
+#mentioned in the saftppsconfig file
+if [[ $p -gt 0 ]]; then
+	echo "PPS test result: Time difference between switch and timing receiver greater than 200 ns exists" | mail -s “pps_test_delay_error” $mail
 fi
 
-#Remove the log file after all the operation is complete
-rm $exp_IO1_log
+#Remove the temporary files after all the operation is complete 
+rm $exp_IO1_log 
+rm $temp_file 
+rm $temp_file1
