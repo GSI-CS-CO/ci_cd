@@ -15,10 +15,6 @@ dev2_log1=./dev2_log1.log
 dev1temp1=./dev1temp1.log1
 dev1temp2=./dev1temp2.log2
 
-#Email address to send error information
-#Add addresses by giving a space between each email address
-mail="a.suresh@gsi.de"
-
 #Maximum acceptable difference in time
 maxdiff=200
 
