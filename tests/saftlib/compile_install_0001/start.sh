@@ -36,7 +36,7 @@ case "$1" in
     git clean -xfd .
     git checkout $development_branch
     ./autogen.sh
-    ./configure --enable-maintainer-mode --prefix=/usr --sysconfdir=/etc
+    ./configure --enable-maintainer-mode --prefix=/usr/local --sysconfdir=/etc
     make clean
     make
     sudo make install
