@@ -27,6 +27,7 @@ function control_data_master()
     echo $dm_start_time > log/start_time.txt
     # Get right start time in the schedule
     sed -i "s/$dm_schedule_keyword/$dm_start_time/g" "log/$schedule_ts"
+    ftm-ctl $ttf_data_master -c $ttf_data_master_pps_core_id stop
     ftm-ctl $ttf_data_master -c $ttf_data_master_pps_core_id preptime 500000
     ftm-ctl $ttf_data_master -c $ttf_data_master_pps_core_id put log/$schedule_ts
     ftm-ctl $ttf_data_master -c $ttf_data_master_pps_core_id swap

@@ -16,12 +16,14 @@ duts=0
 gateway_fail_count=0
 gateway_success_count=0
 gateway_capture_done=0
+found_late_count=0
+found_early_count=0
 
 # Data master settings
 schedule="schedule.xml"
 schedule_ts="schedule_ts.xml"
 dm_schedule_keyword="___STARTTIME___"
-dm_start_offset=0x00000000200000000
+dm_start_offset=0x00000000300000000
 dm_start_time=0x0
 
 # Stop/start logging ($1 = 0/1 (stop/start_and_configure)
@@ -92,10 +94,22 @@ function compare_log_files()
     # Sort file by time stamp
     sort -k1 -n log/temp_$i.txt > log/s_cmp_$i.txt
     rm log/temp_$i.txt
+    # Check for late for early events
+    grep -rn "late" log/snooped_events_$i.txt >> /dev/null
+    if [ $? -ne 1 ]; then
+      echo "Warning: Found late event(s) @ $i!"
+      found_late_count=$((found_late_count+1))
+    fi
+    grep -rn "early" log/snooped_events_$i.txt >> /dev/null
+    if [ $? -ne 1 ]; then
+      echo "Warning: Found early event(s) @ $i!"
+      found_early_count=$((found_early_count+1))
+    fi
   done
   
   # Compare log files
   for i in ${devices[@]}; do
+    sleep 1
     cmp log/s_cmp_$i.txt log/e_cmp.txt
     if [ $? -ne 0 ]; then
       echo "Device $i missed or got different events!"
@@ -143,6 +157,8 @@ function start_data_master()
   sed -i "s/$dm_schedule_keyword/$dm_start_time/g" "log/$schedule_ts"
   
   # Finally set up the Data Master
+  ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id stop
+  echo "DM Stop"
   ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id preptime 500000
   echo "DM Set Preptime 500000..."
   ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id put log/$schedule_ts
@@ -238,7 +254,7 @@ while [ $end_test -eq 0 ]; do
   killall tcpdump
   sleep 5
   
-  #Sort event lists
+  # Sort event lists
   sort -k1 -n log/expected_events.txt > log/e_cmp.txt
   
   # Finally compare the lists
@@ -248,7 +264,6 @@ while [ $end_test -eq 0 ]; do
   echo "Waiting for capture process (on gateway, this will take a minute)..."
   gateway_capture_done=0
   while [ $gateway_capture_done -eq 0 ]; do
-    #ps -ax | grep capture_dev.sh
     ps -ax | grep capture_dev.sh | grep -v "grep" >> /dev/null
     if [ $? -eq 1 ]; then
       gateway_capture_done=1
@@ -287,6 +302,8 @@ while [ $end_test -eq 0 ]; do
   echo "Iteration count:       $iter_count"
   echo "Devices under test:    $duts"
   echo "Success count:         $success_count"
+  echo "Late count:            $found_late_count"
+  echo "Early count:           $found_early_count"
   echo "Fail count:            $fail_count"
   echo "Gateway success count: $gateway_success_count"
   echo "Gateway fail count:    $gateway_fail_count"
