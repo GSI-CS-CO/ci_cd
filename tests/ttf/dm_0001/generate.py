@@ -38,7 +38,29 @@ def main():
   rep      = rnd.randint(1, max_rep)
   max_offs = period - 1
   offs_lst = []
-
+  
+  
+  # Create random messages
+  rnd_fid = []
+  rnd_gid = []
+  rnd_evtno = []
+  rnd_sid = []
+  rnd_bpid = []
+  rnd_par = []
+  rnd_tef = []
+  rnd_offs = []
+  for x in range(0, events):
+    rnd_fid.append(rnd.randint(0, max_fid))
+    rnd_gid.append(rnd.randint(0, max_gid))
+    rnd_evtno.append(rnd.randint(0, max_evtno))
+    rnd_sid.append(rnd.randint(0, max_sid))
+    rnd_bpid.append(rnd.randint(0, max_bpid))
+    rnd_par.append(rnd.randint(0, max_par))
+    rnd_tef.append(rnd.randint(0, max_tef))
+    rnd_offs.append(rnd.randint(0, max_offs))
+  # Sort offsets
+  rnd_offs.sort()
+    
   # Output parameters
   print "Events:      " + str(events)
   print "Repetitions: " + str(rep)
@@ -105,52 +127,34 @@ def main():
   
   chain.appendChild(metax)
   
-  # Create random messages
+  # Print generated random messages
   for x in range(0, events):
-    rnd_fid = rnd.randint(0, max_fid)
-    rnd_gid = rnd.randint(0, max_gid)
-    rnd_evtno = rnd.randint(0, max_evtno)
-    rnd_sid = rnd.randint(0, max_sid)
-    rnd_bpid = rnd.randint(0, max_bpid)
-    rnd_par = rnd.randint(0, max_par)
-    rnd_tef = rnd.randint(0, max_tef)
-    rnd_offs = rnd.randint(0, max_offs)
-    
-    # Avoid repeating offset values
-    while (rnd_offs in offs_lst):
-      print "old rnd_offs"
-      print rnd_offs
-      rnd_offs = rnd.randint(0, max_offs)
-      print "new rnd_offs:"
-      print rnd_offs
-    offs_lst.append(rnd_offs)
-    
     msg = doc.createElement('msg')
   
     inner_id = doc.createElement('id')
     
     p = doc.createElement('FID')
-    text = doc.createTextNode(str(rnd_fid))
+    text = doc.createTextNode(str(rnd_fid[x]))
     p.appendChild(text)
     inner_id.appendChild(p)
     
     p = doc.createElement('GID')
-    text = doc.createTextNode(str(rnd_gid))
+    text = doc.createTextNode(str(rnd_gid[x]))
     p.appendChild(text)
     inner_id.appendChild(p)
     
     p = doc.createElement('EVTNO')
-    text = doc.createTextNode(str(rnd_evtno))
+    text = doc.createTextNode(str(rnd_evtno[x]))
     p.appendChild(text)
     inner_id.appendChild(p)
     
     p = doc.createElement('SID')
-    text = doc.createTextNode(str(rnd_sid))
+    text = doc.createTextNode(str(rnd_sid[x]))
     p.appendChild(text)
     inner_id.appendChild(p)
     
     p = doc.createElement('BPID')
-    text = doc.createTextNode(str(rnd_bpid))
+    text = doc.createTextNode(str(rnd_bpid[x]))
     p.appendChild(text)
     inner_id.appendChild(p)
     
@@ -159,17 +163,17 @@ def main():
     chain.appendChild(msg)
     
     p = doc.createElement('par')
-    text = doc.createTextNode(str(format(rnd_par, '#018x')))
+    text = doc.createTextNode(str(format(rnd_par[x], '#018x')))
     p.appendChild(text)
     msg.appendChild(p)
     
     p = doc.createElement('tef')
-    text = doc.createTextNode(str(rnd_tef))
+    text = doc.createTextNode(str(rnd_tef[x]))
     p.appendChild(text)
     msg.appendChild(p)
     
     p = doc.createElement('offs')
-    text = doc.createTextNode(str(rnd_offs))
+    text = doc.createTextNode(str(rnd_offs[x]))
     p.appendChild(text)
     msg.appendChild(p)
     
