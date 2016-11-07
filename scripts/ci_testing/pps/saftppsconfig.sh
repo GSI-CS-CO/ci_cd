@@ -16,7 +16,7 @@ dev1temp1=./dev1temp1.log1
 dev1temp2=./dev1temp2.log2
 
 #Maximum acceptable difference in time
-maxdiff=200
+export maxdiff=200
 
 #Waiting time for the pps signal generation
 sleep_time=60

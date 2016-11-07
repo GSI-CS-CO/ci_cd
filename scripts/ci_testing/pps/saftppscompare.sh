@@ -114,15 +114,13 @@ do
 done
 
 #Remove the temporary files after all the operation is complete 
-#rm $dev1_log
+rm $dev1_log
 rm $temp_file
-#rm $temp_file1
+rm $temp_file1
 
 #If a value greater than 200ns exists, then send an error email to the recipients
 #mentioned in the saftppsconfig file
 if [[ $p -gt 0 ]]; then
-#	echo "PPS test result: Time difference between switch and timing receiver greater than $maxdiff ns exists"
-#	exit 1
 	temp_count=1
 else
 	temp_count=0
