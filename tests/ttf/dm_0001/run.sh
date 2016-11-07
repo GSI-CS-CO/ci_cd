@@ -99,11 +99,13 @@ function compare_log_files()
     if [ $? -ne 1 ]; then
       echo "Warning: Found late event(s) @ $i!"
       found_late_count=$((found_late_count+1))
+      test_failed=1
     fi
     grep -rn "early" log/snooped_events_$i.txt >> /dev/null
     if [ $? -ne 1 ]; then
       echo "Warning: Found early event(s) @ $i!"
       found_early_count=$((found_early_count+1))
+      test_failed=1
     fi
   done
   
@@ -229,6 +231,7 @@ else
 fi
 
 while [ $end_test -eq 0 ]; do
+  test_failed=0
   echo "Date:"
   date
   echo ""
@@ -268,6 +271,7 @@ while [ $end_test -eq 0 ]; do
     if [ $? -eq 1 ]; then
       gateway_capture_done=1
       echo "Gateway $ttf_gateway_host capture process done!"
+      sleep 1
     fi
   done
   
@@ -298,7 +302,16 @@ while [ $end_test -eq 0 ]; do
     fi
   fi
   
+  # Archive all tests artefacts (in case an error occured)
+  if [ $test_failed -ne 0 ]; then
+    echo "Creating archive..."
+    tar_name="$(date '+%y-%m-%d-_-%H-%M-%S').tar.gz"
+    tar -zcvf $tar_name log
+    mv $tar_name archive
+  fi
+  
   # Small report
+  echo ""
   echo "Iteration count:       $iter_count"
   echo "Devices under test:    $duts"
   echo "Success count:         $success_count"
