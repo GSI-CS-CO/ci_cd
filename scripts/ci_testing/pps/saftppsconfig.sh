@@ -19,10 +19,10 @@ dev1temp2=./dev1temp2.log2
 export maxdiff=200
 
 #Waiting time for the pps signal generation
-sleep_time=60
+sleep_time=300
 
 #Number of lines from the output of pps signal generation to be considered for time difference calculation
-line_num=403
+line_num=2003
 
 #Case statement to check if any configuration is passed as an argument
 if [ "$1" != "" ]; then
