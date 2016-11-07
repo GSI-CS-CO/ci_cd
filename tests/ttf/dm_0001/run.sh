@@ -282,6 +282,7 @@ while [ $end_test -eq 0 ]; do
   else
     gateway_fail_count=$((gateway_fail_count+1))
     echo "Gateway $ttf_gateway_host missed or got different events!"
+    test_failed=1
   fi
   
   # Check for other errors
