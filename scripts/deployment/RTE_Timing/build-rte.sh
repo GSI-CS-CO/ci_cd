@@ -74,6 +74,7 @@ make -j $JOBS
 for i in flash console info sflash time; do
   cp eb-$i $RTE_DIR/bin
 done
+cp monitoring/wr-mon $RTE_DIR/bin
 
 # Build drivers
 cd $TMP_DIR
