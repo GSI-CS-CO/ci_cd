@@ -1,15 +1,21 @@
 #! /bin/bash
+#PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
+BEL_BRANCH="balloon"
+#Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
+#For the rest of the Groups, you can create one for your need
+DEPLOY_TARGET="/dev/null"
+
+# FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
+# YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
 BASE_DIR=`pwd`
 BUILD_DIR="rte-build"
 BEL_PROJECTS="bel_projects"
-BEL_BRANCH="balloon"
 RTE_DIR=`pwd`"/"$BUILD_DIR
 TMP_DIR=`pwd`"/rte-tmp"
 ROOT_DIR=`pwd`"/rte-root"
 LINUX_KERNEL="linux-scu-source-3.10.101-01"
 KERNEL="linux-scu-source_3.10.101-01"
 JOBS=32
-DEPLOY_TARGET="/common/export/timing-rte/rc8"
 ARCH=x86_64
 
 # Clean up installation folders
@@ -26,7 +32,8 @@ fi
 cd $TMP_DIR
 # Get bel_projects
 if [ ! -d "$BEL_PROJECTS" ]; then
-  git clone https://github.com/GSI-CS-CO/bel_projects.git --recursive
+#git clone https://github.com/GSI-CS-CO/bel_projects.git --recursive #TO BE CHECK WHAT IT IS THE BEST OPTION
+  git clone https://github.com/GSI-CS-CO/bel_projects.git
 fi
 
 cd $BEL_PROJECTS
@@ -108,7 +115,7 @@ make -j $JOBS DESTDIR=$RTE_DIR install
 yumdownloader --destdir $TMP_DIR/rpm glib2.$ARCH dbus libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH dbus-devel.$ARCH dbus-glib.$ARCH dbus-glib-devel.$ARCH dbus-libs.$ARCH libffi.$ARCH pcre.$ARCH xz-libs.$ARCH 
 
 #installing socat & dependencies
-yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH
+yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs-1.13.2-12.el7_2.$ARCH
 
 ## Extract all rpms
 cd $RTE_DIR
