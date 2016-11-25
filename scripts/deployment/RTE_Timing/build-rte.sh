@@ -111,6 +111,9 @@ for i in $TMP_DIR/rpm/*; do rpm2cpio "$i" | cpio -idmv; done
 sed -i 1,1d $ROOT_DIR/usr/lib64/pkgconfig/*
 sed -i "1i prefix=$ROOT_DIR" $ROOT_DIR/usr/lib64/pkgconfig/*
 
+# installing dependencies for the saftlib RTE
+yumdownloader --destdir $TMP_DIR/rpm glib2.$ARCH dbus libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH dbus-devel.$ARCH dbus-glib.$ARCH dbus-glib-devel.$ARCH dbus-libs.$ARCH libffi.$ARCH pcre.$ARCH xz-libs.$ARCH 
+
 #building saftlib
 export ROOT_DIR
 export PKG_CONFIG_PATH=$ROOT_DIR/lib/pkgconfig:$ROOT_DIR/usr/lib64/pkgconfig
@@ -120,9 +123,6 @@ git clean -xfd .
 ./autogen.sh
 ./configure --prefix="" --sysconfdir=/etc
 make -j $JOBS DESTDIR=$RTE_DIR install
-
-# installing dependencies for the saftlib RTE
-yumdownloader --destdir $TMP_DIR/rpm glib2.$ARCH dbus libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH dbus-devel.$ARCH dbus-glib.$ARCH dbus-glib-devel.$ARCH dbus-libs.$ARCH libffi.$ARCH pcre.$ARCH xz-libs.$ARCH 
 
 #installing socat & dependencies
 yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs-1.13.2-12.el7_2.$ARCH
