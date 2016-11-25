@@ -18,6 +18,13 @@ KERNEL="linux-scu-source_3.10.101-01"
 JOBS=32
 ARCH=x86_64
 
+#logging
+LOG_FILE="RTE_log"_$(date '+%d-%m-%Y_%H-%M-%S')
+echo $LOG_FILE
+exec 3>&1 4>&2
+trap 'exec 2>&4 1>&3' 0 1 2 3
+exec 1>$LOG_FILE 2>&1
+
 # Clean up installation folders
 #rm -rf $ROOT_DIR $RTE_DIR $TMP_DIR
 rm -rf $ROOT_DIR $RTE_DIR
