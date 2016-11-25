@@ -39,7 +39,6 @@ fi
 cd $TMP_DIR
 # Get bel_projects
 if [ ! -d "$BEL_PROJECTS" ]; then
-#git clone https://github.com/GSI-CS-CO/bel_projects.git --recursive #TO BE CHECK WHAT IT IS THE BEST OPTION
   git clone https://github.com/GSI-CS-CO/bel_projects.git
 fi
 
@@ -48,6 +47,10 @@ git clean -xfd .
 git fetch --all
 git checkout $BEL_BRANCH
 git pull origin $BEL_BRANCH
+git submodule init
+git submodule update --recursive
+# depending on the git version, nested (max 3) submodules can be fetched
+cd ip_cores/fpga-config-space
 git submodule init
 git submodule update --recursive
 
