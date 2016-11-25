@@ -3,7 +3,7 @@
 BEL_BRANCH="balloon"
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
-DEPLOY_TARGET="/common/export/timing-rte/tg-testing"
+DEPLOY_TARGET="/dev/null"
 
 # FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
 # YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
@@ -29,8 +29,8 @@ trap 'exec 2>&4 1>&3' 0 1 2 3
 exec 1>$LOG_FILE 2>&1
 
 # Clean up installation folders
-rm -rf $ROOT_DIR $RTE_DIR $TMP_DIR
-#rm -rf $ROOT_DIR $RTE_DIR
+#rm -rf $ROOT_DIR $RTE_DIR $TMP_DIR
+rm -rf $ROOT_DIR $RTE_DIR
 mkdir $ROOT_DIR 
 mkdir $RTE_DIR
 
@@ -145,6 +145,25 @@ yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH readline.$ARCH ope
 # Extract all rpms
 cd $RTE_DIR
 for i in $TMP_DIR/rpm/*.rpm; do rpm2cpio "$i" | cpio -idmv; done
+
+# Create compilation information
+cd $BASE_DIR
+. timing-rte_buildinfo.sh
+BUILD_INFO="$RTE_DIR/etc/timing-rte_buildinfo"
+
+GIT_BRANCH=$(parse_git_branch)$(parse_git_hash)
+echo "GSI Timing RTE $(date '+%d-%m-%Y_%H-%M-%S') " > $BUILD_INFO
+echo "Compiled by $(whoami) using $0 on $(hostname) - Linux  $(uname -r)" >> $BUILD_INFO
+echo "CI_CD Project" >> $BUILD_INFO
+echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
+echo " -${GIT_BRANCH}" >> $BUILD_INFO
+echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
+cd $TMP_DIR/$BEL_PROJECTS
+GIT_BRANCH=$(parse_git_branch)$(parse_git_hash)
+echo "BEL_PROJECTS" >> $BUILD_INFO
+echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
+echo " -${GIT_BRANCH}" >> $BUILD_INFO
+echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
 
 # Deployment
 echo "DEPLOYMENT"
