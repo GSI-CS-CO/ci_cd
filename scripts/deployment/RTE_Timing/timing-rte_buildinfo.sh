@@ -7,7 +7,7 @@ function parse_git_dirty_word() {
     git diff --quiet --ignore-submodules HEAD 2>/dev/null; 
     if [[ $? -eq 1 ]]
     then
-      echo "Derty"
+      echo "Dirty"
     else
       echo "Nothing to commit"
     fi
