@@ -102,6 +102,29 @@ function control_saftd()
     fi
     vetar_id=$((vetar_id+1))
   done
+  # exploders
+  exploder_id=0
+  for i in ${ttf_exploder_names[@]}; do
+    if [ $1 -eq 0 ]; then
+      echo "Stopping saftd... ($i@${ttf_exploder_hosts[$exploder_id]})"
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "killall saftd; pkill -f saft" > /dev/null 2>&1
+    elif [ $1 -eq 1 ]; then
+      echo "Starting saftd... ($i@${ttf_exploder_hosts[$exploder_id]})"
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saftd $ttf_default_saft_dev:$ttf_exploder_dev_id"
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "ps | grep saftd | grep -v grep" 2>/dev/null 
+    else
+      echo "======================================================================"
+      echo "Probing... ($i@${ttf_exploder_hosts[$exploder_id]}@$ttf_exploder_dev_id)"
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-ctl $ttf_default_saft_dev -i"; echo ""
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-ctl $ttf_default_saft_dev -s"; echo ""
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-io-ctl $ttf_default_saft_dev -i"; echo ""
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-io-ctl $ttf_default_saft_dev -l"; echo ""
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "eb-info $ttf_exploder_dev_id"; echo ""
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "eb-ls $ttf_exploder_dev_id"; echo ""
+      echo "======================================================================"
+    fi
+    exploder_id=$((exploder_id+1))
+  done
 }
 
 # Configure LEDs (will react to all events) ($1 = 0/1 (enable/disable))
@@ -176,6 +199,28 @@ function config_leds()
                                                                       saft-io-ctl baseboard -n LED_DACK -c 0x0 0x0 31250000 0xf 0 -u;"
     fi
     vetar_id=$((vetar_id+1))
+  done
+  # exploders
+  exploder_id=0
+  for i in ${ttf_exploder_names[@]}; do
+    if [ $1 -eq 0 ]; then
+      echo "Disabling LEDs... ($i@${ttf_exploder_hosts[$exploder_id]})"
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-io-ctl baseboard -n LED1 -x;\
+                                                                      saft-io-ctl baseboard -n LED2 -x;\
+                                                                      saft-io-ctl baseboard -n LED3 -x;\
+                                                                      saft-io-ctl baseboard -n LED4 -x;"
+    else
+      echo "Enabling LEDs... ($i@${ttf_exploder_hosts[$exploder_id]})"
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-io-ctl baseboard -n LED1 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED1 -c 0x0 0x0 31250000 0xf 0 -u;\
+                                                                      saft-io-ctl baseboard -n LED2 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED2 -c 0x0 0x0 62500000 0xf 0 -u;\
+                                                                      saft-io-ctl baseboard -n LED3 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED3 -c 0x0 0x0 125000000 0xf 0 -u;\
+                                                                      saft-io-ctl baseboard -n LED4 -c 0x0 0x0 0 0xf 1 -u;\
+                                                                      saft-io-ctl baseboard -n LED4 -c 0x0 0x0 250000000 0xf 0 -u;"
+    fi
+    exploder_id=$((exploder_id+1))
   done
 }
 
