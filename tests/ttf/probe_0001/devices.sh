@@ -2,9 +2,9 @@
 
 # Devices and hosts under test
 ttf_pexaria_names=(pexaria5_27t pexaria5_41t pexaria5_15t pexaria5_43t)
+ttf_pexaria_hosts=(tsl011 tsl011 tsl011 tsl011)
 ttf_pexaria_ipv4=(192.168.191.91 192.168.191.110 192.168.191.79 192.168.191.112)
 ttf_pexaria_dev_ids=(dev/wbm0 dev/wbm1 dev/wbm2 dev/wbm3)
-ttf_pexaria_hosts=(tsl011 tsl011 tsl011 tsl011)
 ttf_pexaria_user=root
 
 ttf_scu_names=(scuxl0001t scuxl0099t scuxl0007t scuxl0085t scuxl0088t scuxl0133t)
@@ -18,6 +18,12 @@ ttf_vetar_hosts=(kp1cx01)
 ttf_vetar_ipv4=(192.168.191.118)
 ttf_vetar_dev_id=dev/wbm0
 ttf_vetar_user=root
+
+ttf_exploder_names=(exploder5_11t)
+ttf_exploder_hosts=(tsl012)
+ttf_exploder_ipv4=(192.168.191.153)
+ttf_exploder_dev_id=dev/wbm1
+ttf_exploder_user=root
 
 # Data master(s)
 ttf_data_master="udp/192.168.191.92"
