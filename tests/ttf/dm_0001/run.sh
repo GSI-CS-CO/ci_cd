@@ -52,6 +52,13 @@ function control_logging()
       ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "killall saft-ctl" > /dev/null 2>&1
       vetar_id=$((vetar_id+1))
     done
+    # Exploders
+    exploder_id=0
+    for i in ${ttf_exploder_names[@]}; do
+      echo "Stopping logging... ($i@${ttf_exploder_hosts[$exploder_id]})"
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "killall saft-ctl" > /dev/null 2>&1
+      exploder_id=$((exploder_id+1))
+    done
   else
     # Start logging, remove old log files and filter PPS events
     # Pexarias
@@ -78,6 +85,14 @@ function control_logging()
       ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       vetar_id=$((vetar_id+1))
     done
+    # Exploders
+    exploder_id=0
+    for i in ${ttf_exploder_names[@]}; do
+      echo "Starting logging... ($i@${ttf_exploder_hosts[$exploder_id]})"
+      rm log/snooped_events_$i.txt
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      exploder_id=$((exploder_id+1))
+    done
   fi
 }
 
@@ -85,7 +100,7 @@ function control_logging()
 function compare_log_files()
 {
   # Check all devices
-  devices=( ${ttf_pexaria_names[@]} ${ttf_scu_names[@]} ${ttf_vetar_names[@]} )
+  devices=( ${ttf_pexaria_names[@]} ${ttf_scu_names[@]} ${ttf_vetar_names[@]} ${ttf_exploder_names[@]})
   duts=${#devices[@]}
   # Sort event lists
   for i in ${devices[@]}; do
