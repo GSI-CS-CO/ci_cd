@@ -100,7 +100,7 @@ make -j $JOBS
 for i in flash console info sflash time; do
   cp eb-$i $RTE_DIR/bin
 done
-cp monitoring/wr-mon $RTE_DIR/bin
+cp monitoring/eb-mon $RTE_DIR/bin
 
 # Build driver
 echo "BUILDING DRIVER"
