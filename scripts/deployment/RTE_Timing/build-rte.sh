@@ -3,7 +3,7 @@
 BEL_BRANCH="balloon"
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
-DEPLOY_TARGET="/dev/null"
+DEPLOY_TARGET="/common/export/timing-rte/RC8-balloon_0"
 
 # FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
 # YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
@@ -140,7 +140,7 @@ make -j $JOBS DESTDIR=$RTE_DIR install
 yumdownloader --destdir $TMP_DIR/rpm glib2.$ARCH dbus libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH dbus-devel.$ARCH dbus-glib.$ARCH dbus-glib-devel.$ARCH dbus-libs.$ARCH libffi.$ARCH pcre.$ARCH xz-libs.$ARCH glibmm24.$ARCH libsigc++20.$ARCH
 
 #installing socat & dependencies
-yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs-1.13.2-12.el7_2.$ARCH
+yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs.$ARCH
 
 # Extract all rpms
 cd $RTE_DIR
