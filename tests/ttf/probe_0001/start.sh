@@ -234,6 +234,7 @@ case "$1" in
     ;;
   "restart")
     control_saftd 0
+    echo "Waiting until all watchdog(s) are expired... (10 seconds)"
     sleep 10
     control_saftd 1
     ;;
