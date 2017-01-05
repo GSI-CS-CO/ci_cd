@@ -3,7 +3,7 @@
 BEL_BRANCH="balloon"
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
-DEPLOY_TARGET="/common/export/timing-rte/RC8-balloon_0"
+DEPLOY_TARGET="/dev/null"
 
 # FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
 # YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
