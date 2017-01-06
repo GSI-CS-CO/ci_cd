@@ -116,7 +116,7 @@ make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver
 make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver-install
 
 # Saftlib lib dependencies
-yumdownloader --destdir $TMP_DIR/lib glibmm24-devel.$ARCH glibmm24.$ARCH libsigc++20-devel.$ARCH libsigc++20.$ARCH
+yumdownloader --destdir $TMP_DIR/lib glibmm24-devel.$ARCH glibmm24.$ARCH libsigc++20-devel.$ARCH libsigc++20.$ARCH dbus-libs.$ARCH dbus-glib.$ARCH
 
 # Extract all rpms
 cd $ROOT_DIR 
