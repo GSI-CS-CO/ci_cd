@@ -1,6 +1,7 @@
 #! /bin/bash
 #PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
 BEL_BRANCH="balloon"
+BEL_RELEASE=""
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
 DEPLOY_TARGET="/dev/null"
@@ -49,6 +50,9 @@ cd $BEL_PROJECTS
 git clean -xfd .
 git fetch --all
 git checkout $BEL_BRANCH
+if [ -n "$BEL_RELEASE" ]; then
+  git checkout $BEL_RELEASE
+fi
 git pull origin $BEL_BRANCH
 git submodule init
 git submodule update --recursive
@@ -157,12 +161,18 @@ echo "Compiled by $(whoami) using $0 on $(hostname) - Linux  $(uname -r)" >> $BU
 echo "CI_CD Project" >> $BUILD_INFO
 echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
 echo " -${GIT_BRANCH}" >> $BUILD_INFO
-echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
+#echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
 cd $TMP_DIR/$BEL_PROJECTS
-GIT_BRANCH=$(parse_git_branch)$(parse_git_hash)
+
+if [ -n "$BEL_RELEASE" ]; then
+  GIT_BRANCH=$(parse_git_tag)$(parse_git_hash)
+else
+  GIT_BRANCH=$(parse_git_branch)$(parse_git_hash)
+fi
+
 echo "BEL_PROJECTS" >> $BUILD_INFO
 echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
-echo " -${GIT_BRANCH}" >> $BUILD_INFO
+echo " - ${GIT_BRANCH}" >> $BUILD_INFO
 echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
 
 # Deployment

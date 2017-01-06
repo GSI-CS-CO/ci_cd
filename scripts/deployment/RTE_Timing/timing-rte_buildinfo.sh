@@ -18,6 +18,11 @@ function parse_git_branch() {
     git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/*\(.*\)/\1$(parse_git_dirty)/"
 }
 
+# gets the current git branch
+function parse_git_tag() {
+    git describe --exact-match --tags HEAD 2> /dev/null
+}
+
 # get last commit hash prepended with @ (i.e. @8a323d0)
 function parse_git_hash() {
     git rev-parse --short HEAD 2> /dev/null | sed "s/\(.*\)/@\1/"
