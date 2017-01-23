@@ -2,7 +2,7 @@
 
 # Settings
 production_repo="https://github.com/GSI-CS-CO/bel_projects.git"
-production_branch="balloon"
+production_branch="proposed_master"
 development_repo="https://github.com/GSI-CS-CO/saftlib.git"
 development_branch="master"
 
