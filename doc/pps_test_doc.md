@@ -4,6 +4,7 @@ A jenkins job named pps_test is created to perform PPS test on timing receivers.
 #Some configuration prior to perform PPS test
 
 File name: saftppsconfig.sh
+
 1) Maximum acceptable time difference between PPS signal generated on different devices is given as 200 ns (can be modified)
 
 2) Number of lines to be considered for time difference calculation from the output of PPS signal generation is 2000 (can be extended depending on the time PPS generation occurs). This number has been considered for PPS generation running for 5 minutes continuously.
