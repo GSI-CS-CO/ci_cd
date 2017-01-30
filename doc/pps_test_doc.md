@@ -5,11 +5,13 @@ A jenkins job named pps_test is created to perform PPS test on timing receivers.
 
 File name: saftppsconfig.sh
 1) Maximum acceptable time difference between PPS signal generated on different devices is given as 200 ns (can be modified)
+
 2) Number of lines to be considered for time difference calculation from the output of PPS signal generation is 2000 (can be extended depending on the time PPS generation occurs). This number has been considered for PPS generation running for 5 minutes continuously.
+
 3) Reference configuration: provides information about the device that acts as a reference to calculate the time difference between this device and other devices connected to it.
 
 #Generation and Testing of PPS signals (ref CI_CD git repo: ci_cd/scripts/ci_testing/pps/)
-1) Make sure that saftlib is installed into the PC performing the PPS generation and saftd is running. Saftd configured for this project is as follows
+1) Make sure that saftlib is installed into the PC (reference: tsl004 for PPS test) performing the PPS generation and saftd is running. Saftd configured for this project is as follows
 
 `saftd exp:dev/wbm0 pex:dev/wbm1`
 
