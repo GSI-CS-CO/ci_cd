@@ -7,7 +7,7 @@
 CONNECTION="nw"
 FACILITY="testing"
 
-HELP="$(basename "$0") [-h] [-c connection device] [-f facility] [-u user] [-p pcname] [-t ttynumber] [-w wbmnumber]-- script to check eb-tools
+HELP="$(basename "$0") [-h] [-c connection device] [-f facility] [-u user] [-p pcname] [-t ttynumber] [-w wbmnumber] [-d device]-- script to check eb-tools
 
 
 where:
@@ -112,7 +112,7 @@ do
 			echo -e "\e[31mError occurred"
 			echo "Device ${ebtestArray[0]} with IP ${ebtestArray[2]} test failed. Error is" > ./check.txt
 			sudo eb-find udp/${ebtestArray[2]} $gsi_vendor_id $lmram_device_id &>> ./check.txt
-			mail -s “eb-tools_test_error” a.suresh@gsi.de < ./check.txt
+			mail -s “eb-tools test error” a.suresh@gsi.de < ./check.txt
 			exit 1
 		fi
 		echo -e "\e[33mReading value at ${lm32_ram_user[0]} of ${ebtestArray[0]}"
@@ -169,63 +169,32 @@ else
 fi
 
 #eb-read and eb-write tools check
-if [ "$pc" == "tsl002" ]; then
 
-	lm32_ram_user=($(sudo eb-find dev/ttyUSB$tty $gsi_vendor_id $lmram_device_id))
-	echo -e "\e[33mReading value at ${lm32_ram_user[0]}"
-	echo -e "\e[34m$(sudo eb-read dev/ttyUSB$tty ${lm32_ram_user[0]}/4)"
-	echo -e "\e[33mWriting random unsigned value to ${lm32_ram_user[0]}"
-	sudo eb-write dev/ttyUSB$tty ${lm32_ram_user[0]}/4 $RANDOM
-	echo -e "\e[34m$(sudo eb-read dev/ttyUSB$tty ${lm32_ram_user[0]}/4)"
+lm32_ram_user=($(sudo eb-find dev/ttyUSB$tty $gsi_vendor_id $lmram_device_id))
+echo -e "\e[33mReading value at ${lm32_ram_user[0]}"
+echo -e "\e[34m$(sudo eb-read dev/ttyUSB$tty ${lm32_ram_user[0]}/4)"
+echo -e "\e[33mWriting random unsigned value to ${lm32_ram_user[0]}"
+sudo eb-write dev/ttyUSB$tty ${lm32_ram_user[0]}/4 $RANDOM
+echo -e "\e[34m$(sudo eb-read dev/ttyUSB$tty ${lm32_ram_user[0]}/4)"
 
-	#eb-get and eb-put tools check
+#eb-get and eb-put tools check
 
-	dd if=/dev/urandom of=$putfile bs=4432 count=1
-	sudo eb-put dev/ttyUSB$tty $lm32_ram_user $putfile
-	echo -e "\e[33mComparing put_file and get_file"
-	sudo eb-get dev/ttyUSB$tty $lm32_ram_user/4432 $getfile
-	cmp -s $putfile $getfile
-	if [ $? = 0 ]; then
-		echo -e "\e[92mput_file and get_file and of same size. RAM check successful"
-	        rm -rf $putfile $getfile
-	else
-		echo -e "\e[31mSize mismatch"
-	        cmp $putfile $getfile
-        	rm -rf $putfile $getfile
-	fi
-	echo -e "\e[33mReading value after performing eb-put and eb-get"
-	echo -e "\e[34m$(sudo eb-read dev/ttyUSB$tty ${lm32_ram_user[0]}/4)"
-	echo
+dd if=/dev/urandom of=$putfile bs=4432 count=1
+sudo eb-put dev/ttyUSB$tty $lm32_ram_user $putfile
+echo -e "\e[33mComparing put_file and get_file"
+sudo eb-get dev/ttyUSB$tty $lm32_ram_user/4432 $getfile
+cmp -s $putfile $getfile
+if [ $? = 0 ]; then
+	echo -e "\e[92mput_file and get_file and of same size. RAM check successful"
+        rm -rf $putfile $getfile
 else
-	ssh $user@$pc.acc.gsi.de '
-	putfile=./put_file
-	getfile=./get_file
-
-	lm32_ram_user=($(sudo eb-find dev/ttyUSB'$tty' '$gsi_vendor_id' '$lmram_device_id'))
-	echo -e "\e[33mReading value at ${lm32_ram_user[0]}"
-	echo -e "\e[34m$(sudo eb-read dev/ttyUSB'$tty' ${lm32_ram_user[0]}/4)"
-	echo -e "\e[33mWriting random unsigned value to ${lm32_ram_user[0]}"
-	sudo eb-write dev/ttyUSB'$tty' ${lm32_ram_user[0]}/4 $RANDOM
-	echo -e "\e[34m$(sudo eb-read dev/ttyUSB'$tty' ${lm32_ram_user[0]}/4)"
-
-	dd if=/dev/urandom of=$putfile bs=4432 count=1
-	sudo eb-put dev/ttyUSB'$tty' $lm32_ram_user $putfile
-	echo -e "\e[33mComparing put_file and get_file"
-	sudo eb-get dev/ttyUSB'$tty' $lm32_ram_user/4432 $getfile
-	cmp -s $putfile $getfile
-	if [ $? = 0 ]; then
-        	echo -e "\e[92mput_file and get_file and of same size. RAM check successful"
-	        rm -rf $putfile $getfile
-	else
-        	echo -e "\e[31mSize mismatch"
-	        cmp $putfile $getfile
-        	rm -rf $putfile $getfile
-	fi
-	echo -e "\e[33mReading value after performing eb-put and eb-get"
-	echo -e "\e[34m$(sudo eb-read dev/ttyUSB'$tty' ${lm32_ram_user[0]}/4)"
-	echo
-	'
+	echo -e "\e[31mSize mismatch"
+        cmp $putfile $getfile
+        rm -rf $putfile $getfile
 fi
+echo -e "\e[33mReading value after performing eb-put and eb-get"
+echo -e "\e[34m$(sudo eb-read dev/ttyUSB$tty ${lm32_ram_user[0]}/4)"
+echo
 }
 
 function PCIE(){
