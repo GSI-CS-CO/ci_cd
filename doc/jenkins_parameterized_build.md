@@ -2,7 +2,7 @@
 
 Jenkins has an in-built function called Parameterized Build wherein the parameter passed to this function can be used inside the shell script. The following steps are carried out to use this functionality.
 
-1) Go to a Jenkins project -> configure -> General
+1) Go to any Jenkins project -> configure -> General (Reference project in jenkins: nightly_build_two_branches)
 
 2) Select `This project is parameterized` option
 
@@ -30,4 +30,4 @@ Usage of parameterized build for bel_projects in a jenkins job
 
 3) If gateware for a different form factor should be built, then the user must just change the name of this parameter in the Jenkins job and the shell script will take care of building the gateware for that particular form factor.
 
-4) Additionally in this project, the user can also change the branch of the git repository from which jenkins should fetch the data to build the gateware. Under `Source Code Management` -> `Branches to build`, mention the branch that is required to build the gateware. The shell script which fetches the data from git repo will refer to this branch and retrieve all the information available in this branch before starting the build process.
+4) Additionally in this project, the user can also change the branch of the git repository from which jenkins should fetch the data to build the gateware (Reference project in jenkins: nightly_build_two_branches). Under `Source Code Management` -> `Branches to build`, mention the branch that is required to build the gateware. The shell script which fetches the data from git repo will refer to this branch and retrieve all the information available in this branch before starting the build process.
