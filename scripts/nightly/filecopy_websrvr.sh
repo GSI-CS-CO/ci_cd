@@ -7,6 +7,7 @@ PWD=$(pwd)
 exp_path=/home/timing/jenkins_jobs/nightly_build_exploder5
 pex_path=/home/timing/jenkins_jobs/nightly_build_pexarria5
 vet_path=/home/timing/jenkins_jobs/nightly_build_vetar2a
+vet_ee_path=/home/timing/jenkins_jobs/nightly_build_vetar2a_ee_butis
 scu3_path=/home/timing/jenkins_jobs/nightly_build_scu3
 scu2_path=/home/timing/jenkins_jobs/nightly_build_scu2
 dm_path=/home/timing/jenkins_jobs/nightly_build_datamaster
@@ -57,6 +58,21 @@ case $PWD in
 
 		cd $WEB_SRVR_PATH/gateware
 		md5sum *.jic *.rpd *.sof | tee MD5SUMS
+        ;;
+
+	$vet_ee_path)
+
+                export PATH=$PATH:$vet_ee_path/toolchain/bin
+                export GSI_BUILD_TYPE=Balloon_release
+                make vetar2a-ee-butis 2>&1 > $log_makefile/nightly_build_vetar2a_eebutis.$(date +%Y-%m-%d).log
+
+                cd syn/gsi_vetar2a/ee_butis
+                cp vetar2a.jic $WEB_SRVR_PATH/gateware/vetar2a_eebutis.jic
+		cp vetar2a.rpd $WEB_SRVR_PATH/gateware/vetar2a_eebutis.rpd
+		cp vetar2a.sof $WEB_SRVR_PATH/gateware/vetar2a_eebutis.sof
+
+                cd $WEB_SRVR_PATH/gateware
+                md5sum *.jic *.rpd *.sof | tee MD5SUMS
         ;;
 
 	$scu3_path)
