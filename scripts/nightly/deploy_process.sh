@@ -16,15 +16,17 @@ fi
 
 centos_nfs_path=/common/usr/nfs/centos7
 debian_nfs_path=/common/usr/nfs/debian_316
+scu_nfs_path=/common/usr/nfs/scu
 etherbone_path=/home/timing/jenkins_jobs/nightly_build_etherbone
 saftlib_path=/home/timing/jenkins_jobs/nightly_build_saftlib
 
 cd $etherbone_path
-sudo make etherbone-install STAGING=$centos_nfs_path/usr/local/bin/etherbone
-sudo make etherbone-install STAGING=$debian_nfs_path/usr/local/bin/etherbone
+sudo make etherbone-install STAGING=$centos_nfs_path
+sudo make etherbone-install STAGING=$debian_nfs_path
+sudo make etherbone-install STAGING=$scu_nfs_path
 
 cd $saftlib_path
-sudo make saftlib-install STAGING=$centos_nfs_path/usr/local/bin/saftlib
-sudo make saftlib-install STAGING=$debian_nfs_path/usr/local/bin/saftlib
-
+sudo make saftlib-install STAGING=$centos_nfs_path
+sudo make saftlib-install STAGING=$debian_nfs_path
+sudo make saftlib-install STAGING=$scu_nfs_path
 
