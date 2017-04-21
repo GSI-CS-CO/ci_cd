@@ -69,6 +69,16 @@ function control_logging()
       ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       pex_id=$((pex_id+1))
     done
+    
+    # Vetar
+    vetar_id=0
+    for i in ${ttf_vetar_names[@]}; do
+      echo "Starting logging... ($i@${ttf_vetar_hosts[$vetar_id]})"
+      rm log/snooped_events_$i.txt
+      ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      vetar_id=$((vetar_id+1))
+    done
+
     # SCUs
     scu_id=0
     for i in ${ttf_scu_names[@]}; do
@@ -77,14 +87,7 @@ function control_logging()
       ssh $ttf_scu_user@${ttf_scu_hosts[$scu_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       scu_id=$((scu_id+1))
     done
-    # Vetars
-    vetar_id=0
-    for i in ${ttf_vetar_names[@]}; do
-      echo "Starting logging... ($i@${ttf_vetar_hosts[$vetar_id]})"
-      rm log/snooped_events_$i.txt
-      ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
-      vetar_id=$((vetar_id+1))
-    done
+    
     # Exploders
     exploder_id=0
     for i in ${ttf_exploder_names[@]}; do

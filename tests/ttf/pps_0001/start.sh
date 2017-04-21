@@ -33,7 +33,7 @@ function control_data_master()
     ftm-ctl $ttf_data_master -c $ttf_data_master_pps_core_id swap
     ftm-ctl $ttf_data_master -c $ttf_data_master_pps_core_id run
   else
-    echo "Stopping date master..."
+    echo "Stopping data master..."
     ftm-ctl $ttf_data_master -c $ttf_data_master_pps_core_id idle
     ftm-ctl $ttf_data_master -c $ttf_data_master_pps_core_id stop
   fi
@@ -74,7 +74,7 @@ function configure_pps()
       ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "killall saft-pps-gen" > /dev/null 2>&1
     else
       echo "Starting saft-pps-gen... ($i@${ttf_vetar_hosts[$vetar_id]})"
-      ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "nohup saft-pps-gen $ttf_default_saft_dev -s -e -v" > /dev/null &
+      ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "nohup saft-pps-gen $i -s -e -v" > /dev/null &
     fi
     vetar_id=$((vetar_id+1))
   done

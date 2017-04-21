@@ -9,6 +9,9 @@ case "$1" in
   "cryring")
     ./run.sh 1 1 "test_cases/cryring_injector.xml"
     ;;
+  "unipz")
+    ./run.sh 1 1 "test_cases/unipz.xml"
+    ;;
   "random")
     ./run.sh 1 1
     ;;
@@ -32,6 +35,9 @@ case "$1" in
     ;;
   "endless_cryring")
     ./run.sh 0 0 "test_cases/cryring_injector.xml"
+    ;;
+  "endless_unipz")
+    ./run.sh 0 0 "test_cases/unipz.xml"
     ;;
   "endless_random")
     ./run.sh 0 0
