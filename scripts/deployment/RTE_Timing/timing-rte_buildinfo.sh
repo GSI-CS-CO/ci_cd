@@ -27,3 +27,7 @@ function parse_git_tag() {
 function parse_git_hash() {
     git rev-parse --short HEAD 2> /dev/null | sed "s/\(.*\)/@\1/"
 }
+
+function parse_git_last_commits() {
+    git  log --oneline -n 5 2>/dev/null;
+}
