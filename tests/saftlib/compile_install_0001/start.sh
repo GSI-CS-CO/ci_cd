@@ -2,7 +2,7 @@
 
 # Settings
 production_repo="https://github.com/GSI-CS-CO/bel_projects.git"
-production_branch="proposed_master"
+production_branch="c_release_giga_merge"
 development_repo="https://github.com/GSI-CS-CO/saftlib.git"
 development_branch="master"
 
