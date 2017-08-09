@@ -150,8 +150,8 @@ function control_saftd()
       ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-ctl ${ttf_exploder_names[$exploder_id]} -s"; echo ""
       ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-io-ctl ${ttf_exploder_names[$exploder_id]} -i"; echo ""
       ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-io-ctl ${ttf_exploder_names[$exploder_id]} -l"; echo ""
-      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "eb-info ${ttf_exploder_names[$exploder_id]}"; echo ""
-      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "eb-ls ${ttf_exploder_names[$exploder_id]}"; echo ""
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "eb-info ${ttf_exploder_dev_id[$exploder_id]}"; echo ""
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "eb-ls ${ttf_exploder_dev_id[$exploder_id]}"; echo ""
       echo "======================================================================"
     fi
     exploder_id=$((exploder_id+1))
