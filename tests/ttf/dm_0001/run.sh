@@ -69,7 +69,7 @@ function control_logging()
       ssh $ttf_pexaria_user@${ttf_pexaria_hosts[$pex_id]}.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       pex_id=$((pex_id+1))
     done
-    
+
     # Vetar
     vetar_id=0
     for i in ${ttf_vetar_names[@]}; do
@@ -87,13 +87,13 @@ function control_logging()
       ssh $ttf_scu_user@${ttf_scu_hosts[$scu_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       scu_id=$((scu_id+1))
     done
-    
+
     # Exploders
     exploder_id=0
     for i in ${ttf_exploder_names[@]}; do
       echo "Starting logging... ($i@${ttf_exploder_hosts[$exploder_id]})"
       rm log/snooped_events_$i.txt
-      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-ctl baseboard snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "saft-ctl $i snoop 0x0 0x0 0 -x | grep -v \"EvtID: 0xffff000000000000\"" > log/snooped_events_$i.txt &
       exploder_id=$((exploder_id+1))
     done
   fi
@@ -126,7 +126,7 @@ function compare_log_files()
       test_failed=1
     fi
   done
-  
+
   # Compare log files
   for i in ${devices[@]}; do
     sleep 1
@@ -162,20 +162,20 @@ function start_data_master()
 {
   # Copy old schedule
   cp "log/$schedule" "log/$schedule_ts"
-  
+
   # Get time from ECA
   dm_time=`ftm-ctl $ttf_data_master -t | grep "ECA TIME" | cut -c 32-49`
   dm_time="$(($dm_time+0))" # To dec
   dm_start_time="$(($dm_time+$dm_start_offset))" # Add offset
   echo $dm_start_time > log/start_time.txt
-  
+
   # Print debug infos
   printf "Current time at Data Master: 0x%x (%d)\n" $dm_time $dm_time
   printf "Start time at Data Master:   0x%x (%d)\n" $dm_start_time $dm_start_time
-  
+
   # Get right start time in the schedule
   sed -i "s/$dm_schedule_keyword/$dm_start_time/g" "log/$schedule_ts"
-  
+
   # Finally set up the Data Master
   ftm-ctl $ttf_data_master -c $ttf_data_master_traffic_core_id stop
   echo "DM Stop"
@@ -198,7 +198,7 @@ function poll_dm_time()
   dm_duration_ns="$((${duration%.*}*1000000000))"
   dm_end_time="$(($dm_start_time+$dm_duration_ns))"
   time_left="$(($dm_end_time-$dm_time_now))"
-  
+
   # Wait for end of schedule
   while [ $time_left -ge 0 ]; do
     sleep 0.5
@@ -266,7 +266,7 @@ while [ $end_test -eq 0 ]; do
   control_logging 1
   ./capture_dev.sh $ttf_gateway_interface $ttf_data_master_ip &
   sleep 5
-  
+
   # Wait until all events were send
   duration=`cat log/duration.txt`
   poll_dm_time
@@ -274,13 +274,13 @@ while [ $end_test -eq 0 ]; do
   control_logging 0
   killall tcpdump
   sleep 5
-  
+
   # Sort event lists
   sort -k1 -n log/expected_events.txt > log/e_cmp.txt
-  
+
   # Finally compare the lists
   compare_log_files
-  
+
   # Wait for capture.sh script
   echo "Waiting for capture process (on gateway, this will take a minute)..."
   gateway_capture_done=0
@@ -292,7 +292,7 @@ while [ $end_test -eq 0 ]; do
       sleep 1
     fi
   done
-  
+
   cmp log/s_cmp_$ttf_gateway_host.txt log/e_cmp.txt
   if [ $? -eq 0 ]; then
     gateway_success_count=$((gateway_success_count+1))
@@ -302,7 +302,7 @@ while [ $end_test -eq 0 ]; do
     echo "Gateway $ttf_gateway_host missed or got different events!"
     test_failed=1
   fi
-  
+
   # Check for other errors
   if [ $trap -eq 1 ]; then
     end_test=1
@@ -312,7 +312,7 @@ while [ $end_test -eq 0 ]; do
       end_test=1
     fi
   fi
-  
+
   # Check for other conditions
   iter_count=$((iter_count+1))
   if [ $test_loops -ne 0 ]; then
@@ -320,7 +320,7 @@ while [ $end_test -eq 0 ]; do
       end_test=1
     fi
   fi
-  
+
   # Archive all tests artefacts (in case an error occured)
   if [ $test_failed -ne 0 ]; then
     echo "Creating archive..."
@@ -328,7 +328,7 @@ while [ $end_test -eq 0 ]; do
     tar -zcvf $tar_name log
     mv $tar_name archive
   fi
-  
+
   # Small report
   echo ""
   echo "Iteration count:       $iter_count"
