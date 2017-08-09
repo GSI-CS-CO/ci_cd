@@ -23,7 +23,6 @@ ttf_vetar_user=root
 ttf_exploder_names=(exploder5a_13t)
 ttf_exploder_hosts=(tsl012)
 ttf_exploder_ipv4=(192.168.128.146)
-#ttf_exploder_ipv4=(192.168.128.142)
 ttf_exploder_dev_id=dev/wbm1
 ttf_exploder_user=root
 
