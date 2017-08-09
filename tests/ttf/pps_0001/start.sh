@@ -86,7 +86,7 @@ function configure_pps()
       ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "killall saft-pps-gen" > /dev/null 2>&1
     else
       echo "Starting saft-pps-gen... ($i@${ttf_exploder_hosts[$exploder_id]})"
-      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "nohup saft-pps-gen $ttf_default_saft_dev -s -e -v" > /dev/null &
+      ssh $ttf_exploder_user@${ttf_exploder_hosts[$exploder_id]}.$tff_postfix "nohup saft-pps-gen $i -s -e -v" > /dev/null &
     fi
     exploder_id=$((exploder_id+1))
   done
