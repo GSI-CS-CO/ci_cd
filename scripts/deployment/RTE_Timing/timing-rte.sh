@@ -63,6 +63,6 @@ echo 'dbus:*:100:' >> /etc/group
 mkdir /var/run/dbus
 
 log 'starting services'
-dbus-daemon --system
-saftd baseboard:dev/wbm0 >/tmp/saftd.log 2>&1 &
+chrt -r 25 dbus-daemon --system
+chrt -r 30 saftd baseboard:dev/wbm0 >/tmp/saftd.log 2>&1 &
 dbus-uuidgen > /etc/machine-id
