@@ -54,7 +54,8 @@ test -f /usr/bin/socat || cp -a /opt/$NAME/socat /usr/bin
 if [ `ls /proc/vme/info | grep -o info` ]
 then	
 	/sbin/rmmod pcie_wb
-	/sbin/insmod /lib/modules/$KERNEL_VERSION/extra/vme_wb.ko slot=2 vmebase=0x0 vector=1 level=7 lun=1
+	# Load different slot numbers for "automatic" card detection up to slot 8 (loading the vme_wb driver with non-existing slots does not harm)
+	/sbin/insmod /lib/modules/$KERNEL_VERSION/extra/vme_wb.ko slot=1,2,3,4,5,6,7,8 vmebase=0,0,0,0,0,0,0,0 vector=1,2,3,4,5,6,7,8 level=7,7,7,7,7,7,7,7 lun=1,2,3,4,5,6,7,8
 fi
 
 log 'setting up dbus acounts'
@@ -64,5 +65,7 @@ mkdir /var/run/dbus
 
 log 'starting services'
 chrt -r 25 dbus-daemon --system
-chrt -r 30 saftd baseboard:dev/wbm0 >/tmp/saftd.log 2>&1 &
+# start saftlib for multiple devices: saftd tr0:dev/wbm0 tr1:dev/wbm1 tr2:dev/wbm2 ... trXYZ:dev/wbmXYZ
+saftlib_devices=$(for dev in /dev/wbm*; do echo tr${dev#/dev/wbm}:${dev#/}; done) 
+chrt -r 30 saftd $saftlib_devices >/tmp/saftd.log 2>&1 &
 dbus-uuidgen > /etc/machine-id
