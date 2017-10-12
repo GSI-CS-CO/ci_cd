@@ -97,7 +97,6 @@ function control_saftd()
     else
       echo "======================================================================"
       echo "Probing... ($i@${ttf_vetar_hosts[$vetar_id]}@$ttf_vetar_dev_id)"
-      echo $ttf_vetar_user ${ttf_vetar_hosts[$vetar_id]} $tff_postfix  $i
       sleep 5
       ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl $i -i"; echo ""
       ssh $ttf_vetar_user@${ttf_vetar_hosts[$vetar_id]}.$tff_postfix "saft-ctl $i -s"; echo ""
