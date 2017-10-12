@@ -14,16 +14,16 @@ ttf_scu_is_version_3=(1 1 0 0 0 0)
 ttf_scu_dev_id=dev/wbm0
 ttf_scu_user=root
 
-ttf_vetar_names=(vetar14t vetar16t)
-ttf_vetar_hosts=(kp1cx01 kp1cx01)
-ttf_vetar_ipv4=(192.168.128.111 192.168.128.113)
-ttf_vetar_dev_ids=(dev/wbm0 dev/wbm1)
+ttf_vetar_names=(vetar14t)
+ttf_vetar_hosts=(kp1cx01)
+ttf_vetar_ipv4=(192.168.128.111)
+ttf_vetar_dev_ids=(dev/wbm0)
 ttf_vetar_user=root
 
-ttf_exploder_names=(exploder5a_13t)
+ttf_exploder_names=(exploder5a_11t)
 ttf_exploder_hosts=(tsl012)
-ttf_exploder_ipv4=(192.168.128.146)
-ttf_exploder_dev_id=dev/wbm1
+ttf_exploder_ipv4=(192.168.128.38)
+ttf_exploder_dev_id=dev/wbm2
 ttf_exploder_user=root
 
 # Data master(s)
@@ -35,7 +35,7 @@ ttf_data_master_backup_name=pexaria5_32t
 ttf_data_master_backup="udp/192.168.128.89"
 ttf_data_master_backup_ip="192.168.128.89"
 
-ttf_data_master_host="tsl010"
+ttf_data_master_host="tsl014"
 ttf_data_master_pps_core_id=0
 ttf_data_master_traffic_core_id=1
 
