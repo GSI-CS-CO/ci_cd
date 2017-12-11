@@ -32,7 +32,7 @@ exec 1>$LOG_FILE 2>&1
 # Clean up installation folders
 #rm -rf $ROOT_DIR $RTE_DIR $TMP_DIR
 rm -rf $ROOT_DIR $RTE_DIR
-mkdir $ROOT_DIR 
+mkdir $ROOT_DIR
 mkdir $RTE_DIR
 
 # Get the building files
@@ -101,7 +101,7 @@ make eca DESTDIR=$RTE_DIR EXTRA_FLAGS=-I"$RTE_DIR/lib/" EB=$TMP_DIR/$BEL_PROJECT
 
 cd $TMP_DIR/$BEL_PROJECTS/tools
 make -j $JOBS
-for i in flash console info sflash time; do
+for i in flash console info sflash reset time; do
   cp eb-$i $RTE_DIR/bin
 done
 cp monitoring/eb-mon $RTE_DIR/bin
@@ -119,7 +119,7 @@ make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver-insta
 yumdownloader --destdir $TMP_DIR/lib glibmm24-devel.$ARCH glibmm24.$ARCH libsigc++20-devel.$ARCH libsigc++20.$ARCH dbus-libs.$ARCH dbus-glib.$ARCH
 
 # Extract all rpms
-cd $ROOT_DIR 
+cd $ROOT_DIR
 for i in $TMP_DIR/lib/*; do rpm2cpio "$i" | cpio -idmv; done
 
 #cp $BASE_DIR/pkgconfig/* $ROOT_DIR/usr/lib64/pkgconfig
