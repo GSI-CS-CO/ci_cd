@@ -116,8 +116,7 @@ make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver
 make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver-install
 
 # Saftlib lib dependencies
-yumdownloader --destdir $TMP_DIR/lib glibmm24-devel.$ARCH glibmm24.$ARCH libsigc++20-devel.$ARCH libsigc++20.$ARCH dbus-libs.$ARCH dbus-glib.$ARCH
-
+yumdownloader --destdir $TMP_DIR/lib libuuid-devel.$ARCH libblkid-devel.$ARCH libmount-devel.$ARCH glibmm24-devel.$ARCH glibmm24.$ARCH libsigc++20-devel.$ARCH libsigc++20.$ARCH dbus-libs.$ARCH dbus-glib.$ARCH
 # Extract all rpms
 cd $ROOT_DIR
 for i in $TMP_DIR/lib/*; do rpm2cpio "$i" | cpio -idmv; done
@@ -141,8 +140,7 @@ git clean -xfd .
 make -j $JOBS DESTDIR=$RTE_DIR install
 
 # Saftlib runtime dependencies
-yumdownloader --destdir $TMP_DIR/rpm glib2.$ARCH dbus libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH dbus-devel.$ARCH dbus-glib.$ARCH dbus-glib-devel.$ARCH dbus-libs.$ARCH libffi.$ARCH pcre.$ARCH xz-libs.$ARCH glibmm24.$ARCH libsigc++20.$ARCH
-
+yumdownloader --destdir $TMP_DIR/rpm glib2.$ARCH dbus libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH dbus-devel.$ARCH dbus-glib.$ARCH dbus-glib-devel.$ARCH dbus-libs.$ARCH libffi.$ARCH pcre.$ARCH xz-libs.$ARCH libuuid.$ARCH libblkid.$ARCH libmount.$ARCH glibmm24.$ARCH libsigc++20.$ARCH
 #installing socat & dependencies
 yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs.$ARCH
 
