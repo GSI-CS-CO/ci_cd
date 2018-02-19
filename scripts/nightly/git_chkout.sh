@@ -1,4 +1,4 @@
 #!/bin/bash
 
-git checkout proposed_master
+git checkout master
 git pull
