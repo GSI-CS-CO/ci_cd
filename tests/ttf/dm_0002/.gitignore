@@ -1,0 +1,7 @@
+*.o
+*.cmp
+*.dot
+*.rpt
+*.out
+dm.dict
+dm.groups
