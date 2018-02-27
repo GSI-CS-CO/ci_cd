@@ -1,0 +1,24 @@
+[
+  {
+    "name"       : "scuxl0099",
+    "login"      : "root",
+    "extension"  : ".acc.gsi.de",
+    "host_reset" : "yes",
+    "reset2host" : "yes",
+    "receivers":
+    [
+       { "dev_name" : "scuxl0099t", "type" : "scu3", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.141" }
+    ]
+  },
+  {
+    "name"       : "scuxl0001",
+    "login"      : "root",
+    "extension"  : ".acc.gsi.de",
+    "host_reset" : "yes",
+    "reset2host" : "yes",
+    "receivers":
+    [
+       { "dev_name" : "scuxl0001t", "type" : "scu3", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.107" }
+    ]
+  }
+]
