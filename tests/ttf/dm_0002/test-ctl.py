@@ -211,7 +211,7 @@ def stop_snooping(ver):
     # Stop snooping by killing saft-ctl instances
     cmd_list = []
     try:
-        with open('../../devices.json') as json_file:
+        with open('../devices.json') as json_file:
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
@@ -228,7 +228,7 @@ def start_snooping(ver):
     cmd_clean_list = []
     cmd_list = []
     try:
-        with open('../../devices.json') as json_file:
+        with open('../devices.json') as json_file:
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
@@ -248,7 +248,7 @@ def get_comparison_files(ver):
     # Collect all CMP files (from ever host)
     cmd_list = []
     try:
-        with open('../../devices.json') as json_file:
+        with open('../devices.json') as json_file:
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
@@ -272,7 +272,7 @@ def compare_results(ver):
         for line in output:
           save_file.write(line)
         save_file.close()
-        with open('../../devices.json') as json_file:
+        with open('../devices.json') as json_file:
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:

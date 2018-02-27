@@ -5,3 +5,4 @@
 *.out
 dm.dict
 dm.groups
+sched-builder
