@@ -1,6 +1,6 @@
 [
   {
-    "name" : "tsl011", "login" : "gsi", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no",
+    "name" : "tsl011", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "no",
     "receivers":
     [
        { "dev_name" : "pexaria51t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.193", "mactg" : "00:26:7b:00:04:4b" },
@@ -12,14 +12,15 @@
     ]
   },
   {
-    "name" : "scuxl0099", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes",
+    "name" : "scuxl0099", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
     "receivers":
     [
        { "dev_name" : "scuxl0099t", "type" : "scu3", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.141", "mactg" : "00:26:7b:00:03:d8" }
     ]
   },
   {
-    "name" : "scuxl0001", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes","receivers":
+    "name" : "scuxl0001", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
+    "receivers":
     [
        { "dev_name" : "scuxl0001t", "type" : "scu3", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.107", "mactg" : "00:26:7b:00:03:d5" }
     ]
