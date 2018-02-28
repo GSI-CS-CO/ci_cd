@@ -5,6 +5,7 @@ import os
 import subprocess
 import sys
 import json
+import time
 
 ########################################################################################################################
 v_operation = "none"
@@ -20,22 +21,72 @@ def func_probe():
                 for q in p['receivers']:
                     cmd = "ssh %s@%s%s eb-info %s" % (p['login'], p['name'], p['extension'], q['slot'])
                     cmd_list.append(cmd)
+                    cmd = "ssh %s@%s%s saft-ctl %s -i" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                    cmd_list.append(cmd)
+                    cmd = "ssh %s@%s%s saft-ctl %s -s" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                    cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
         subprocess.call(cmd_list[i].split())
+        print "----------------------------------------------------------------------------------------------------"
 
 ########################################################################################################################
 def func_start():
-    pass
+    # Start saftd
+    cmd_list = []
+    try:
+        with open('../devices.json') as json_file:
+            data = json.load(json_file)
+            for p in data:
+                receivers = []
+                for q in p['receivers']:
+                    relation = "%s:%s" % ((q['dev_name']), (q['slot']))
+                    receivers.append(relation)
+                receivers_string = ' '.join(str(x) for x in receivers)
+                if p['csco_ramdisk'] == "no":
+                    cmd = "ssh %s@%s%s `saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
+                else:
+                    cmd = "ssh %s@%s%s `/usr/sbin/saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
+                cmd_list.append(cmd)
+    except (ValueError, KeyError, TypeError):
+        print "JSON format error"
+    for i in range(len(cmd_list)):
+        print cmd_list[i]
+        cmd_to_perform = cmd_list[i].split()
+        cmd_to_perform_info = cmd_to_perform[1]
+        print "Starting saftd at %s..." % (cmd_to_perform_info)
+        subprocess.call(cmd_to_perform)
+        time.sleep(1)
+        print "----------------------------------------------------------------------------------------------------"
 
 ########################################################################################################################
 def func_stop():
-    pass
+    # Stop saftd
+    cmd_list = []
+    try:
+        with open('../devices.json') as json_file:
+            data = json.load(json_file)
+            for p in data:
+                cmd = "ssh %s@%s%s killall saftd" % (p['login'], p['name'], p['extension'])
+                cmd_list.append(cmd)
+    except (ValueError, KeyError, TypeError):
+        print "JSON format error"
+    for i in range(len(cmd_list)):
+        cmd_to_perform = cmd_list[i].split()
+        cmd_to_perform_info = cmd_to_perform[1]
+        print "Stopping saftd at %s..." % (cmd_to_perform_info)
+        subprocess.call(cmd_to_perform)
+        time.sleep(1)
+        print "----------------------------------------------------------------------------------------------------"
 
 ########################################################################################################################
 def func_restart():
-    pass
+    # Restart saftd
+    func_stop()
+    print "Going to sleep for 10 seconds..."
+    time.sleep(10+1)
+    func_start()
 
 ########################################################################################################################
 def main():
@@ -60,9 +111,9 @@ def main():
         func_start()
     elif v_operation == "stop":
         func_stop()
-    if v_operation == "restart":
+    elif v_operation == "restart":
         func_restart()
-    if v_operation == "probe":
+    elif v_operation == "probe":
         func_probe()
     else:
         print "Error: Please provide operation name [start/stop/restart/probe]"
