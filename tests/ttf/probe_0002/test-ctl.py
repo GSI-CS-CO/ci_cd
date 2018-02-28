@@ -99,9 +99,9 @@ def func_reset():
                 for q in p['receivers']:
                     cmd = "timeout 5 ssh %s@%s%s eb-reset %s" % (p['login'], p['name'], p['extension'], q['slot'])
                     cmd_list.append(cmd)
-                    if p['reset2host'] == "no":
-                      cmd = "timeout 5 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
-                      cmd_list.append(cmd)
+                if p['reset2host'] == "no":
+                    cmd = "timeout 5 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
+                    cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
