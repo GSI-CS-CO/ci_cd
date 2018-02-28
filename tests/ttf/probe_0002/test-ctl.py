@@ -8,8 +8,9 @@ import json
 import time
 
 ########################################################################################################################
+v_target = "none"
 v_operation = "none"
-v_gateware_source = "here"
+v_gateware_source = "none"
 
 ########################################################################################################################
 def func_probe():
@@ -20,12 +21,13 @@ def func_probe():
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
-                    cmd = "timeout 5 ssh %s@%s%s eb-info %s" % (p['login'], p['name'], p['extension'], q['slot'])
-                    cmd_list.append(cmd)
-                    cmd = "timeout 5 ssh %s@%s%s saft-ctl %s -i" % (p['login'], p['name'], p['extension'], q['dev_name'])
-                    cmd_list.append(cmd)
-                    cmd = "timeout 5 ssh %s@%s%s saft-ctl %s -s" % (p['login'], p['name'], p['extension'], q['dev_name'])
-                    cmd_list.append(cmd)
+                    if (v_target == str(q['type'])) or (v_target == "all"):
+                        cmd = "timeout 5 ssh %s@%s%s eb-info %s" % (p['login'], p['name'], p['extension'], q['slot'])
+                        cmd_list.append(cmd)
+                        cmd = "timeout 5 ssh %s@%s%s saft-ctl %s -i" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                        cmd_list.append(cmd)
+                        cmd = "timeout 5 ssh %s@%s%s saft-ctl %s -s" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                        cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -42,14 +44,15 @@ def func_start():
             for p in data:
                 receivers = []
                 for q in p['receivers']:
-                    relation = "%s:%s" % ((q['dev_name']), (q['slot']))
-                    receivers.append(relation)
-                receivers_string = ' '.join(str(x) for x in receivers)
-                if p['csco_ramdisk'] == "no":
-                    cmd = "timeout 5 ssh %s@%s%s `saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
-                else:
-                    cmd = "timeout 5 ssh %s@%s%s `/usr/sbin/saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
-                cmd_list.append(cmd)
+                    if (v_target == str(q['type'])) or (v_target == "all"):
+                        relation = "%s:%s" % ((q['dev_name']), (q['slot']))
+                        receivers.append(relation)
+                        receivers_string = ' '.join(str(x) for x in receivers)
+                        if p['csco_ramdisk'] == "no":
+                            cmd = "timeout 5 ssh %s@%s%s `saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
+                        else:
+                            cmd = "timeout 5 ssh %s@%s%s `/usr/sbin/saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
+                        cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -68,8 +71,9 @@ def func_stop():
         with open('../devices.json') as json_file:
             data = json.load(json_file)
             for p in data:
-                cmd = "timeout 5 ssh %s@%s%s killall saftd" % (p['login'], p['name'], p['extension'])
-                cmd_list.append(cmd)
+                if (v_target == str(q['type'])) or (v_target == "all"):
+                    cmd = "timeout 5 ssh %s@%s%s killall saftd" % (p['login'], p['name'], p['extension'])
+                    cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -96,12 +100,14 @@ def func_reset():
         with open('../devices.json') as json_file:
             data = json.load(json_file)
             for p in data:
-                for q in p['receivers']:
-                    cmd = "timeout 5 ssh %s@%s%s eb-reset %s" % (p['login'], p['name'], p['extension'], q['slot'])
-                    cmd_list.append(cmd)
-                if p['reset2host'] == "no":
-                    cmd = "timeout 5 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
-                    cmd_list.append(cmd)
+                if (v_target == str(q['type'])) or (v_target == "all"):
+                    if (v_target == str(q['type'])) or (v_target == "all"):
+                        for q in p['receivers']:
+                            cmd = "timeout 5 ssh %s@%s%s eb-reset %s" % (p['login'], p['name'], p['extension'], q['slot'])
+                            cmd_list.append(cmd)
+                        if p['reset2host'] == "no":
+                            cmd = "timeout 5 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
+                            cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -121,12 +127,16 @@ def func_flash():
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
-                    cmd = "timeout 5 ssh %s@%s%s rm %s.rpd" % (p['login'], p['name'], p['extension'], q['type'])
-                    cmd_list.append(cmd)
-                    cmd = "timeout 10 ssh %s@%s%s wget %s/gateware/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
-                    cmd_list.append(cmd)
-                    cmd = "timeout 60 ssh %s@%s%s eb-flash %s %s.rpd" % (p['login'], p['name'], p['extension'], q['slot'], q['type'])
-                    cmd_list.append(cmd)
+                    if (v_target == str(q['type'])) or (v_target == "all"):
+                        cmd = "timeout 5 ssh %s@%s%s rm %s.rpd" % (p['login'], p['name'], p['extension'], q['type'])
+                        cmd_list.append(cmd)
+                        if str(q['type']) == "ftm":
+                            cmd = "timeout 10 ssh %s@%s%s wget %s/ftm/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
+                        else:
+                            cmd = "timeout 10 ssh %s@%s%s wget %s/gateware/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
+                        cmd_list.append(cmd)
+                        cmd = "timeout 60 ssh %s@%s%s eb-flash %s %s.rpd" % (p['login'], p['name'], p['extension'], q['slot'], q['type'])
+                        cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -142,19 +152,23 @@ def main():
     # Get arguments
     cmdtotal = len(sys.argv)
     cmdargs = str(sys.argv)
+    global v_target
     global v_operation
     global v_gateware_source
 
     # Plausibility check
     try:
-        if cmdtotal == 2:
+        if cmdtotal == 3:
             v_operation = str(sys.argv[1])
-        elif cmdtotal == 3:
+            v_target = str(sys.argv[2])
+        elif cmdtotal == 4:
             v_operation = str(sys.argv[1])
-            v_gateware_source = str(sys.argv[2])
+            v_target = str(sys.argv[2])
+            v_gateware_source = str(sys.argv[3])
         else:
-            print "Error: Please provide operation name [start/stop/restart/probe/reset/{flash [source URL]}"
-            print "Flash example: flash http://tsl002.acc.gsi.de/releases/doomsday"
+            print "Error: Please provide operation name [start target/stop target/restart target/probe target/reset target/{flash target [source URL]}"
+            print "Targets: all scu2 scu3 pexarria5 exploder5 microtca pmc vetar2a vetar2a-ee-butis ftm"
+            print "Flash example: flash all http://tsl002.acc.gsi.de/releases/doomsday"
             exit(1)
     except:
         print "Error: Could not parse given arguments!"
