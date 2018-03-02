@@ -12,6 +12,22 @@
     ]
   },
   {
+    "name" : "tgtca002", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "no",
+    "receivers":
+    [
+       { "dev_name" : "microtca_proto_0001t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.20", "mactg" : "02:ff:00:02:00:04" },
+       { "dev_name" : "microtca_proto_0002t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.21", "mactg" : "02:ff:00:02:00:05" }
+    ]
+  },
+  {
+    "name" : "tsl014", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
+    "receivers":
+    [
+       { "dev_name" : "pexaria32t", "type" : "ftm", "role" : "data_master_rnd", "slot" : "dev/wbm0", "iptg" : "192.168.128.89", "mactg" : "00:26:7b:00:04:32" },
+       { "dev_name" : "pexaria28t", "type" : "ftm", "role" : "data_master_pps", "slot" : "dev/wbm1", "iptg" : "192.168.128.85", "mactg" : "00:26:7b:00:04:28" }
+    ]
+  },
+  {
     "name" : "scuxl0099", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
     "receivers":
     [
@@ -51,14 +67,6 @@
     "receivers":
     [
        { "dev_name" : "scuxl0133t", "type" : "scu2", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.34", "mactg" : "00:26:7b:00:03:85" }
-    ]
-  },
-  {
-    "name" : "tgtca002", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "no",
-    "receivers":
-    [
-       { "dev_name" : "microtca_proto_0001t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.20", "mactg" : "02:ff:00:02:00:04" },
-       { "dev_name" : "microtca_proto_0002t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.21", "mactg" : "02:ff:00:02:00:05" }
     ]
   }
 ]
