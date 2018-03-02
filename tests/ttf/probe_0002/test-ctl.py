@@ -125,7 +125,10 @@ def func_reset():
                         host_has_target_devices = 1
                 if (p['reset2host'] == "no") and (host_has_target_devices == 1):
                     if host_reset_found == 0:
-                        cmd = "timeout 5 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
+                        if p['csco_ramdisk'] == "no":
+                            cmd = "timeout 5 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
+                        else:
+                            cmd = "timeout 5 ssh %s@%s%s /sbin/reboot" % (p['login'], p['name'], p['extension'])
                         cmd_list.append(cmd)
                         host_reset_found = 1
     except (ValueError, KeyError, TypeError):

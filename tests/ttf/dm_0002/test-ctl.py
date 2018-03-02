@@ -9,22 +9,26 @@ import filecmp
 import signal
 import sys
 import glob
+import random
 from time import gmtime, strftime
 
 ########################################################################################################################
 # Schedule settings
 v_total_cores = 4
 v_schedule_name = "fuzzer"
-v_max_period_duration = 1000000000 # ns
 v_start_time_offset = 50000000000 # ns
-v_max_periods = 29 # One additional period will be added by DM
-v_max_events = 15
 v_verbose = 0
 
 ########################################################################################################################
+# Random schedule settings
+v_max_period_duration = 1000000000 # ns
+v_max_periods = 9 # One additional period will be added by DM
+v_max_events = 10
+
+########################################################################################################################
 # Global settings  (do not change this)
-v_total_events_dm = (v_max_periods+1)*v_max_events*v_total_cores
 v_data_master = ""
+v_total_events_dm = 0
 v_test_iterations = 0
 v_test_finished = 0
 v_current_time = 0
@@ -113,6 +117,8 @@ def clean_up_and_build(ver):
 ########################################################################################################################
 def generate_schedules(ver):
     # Build schedule for each CPU
+    global v_total_events_dm
+    v_total_events_dm = (v_max_periods+1)*v_max_events*v_total_cores
     for cpu_id in range(0, v_total_cores):
         print "Building schedule for CPU %d..." % (cpu_id)
         cmd = "./sched-builder %s %s %s %s %s" % (v_schedule_name, cpu_id, v_max_events, v_max_periods, v_max_period_duration)
@@ -289,8 +295,6 @@ def compare_results(ver):
                         file_name = "%s.cmp" % (q['dev_name'])
                         file_name_new = "%s_stripped.cmp" % (q['dev_name'])
                         file_name_sor = "%s_sorted.cmp" % (q['dev_name'])
-                        print file_name
-                        print file_name_new
                         f1 = open(file_name, 'r')
                         f2 = open(file_name_new, 'w+')
                         for line in f1:
@@ -360,6 +364,16 @@ def evaluate_reports(ver):
         archive_reports(1)
     print "=============================================================================="
     return test_result
+
+########################################################################################################################
+def func_gen_random_parameters(ver):
+    # Generate new parameters
+    global v_max_period_duration
+    global v_max_periods
+    global v_max_events
+    v_max_period_duration = random.randint(500000000, 1000000000)
+    v_max_events = random.randint(1, 20)
+    v_max_periods = random.randint(1, 100)
 
 ########################################################################################################################
 def archive_reports(ver):
@@ -437,6 +451,10 @@ def main():
         if v_test_iterations != 0:
             if iteration_cnt == v_test_iterations:
                 v_test_finished = 1
+
+        # Generate new parameters for the next run
+        if v_test_finished == 0:
+            func_gen_random_parameters(1)
 
     # Done
     exit(test_result)
