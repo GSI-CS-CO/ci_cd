@@ -11,7 +11,7 @@ import time
 v_target = "none"
 v_operation = "none"
 v_gateware_source = "none"
-v_debug = 0
+v_debug = 1
 
 ########################################################################################################################
 def func_probe():
@@ -117,11 +117,13 @@ def func_reset():
             data = json.load(json_file)
             for p in data:
                 host_reset_found = 0
+                host_has_target_devices = 0
                 for q in p['receivers']:
                     if (v_target == str(q['type'])) or (v_target == "all"):
                         cmd = "timeout 5 ssh %s@%s%s eb-reset %s" % (p['login'], p['name'], p['extension'], q['slot'])
                         cmd_list.append(cmd)
-                if p['reset2host'] == "no":
+                        host_has_target_devices = 1
+                if (p['reset2host'] == "no") and (host_has_target_devices == 1):
                     if host_reset_found == 0:
                         cmd = "timeout 5 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
                         cmd_list.append(cmd)
@@ -192,7 +194,7 @@ def main():
         else:
             print "Error: Please provide operation name [start target/stop target/restart target/probe target/reset target/{flash target [source URL]}"
             print "Targets: all scu2 scu3 pexarria5 exploder5 microtca pmc vetar2a vetar2a-ee-butis ftm"
-            print "Flash example: all flash http://tsl002.acc.gsi.de/releases/doomsday"
+            print "Flash example: flash all http://tsl002.acc.gsi.de/releases/doomsday"
             exit(1)
     except:
         print "Error: Could not parse given arguments!"
@@ -212,7 +214,7 @@ def main():
     elif v_operation == "flash":
         func_flash()
     else:
-        print "Error: Could not parse given arguments!"
+        print "Error: Ambiguous arguments!"
         exit(1)
 
     # Done
