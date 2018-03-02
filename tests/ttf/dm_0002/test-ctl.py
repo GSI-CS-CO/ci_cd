@@ -215,8 +215,9 @@ def stop_snooping(ver):
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
-                    cmd = "ssh %s@%s%s killall saft-ctl" % (p['login'], p['name'], p['extension'])
-                    cmd_list.append(cmd)
+                    if q['role'] == "node":
+                        cmd = "ssh %s@%s%s killall saft-ctl" % (p['login'], p['name'], p['extension'])
+                        cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -232,10 +233,11 @@ def start_snooping(ver):
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
-                    cmd_clean = "ssh %s@%s%s rm %s.cmp" % (p['login'], p['name'], p['extension'], q['dev_name'])
-                    cmd_clean_list.append(cmd_clean)
-                    cmd = "nohup ssh %s@%s%s saft-ctl %s snoop 0 0 0 -x >> %s.cmp &" % (p['login'], p['name'], p['extension'], q['dev_name'], q['dev_name'])
-                    cmd_list.append(cmd)
+                    if q['role'] == "node":
+                        cmd_clean = "ssh %s@%s%s rm /%s.cmp" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                        cmd_clean_list.append(cmd_clean)
+                        cmd = "nohup ssh %s@%s%s saft-ctl %s snoop 0 0 0 -x >> /%s.cmp &" % (p['login'], p['name'], p['extension'], q['dev_name'], q['dev_name'])
+                        cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_clean_list)):
@@ -252,8 +254,9 @@ def get_comparison_files(ver):
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
-                    cmd = "scp %s@%s%s:/%s.cmp ." % (p['login'], p['name'], p['extension'], q['dev_name'])
-                    cmd_list.append(cmd)
+                    if q['role'] == "node":
+                        cmd = "scp %s@%s%s:/%s.cmp ." % (p['login'], p['name'], p['extension'], q['dev_name'])
+                        cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -270,54 +273,56 @@ def compare_results(ver):
         output = subprocess.check_output(cmd.split())
         save_file = open(schedule_sor, 'w+')
         for line in output:
-          save_file.write(line)
+            save_file.write(line)
         save_file.close()
+        print "+++"
         with open('../devices.json') as json_file:
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
-                    line_cnt = 0
-                    late_cnt = 0
-                    early_cnt = 0
-                    delayed_cnt = 0
-                    conflict_cnt = 0
-                    file_name = "%s.cmp" % (q['dev_name'])
-                    file_name_new = "%s_stripped.cmp" % (q['dev_name'])
-                    file_name_sor = "%s_sorted.cmp" % (q['dev_name'])
-                    print file_name
-                    print file_name_new
-                    f1 = open(file_name, 'r')
-                    f2 = open(file_name_new, 'w+')
-                    for line in f1:
-                        line_cnt += 1
-                        if line.find("late") != -1:
-                            late_cnt += 1
-                        if line.find("early") != -1:
-                            early_cnt += 1
-                        if line.find("delayed") != -1:
-                            delayed_cnt += 1
-                        if line.find("conflict") != -1:
-                            conflict_cnt += 1
-                        smart_line = line.replace('!', ' !')
-                        smart_line = smart_line.replace('tDeadline: ', '')
-                        smart_line = smart_line.replace('EvtID: ', '')
-                        smart_line = smart_line.replace('Param: ', '')
-                        print_line = smart_line.split()
-                        print_line = "%s %s %s\n" % (print_line[0], print_line[1], print_line[2])
-                        f2.write(print_line)
-                    f1.close()
-                    f2.close()
-                    # Sort file by execution time
-                    cmd = "sort %s" % (file_name_new)
-                    schedule_sor = "%s_sorted.cmp" % (q['dev_name'])
-                    output = subprocess.check_output(cmd.split())
-                    save_file = open(schedule_sor, 'w+')
-                    for line in output:
-                        save_file.write(line)
-                    save_file.close()
-                    # Compare files
-                    equal = filecmp.cmp(file_name_new, schedule_sor)
-                    v_reports.append(report_class(q['dev_name'],line_cnt,late_cnt,early_cnt,delayed_cnt,conflict_cnt,equal))
+                    if q['role'] == "node":
+                        line_cnt = 0
+                        late_cnt = 0
+                        early_cnt = 0
+                        delayed_cnt = 0
+                        conflict_cnt = 0
+                        file_name = "%s.cmp" % (q['dev_name'])
+                        file_name_new = "%s_stripped.cmp" % (q['dev_name'])
+                        file_name_sor = "%s_sorted.cmp" % (q['dev_name'])
+                        print file_name
+                        print file_name_new
+                        f1 = open(file_name, 'r')
+                        f2 = open(file_name_new, 'w+')
+                        for line in f1:
+                            line_cnt += 1
+                            if line.find("late") != -1:
+                                late_cnt += 1
+                            if line.find("early") != -1:
+                                early_cnt += 1
+                            if line.find("delayed") != -1:
+                                delayed_cnt += 1
+                            if line.find("conflict") != -1:
+                                conflict_cnt += 1
+                            smart_line = line.replace('!', ' !')
+                            smart_line = smart_line.replace('tDeadline: ', '')
+                            smart_line = smart_line.replace('EvtID: ', '')
+                            smart_line = smart_line.replace('Param: ', '')
+                            print_line = smart_line.split()
+                            print_line = "%s %s %s\n" % (print_line[0], print_line[1], print_line[2])
+                            f2.write(print_line)
+                        f1.close()
+                        f2.close()
+                        # Sort file by execution time
+                        cmd = "sort %s" % (file_name_new)
+                        schedule_sor = "%s_sorted.cmp" % (q['dev_name'])
+                        output = subprocess.check_output(cmd.split())
+                        save_file = open(schedule_sor, 'w+')
+                        for line in output:
+                            save_file.write(line)
+                        save_file.close()
+                        # Compare files
+                        equal = filecmp.cmp(file_name_new, schedule_sor)
+                        v_reports.append(report_class(q['dev_name'],line_cnt,late_cnt,early_cnt,delayed_cnt,conflict_cnt,equal))
             for p in data:
                 for q in p['receivers']:
                     file_name = "%s.cmp" % (q['dev_name'])
