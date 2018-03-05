@@ -46,6 +46,13 @@
     ]
   },
   {
+    "name" : "kp1cx02", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
+    "receivers":
+    [
+       { "dev_name" : "PMC_PROTO_REVB_104398", "type" : "pmc", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.22", "mactg" : "02:ff:00:02:00:06" }
+    ]
+  },
+  {
     "name" : "scuxl0099", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
     "receivers":
     [
