@@ -15,10 +15,10 @@
     "name" : "tsl012", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "no",
     "receivers":
     [
-       { "dev_name" : "expl004t", "type" : "exploder5", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.139", "mactg" : "00:26:7b:00:02:11" },
-       { "dev_name" : "expl007t", "type" : "exploder5", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.142", "mactg" : "00:26:7b:00:02:14" },
+       { "dev_name" : "expl004t", "type" : "exploder5", "role" : "pps_monitor", "slot" : "dev/wbm0", "iptg" : "192.168.128.139", "mactg" : "00:26:7b:00:02:11" },
+       { "dev_name" : "expl007t", "type" : "exploder5", "role" : "pps_monitor", "slot" : "dev/wbm1", "iptg" : "192.168.128.142", "mactg" : "00:26:7b:00:02:14" },
        { "dev_name" : "expl011t", "type" : "exploder5", "role" : "node", "slot" : "dev/wbm2", "iptg" : "192.168.128.146", "mactg" : "00:26:7b:00:02:18" },
-       { "dev_name" : "expl013t", "type" : "exploder5", "role" : "node", "slot" : "dev/wbm3", "iptg" : "192.168.128.148", "mactg" : "00:26:7b:00:02:1a" }
+       { "dev_name" : "expl013t", "type" : "exploder5", "role" : "pps_monitor", "slot" : "dev/wbm3", "iptg" : "192.168.128.148", "mactg" : "00:26:7b:00:02:1a" }
     ]
   },
   {
@@ -41,8 +41,7 @@
     "name" : "kp1cx01", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
     "receivers":
     [
-       { "dev_name" : "vmel014t", "type" : "vetar2a", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.111", "mactg" : "00:26:7b:00:05:0f" },
-       { "dev_name" : "vmel016t", "type" : "vetar2a", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.113", "mactg" : "00:26:7b:00:05:11" }
+       { "dev_name" : "vmel014t", "type" : "vetar2a", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.111", "mactg" : "00:26:7b:00:05:0f" }
     ]
   },
   {
