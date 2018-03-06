@@ -37,7 +37,7 @@ def func_start():
 
 ########################################################################################################################
 def func_stop():
-    # Start data master
+    # Stop data master
     print "Stopping data master..."
     cmd = "timeout 30 dm-cmd %s abort" % (v_data_master)
     subprocess.call(cmd.split())
@@ -82,6 +82,7 @@ def func_deinit():
 
 ########################################################################################################################
 def func_get_pps_data_master():
+    # Find data master in config file
     global v_data_master
     global v_data_master_alias
     v_data_master_found = 0
@@ -95,6 +96,7 @@ def func_get_pps_data_master():
                         v_data_master = "udp/%s" % (str(q['iptg']))
                         v_data_master_alias = str(q['dev_name'])
                         v_data_master_found = 1
+                        v_data_master ="tcp/tsl014.acc.gsi.de" # !!!
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     if (v_data_master_found == 1):
@@ -103,7 +105,6 @@ def func_get_pps_data_master():
     else:
         print "No data master found!"
         return 1
-
 
 ########################################################################################################################
 def main():
