@@ -1,5 +1,0 @@
-22 serialization::archive 14 0 0 0 2 3 0 0 0 0 10 CPU0_EVT_0 12 CPU0_PATTERN 0 0 9 undefined 0 0 1 0
-0 10 CPU0_START 12 CPU0_PATTERN 1 0 9 undefined 0 0
-1 9 CPU0_STOP 12 CPU0_PATTERN 0 0 9 undefined 0 0
-2
-3 -1 -1
