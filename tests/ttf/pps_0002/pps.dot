@@ -1,0 +1,20 @@
+digraph g {
+name="pps";
+
+graph []
+edge  [type="defdst"]
+
+subgraph cpu0 {
+  node  [cpu="0"];
+
+  CPU0_START [type="flow", pattern="CPU0_PATTERN", patentry="true", toffs="0"];
+  CPU0_EVT_0 [type="tmsg", pattern="CPU0_PATTERN", toffs="0", id="0x1fff000000000000", par="0x01234567890abcdef"];
+  CPU0_STOP  [type="block", pattern="CPU0_PATTERN", tperiod="1000000000"];
+
+  CPU0_START -> CPU0_EVT_0 -> CPU0_STOP;
+  CPU0_STOP -> CPU0_EVT_0;
+  CPU0_START -> CPU0_EVT_0 [type="flowdst"];
+
+  }
+
+}
