@@ -281,7 +281,6 @@ def compare_results(ver):
         for line in output:
             save_file.write(line)
         save_file.close()
-        print "+++"
         with open('../devices.json') as json_file:
             data = json.load(json_file)
             for p in data:
@@ -298,22 +297,27 @@ def compare_results(ver):
                         f1 = open(file_name, 'r')
                         f2 = open(file_name_new, 'w+')
                         for line in f1:
-                            line_cnt += 1
-                            if line.find("late") != -1:
-                                late_cnt += 1
-                            if line.find("early") != -1:
-                                early_cnt += 1
-                            if line.find("delayed") != -1:
-                                delayed_cnt += 1
-                            if line.find("conflict") != -1:
-                                conflict_cnt += 1
-                            smart_line = line.replace('!', ' !')
-                            smart_line = smart_line.replace('tDeadline: ', '')
-                            smart_line = smart_line.replace('EvtID: ', '')
-                            smart_line = smart_line.replace('Param: ', '')
-                            print_line = smart_line.split()
-                            print_line = "%s %s %s\n" % (print_line[0], print_line[1], print_line[2])
-                            f2.write(print_line)
+                            dont_save_line = 0
+                            # PPS event found? Skip this event!
+                            if "EvtID: 0x1fff000000000000" in line:
+                                dont_save_line = 1
+                            if (dont_save_line == 0):
+                                line_cnt += 1
+                                if line.find("late") != -1:
+                                    late_cnt += 1
+                                if line.find("early") != -1:
+                                    early_cnt += 1
+                                if line.find("delayed") != -1:
+                                    delayed_cnt += 1
+                                if line.find("conflict") != -1:
+                                    conflict_cnt += 1
+                                smart_line = line.replace('!', ' !')
+                                smart_line = smart_line.replace('tDeadline: ', '')
+                                smart_line = smart_line.replace('EvtID: ', '')
+                                smart_line = smart_line.replace('Param: ', '')
+                                print_line = smart_line.split()
+                                print_line = "%s %s %s\n" % (print_line[0], print_line[1], print_line[2])
+                                f2.write(print_line)
                         f1.close()
                         f2.close()
                         # Sort file by execution time
