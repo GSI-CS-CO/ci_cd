@@ -86,6 +86,12 @@ def func_stop():
                         if saftd_stop_found == 0:
                             cmd = "timeout 5 ssh %s@%s%s killall saftd" % (p['login'], p['name'], p['extension'])
                             cmd_list.append(cmd)
+                            cmd = "timeout 5 ssh %s@%s%s killall saft-ctl" % (p['login'], p['name'], p['extension'])
+                            cmd_list.append(cmd)
+                            cmd = "timeout 5 ssh %s@%s%s killall saft-pps-gen" % (p['login'], p['name'], p['extension'])
+                            cmd_list.append(cmd)
+                            cmd = "timeout 5 ssh %s@%s%s killall saft-io-ctl" % (p['login'], p['name'], p['extension'])
+                            cmd_list.append(cmd)
                             saftd_stop_found = 1
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
@@ -93,7 +99,7 @@ def func_stop():
         if v_debug == 0:
             cmd_to_perform = cmd_list[i].split()
             cmd_to_perform_info = cmd_to_perform[3]
-            print "Stopping saftd at %s..." % (cmd_to_perform_info)
+            print "Stopping saftd and tools at %s..." % (cmd_to_perform_info)
             subprocess.call(cmd_to_perform)
             time.sleep(1)
         else:
