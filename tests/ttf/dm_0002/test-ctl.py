@@ -455,7 +455,9 @@ def main():
         # Generate new parameters for the next run
         if v_test_finished == 0:
             func_gen_random_parameters(1)
-
+        else:
+            stop_snooping(1)
+    
     # Done
     exit(test_result)
 
