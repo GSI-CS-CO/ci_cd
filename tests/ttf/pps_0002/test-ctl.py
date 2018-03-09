@@ -96,7 +96,6 @@ def func_get_pps_data_master():
                         v_data_master = "udp/%s" % (str(q['iptg']))
                         v_data_master_alias = str(q['dev_name'])
                         v_data_master_found = 1
-                        v_data_master ="tcp/tsl014.acc.gsi.de" # !!!
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     if (v_data_master_found == 1):

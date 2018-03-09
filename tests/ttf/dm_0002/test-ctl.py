@@ -399,6 +399,31 @@ def archive_reports(ver):
     subprocess.call(copy_cmd.split())
 
 ########################################################################################################################
+def func_get_rnd_data_master():
+    # Find data master in config file
+    global v_data_master
+    global v_data_master_alias
+    v_data_master_found = 0
+    try:
+        with open('../devices.json') as json_file:
+            data = json.load(json_file)
+            for p in data:
+                saftd_stop_found = 0
+                for q in p['receivers']:
+                    if ("data_master_rnd" == str(q['role'])):
+                        v_data_master = "tcp/%s%s" % (str(p['name']), str(p['extension']))
+                        v_data_master_alias = str(q['dev_name'])
+                        v_data_master_found = 1
+    except (ValueError, KeyError, TypeError):
+        print "JSON format error"
+    if (v_data_master_found == 1):
+        print "Found data master [%s@%s]!" % (v_data_master_alias, v_data_master)
+        return 0
+    else:
+        print "No data master found!"
+        return 1
+
+########################################################################################################################
 def main():
     # Get arguments
     cmdtotal = len(sys.argv)
@@ -410,14 +435,15 @@ def main():
     global v_test_finished
 
     # Plausibility check
-    if cmdtotal != 3:
+    if cmdtotal != 2:
         print "Error: Please provide a data master name and amount of test iterations!"
         exit(1)
     else:
         try:
-            v_data_master = str(sys.argv[1])
-            v_test_iterations = int(sys.argv[2])
             signal.signal(signal.SIGINT, signal_handler)
+            v_test_iterations = int(sys.argv[1])
+            if func_get_rnd_data_master():
+                exit(1)
         except:
             print "Error: Could not parse given arguments!"
             exit(1)
@@ -457,7 +483,7 @@ def main():
             func_gen_random_parameters(1)
         else:
             stop_snooping(1)
-    
+
     # Done
     exit(test_result)
 
