@@ -396,7 +396,15 @@ def archive_reports(ver):
     dot_files = ' '.join(str(e) for e in dot_files)
     copy_cmd = "cp %s %s" % (dot_files, timestamp_dir)
     subprocess.call(copy_cmd.split())
-    # Save rpt files
+    # Save DM status
+    cmd = "dm-cmd %s details" % (v_data_master)
+    proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
+    (out, err) = proc.communicate()
+    save_file = open("dm_status.rpt", 'w+')
+    for line in out:
+        save_file.write(line)
+    save_file.close()
+    # Save rpt file
     dot_files = (glob.glob("*.rpt"))
     dot_files = ' '.join(str(e) for e in dot_files)
     copy_cmd = "cp %s %s" % (dot_files, timestamp_dir)
