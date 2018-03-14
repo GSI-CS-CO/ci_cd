@@ -163,11 +163,11 @@ def func_flash():
                         cmd = "timeout 5 ssh %s@%s%s rm %s.rpd" % (p['login'], p['name'], p['extension'], q['type'])
                         cmd_list.append(cmd)
                         if str(q['type']) == "ftm":
-                            cmd = "timeout 10 ssh %s@%s%s wget %s/ftm/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
+                            cmd = "timeout 30 ssh %s@%s%s wget %s/ftm/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
                         else:
-                            cmd = "timeout 10 ssh %s@%s%s wget %s/gateware/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
+                            cmd = "timeout 30 ssh %s@%s%s wget %s/gateware/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
                         cmd_list.append(cmd)
-                        cmd = "timeout 180 ssh %s@%s%s eb-flash %s %s.rpd" % (p['login'], p['name'], p['extension'], q['slot'], q['type'])
+                        cmd = "timeout 720 ssh %s@%s%s eb-flash %s %s.rpd" % (p['login'], p['name'], p['extension'], q['slot'], q['type'])
                         cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
