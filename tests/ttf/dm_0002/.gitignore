@@ -5,4 +5,5 @@
 *.out
 dm.dict
 dm.groups
+dm.hashes
 sched-builder
