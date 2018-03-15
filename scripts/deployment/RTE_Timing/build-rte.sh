@@ -107,6 +107,11 @@ for i in flash console info sflash reset time config-nv; do
 done
 cp monitoring/eb-mon $RTE_DIR/bin
 
+# Build display toolchain
+cd $TMP_DIR/$BEL_PROJECTS/ip_cores/etherbone-core/api
+./autogen.sh
+./configure
+make -j $JOBS
 cd $TMP_DIR/$BEL_PROJECTS/tools/display
 make LOC=ASL
 cp simple-display $RTE_DIR/bin
