@@ -1,10 +1,10 @@
 #! /bin/bash
 #PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
-BEL_BRANCH="balloon"
+BEL_BRANCH="doomsday"
 BEL_RELEASE=""
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
-DEPLOY_TARGET="/dev/null"
+DEPLOY_TARGET="/common/export/timing-rte/tg-doomsday-v4.0.0-alpha-master-and-display"
 
 # FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
 # YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
@@ -89,6 +89,7 @@ git clean -xfd .
 ./autogen.sh
 export PKG_CONFIG_PATH=$RTE_DIR/lib/pkgconfig
 ./configure --prefix=""
+make -j $JOBS
 make -j $JOBS DESTDIR=$RTE_DIR install
 
 # Build all tools and copy the
@@ -105,6 +106,10 @@ for i in flash console info sflash reset time config-nv; do
   cp eb-$i $RTE_DIR/bin
 done
 cp monitoring/eb-mon $RTE_DIR/bin
+
+cd $TMP_DIR/$BEL_PROJECTS/tools/display
+make LOC=ASL
+cp simple-display $RTE_DIR/bin
 
 # Build driver
 echo "BUILDING DRIVER"
