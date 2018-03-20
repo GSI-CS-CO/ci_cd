@@ -64,7 +64,7 @@ cd ../../../
 
 # =============================================================================
 # Build report
-cd ..
+cd ../..
 ./reporter.sh $v_build_target
 cp $v_build_target.rpt $v_webserver_base$v_webserver_target/$v_build_target.rpt
 
