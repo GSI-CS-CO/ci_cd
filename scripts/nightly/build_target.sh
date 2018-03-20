@@ -46,6 +46,12 @@ export GSI_BUILD_TYPE=$v_build_type
 make $v_build_target
 
 # =============================================================================
+# Build report
+cd ..
+./reporter.sh $v_build_target
+cp $v_build_target.rpt $v_webserver_base$v_webserver_target/$v_build_target.rpt
+
+# =============================================================================
 # Copy files to webserver
 cp `find . -name *.rpd` $v_webserver_base$v_webserver_target/$v_build_target.rpd
 cp `find . -name *.sof` $v_webserver_base$v_webserver_target/$v_build_target.sof
