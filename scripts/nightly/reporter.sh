@@ -1,8 +1,11 @@
 #!/bin/bash
-# Usage
-# =================================================================================================
-# ./reporter.sh <target_name>
-# -> <target_name> must match with job name (ftm, exploder5, pexarria5, ...)
+# =============================================================================
+# Get command line arguments
+v_build_target=$1;
+v_target_branch=$2;
+v_webserver_target=$3;
+v_build_type=$4
+v_webserver_base=/var/www/html/releases/;
 
 # Custom settings
 # =================================================================================================
@@ -42,22 +45,21 @@ report_files=(
 # Start report filter
 # =================================================================================================
 # Create report file
-target=$1
-if [ -f $target.rpt ]; then
-  rm $target.rpt
+if [ -f $v_build_target.rpt ]; then
+  rm $v_build_target.rpt
 fi
-touch $target.rpt
+touch $v_build_target.rpt
 
 # Initialize file
-echo `date` >> $target.rpt
-echo "" >> $target.rpt
+echo `date` >> $v_build_target.rpt
+echo "" >> $v_build_target.rpt
 
 # Iterate files
 for j in "${report_files[@]}"
 do
   report_file=$j
-  echo "Content of $report_file" >> $target.rpt
-  echo "================================================================================" >> $target.rpt
+  echo "Content of $report_file" >> $v_build_target.rpt
+  echo "================================================================================" >> $v_build_target.rpt
   while read LINE
   do
     # Get warnings from file
@@ -77,7 +79,10 @@ do
     fi
     # Check if string is neither empty nor space in shell script
     if [ ! -z "$temp" -a "$temp" != " " ]; then
-      echo $temp >> $target.rpt
+      echo $temp >> $v_build_target.rpt
     fi
   done <$report_file
 done
+
+# Copy report to webserver
+cp $v_build_target.rpt $v_webserver_base$v_webserver_target/$v_build_target.rpt
