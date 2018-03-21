@@ -1,4 +1,6 @@
 #!/bin/bash
+set -ex
+
 # =============================================================================
 # Get command line arguments
 v_build_target=$1;
