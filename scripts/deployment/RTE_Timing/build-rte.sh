@@ -168,7 +168,7 @@ echo "GSI Timing RTE $(date '+%d-%m-%Y_%H-%M-%S') " > $BUILD_INFO
 echo "Compiled by $(whoami) using $0 on $(hostname) - Linux  $(uname -r)" >> $BUILD_INFO
 echo "CI_CD Project" >> $BUILD_INFO
 echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
-echo " -${GIT_BRANCH}" >> $BUILD_INFO
+echo " - ${GIT_BRANCH}" >> $BUILD_INFO
 #echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
 cd $TMP_DIR/$BEL_PROJECTS
 
@@ -180,7 +180,7 @@ fi
 
 echo "BEL_PROJECTS" >> $BUILD_INFO
 echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
-echo " -${GIT_BRANCH}" >> $BUILD_INFO
+echo " - ${GIT_BRANCH}" >> $BUILD_INFO
 #echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
 echo "Last Commits in repo:" >> $BUILD_INFO
 echo "$(parse_git_last_commits)" >> $BUILD_INFO
