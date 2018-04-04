@@ -1,6 +1,6 @@
 #! /bin/bash
 #PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
-BEL_BRANCH="balloon"
+BEL_BRANCH="doomsday"
 BEL_RELEASE=""
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
@@ -89,6 +89,7 @@ git clean -xfd .
 ./autogen.sh
 export PKG_CONFIG_PATH=$RTE_DIR/lib/pkgconfig
 ./configure --prefix=""
+make -j $JOBS
 make -j $JOBS DESTDIR=$RTE_DIR install
 
 # Build all tools and copy the
@@ -148,6 +149,15 @@ yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH readline.$ARCH ope
 cd $RTE_DIR
 for i in $TMP_DIR/rpm/*.rpm; do rpm2cpio "$i" | cpio -idmv; done
 
+# Build display tool
+cd $TMP_DIR/$BEL_PROJECTS/ip_cores/etherbone-core/api
+./autogen.sh
+./configure
+make -j $JOBS
+cd $TMP_DIR/$BEL_PROJECTS/tools/display
+make LOC=ASL
+cp simple-display $RTE_DIR/bin
+
 # Create compilation information
 cd $BASE_DIR
 . timing-rte_buildinfo.sh
@@ -158,7 +168,7 @@ echo "GSI Timing RTE $(date '+%d-%m-%Y_%H-%M-%S') " > $BUILD_INFO
 echo "Compiled by $(whoami) using $0 on $(hostname) - Linux  $(uname -r)" >> $BUILD_INFO
 echo "CI_CD Project" >> $BUILD_INFO
 echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
-echo " -${GIT_BRANCH}" >> $BUILD_INFO
+echo " - ${GIT_BRANCH}" >> $BUILD_INFO
 #echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
 cd $TMP_DIR/$BEL_PROJECTS
 
@@ -170,7 +180,7 @@ fi
 
 echo "BEL_PROJECTS" >> $BUILD_INFO
 echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
-echo " -${GIT_BRANCH}" >> $BUILD_INFO
+echo " - ${GIT_BRANCH}" >> $BUILD_INFO
 #echo " - $(parse_git_dirty_word)" >> $BUILD_INFO
 echo "Last Commits in repo:" >> $BUILD_INFO
 echo "$(parse_git_last_commits)" >> $BUILD_INFO
