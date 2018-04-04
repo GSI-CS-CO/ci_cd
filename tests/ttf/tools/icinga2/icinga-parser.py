@@ -70,10 +70,6 @@ def func_get_nodes(ver):
 
     # Create config file for each type
     for x in l_types:
-        # Create file
-        file_name = "nodes_%s.cfg" % x
-        cfgfile = open(file_name, 'w+')
-
         # Hostgroup
         #cfgfile.write("define hostgroup {\n")
         #print_line =  "        hostgroup_name %s\n" % x
@@ -98,25 +94,18 @@ def func_get_nodes(ver):
             if l_dev_types[i] == x:
                 print_line = "object Host \"wrn_%s_%s\" {\n" % (l_dev_nodes[i], l_dev_roles[i])
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
                 print_line = "        address = \"%s\"\n" % (l_dev_ips[i])
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
                 print_line = "        check_command = \"hostalive\"\n"
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
+                print_line = "        groups = [ \"nodes\" ]\n"
+                l_all_lines.append(print_line)
                 l_all_lines.append("}\n\n")
-                cfgfile.write("}\n\n")
-        cfgfile.close()
 
 ########################################################################################################################
 def func_get_switches(ver):
     # Vars
     global l_all_lines
-
-    # Create file
-    file_name = "switches.cfg"
-    cfgfile = open(file_name, 'w+')
 
     # Try to find all kinds of nodes
     try:
@@ -125,27 +114,20 @@ def func_get_switches(ver):
             for p in data:
                 print_line = "object Host \"wrs_%s_%s\" {\n" % (p['name'], p['role'])
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
                 print_line = "        address = \"%s\"\n" % (p['ip'])
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
                 print_line = "        check_command = \"hostalive\"\n"
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
+                print_line = "        groups = [ \"switches\" ]\n"
+                l_all_lines.append(print_line)
                 l_all_lines.append("}\n\n")
-                cfgfile.write("}\n\n")
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
-    cfgfile.close()
 
 ########################################################################################################################
 def func_get_chassis(ver):
     # Vars
     global l_all_lines
-
-    # Create file
-    file_name = "chassis.cfg"
-    cfgfile = open(file_name, 'w+')
 
     # Try to find all kinds of nodes
     try:
@@ -154,18 +136,15 @@ def func_get_chassis(ver):
             for p in data:
                 print_line = "object Host \"host_%s\" {\n" % (p['name'])
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
                 print_line = "        address = \"%s%s\"\n" % (p['name'], p['extension'])
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
                 print_line = "        check_command = \"hostalive\"\n"
                 l_all_lines.append(print_line)
-                cfgfile.write(print_line)
+                print_line = "        groups = [ \"chassis\" ]\n"
+                l_all_lines.append(print_line)
                 l_all_lines.append("}\n\n")
-                cfgfile.write("}\n\n")
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
-    cfgfile.close()
 
 ########################################################################################################################
 def func_create_hosts_dot_conf(ver):
@@ -180,6 +159,22 @@ def func_create_hosts_dot_conf(ver):
     cfgfile.close()
 
 ########################################################################################################################
+def func_create_groups_dot_conf(ver):
+    # Write file
+    file_name = "groups.conf"
+    cfgfile = open(file_name, 'w+')
+    cfgfile.write("object HostGroup \"switches\" {\n")
+    cfgfile.write("        display_name = \"White Rabbit Switches\"\n")
+    cfgfile.write("}\n\n")
+    cfgfile.write("object HostGroup \"nodes\" {\n")
+    cfgfile.write("        display_name = \"White Rabbit Nodes (Timing Receivers)\"\n")
+    cfgfile.write("}\n\n")
+    cfgfile.write("object HostGroup \"chassis\" {\n")
+    cfgfile.write("        display_name = \"Timing Receiver Chassis (Hosts)\"\n")
+    cfgfile.write("}\n\n")
+    cfgfile.close()
+
+########################################################################################################################
 def main():
     # Get nodes
     func_get_nodes(0)
@@ -190,8 +185,11 @@ def main():
     # Get hosts
     func_get_chassis(0)
 
-    # Done
+    # Create files
     func_create_hosts_dot_conf(0)
+    func_create_groups_dot_conf(0)
+
+    # Done
     exit(0)
 
 # Main
