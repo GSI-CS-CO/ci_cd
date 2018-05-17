@@ -2,7 +2,6 @@
 . /etc/functions
 
 log 'initializing'
-
 KERNELVER=$(/bin/uname -r)
 ARCH=$(/bin/uname -m)
 HOSTNAME=$(/bin/hostname -s)
@@ -21,13 +20,13 @@ if [ ! -d /opt/$NAME/$ARCH/lib/modules/$KERNEL_VERSION ]; then
 	log_error "kernel modules for $KERNELVER not available"
 fi
 
-
 log 'copying utilities to ramdisk'
 cp -a /opt/$NAME/$ARCH/bin/* /usr/bin/
 cp -a /opt/$NAME/$ARCH/sbin/* /usr/sbin/
 cp -a /opt/$NAME/$ARCH/usr/bin/* /usr/bin/
 cp -a /opt/$NAME/$ARCH/usr/sbin/* /sbin
 cp -a /opt/$NAME/$ARCH/usr/share/* /share
+cp -a /opt/$NAME/$ARCH/usr/share/* /usr/share
 cp -a /opt/$NAME/$ARCH/usr/include/* /include
 cp -a /opt/$NAME/$ARCH/usr/lib/* /lib
 cp -a /opt/$NAME/$ARCH/usr/lib64/* /lib
@@ -37,16 +36,30 @@ mkdir /lib/modules/3.10.101-rt111-scu01/extra/
 cp -a /opt/$NAME/$ARCH/lib/modules/3.10.101-rt111-scu01/extra/*.ko* /lib/modules/3.10.101-rt111-scu01/extra/
 cp -a /opt/$NAME/$ARCH/lib/modules/3.10.101-rt111-scu01/legacy-vme64x-core/drv/driver/*.ko* /lib/modules/3.10.101-rt111-scu01/extra/
 cp -a /opt/$NAME/$ARCH/etc/* /etc/
+cp /opt/$NAME/$ARCH/etc/profile.d/dummy.sh /etc/profile.d/dummy.sh
+cp /opt/$NAME/$ARCH/etc/dbus-1/system.conf /etc/dbus-1/system.conf
+
+# super ugly libpthread patch (tbd: clean up this script)
+cp ./lib/libpthread-2.17.so ./usr/lib/libpthread-2.17.so
+
+# check if we are running admin mode
+if [ -f /etc/admin ]; then
+	log 'locking device'
+	killall dropbear
+	sleep 1
+	# disable password logins
+	dropbear -s -B
+fi
 
 # run ldconfig
 ldconfig
 
-#load drivers
+# load drivers
 insmod /lib/modules/$KERNEL_VERSION/extra/wishbone.ko
 insmod /lib/modules/$KERNEL_VERSION/extra/pcie_wb.ko
 insmod /lib/modules/$KERNEL_VERSION/extra/vmebus.ko
 
-# Start etherbone TCP->PCIe gateway
+# start etherbone TCP->PCIe gateway
 test -f /usr/bin/socat || cp -a /opt/$NAME/socat /usr/bin
 /usr/bin/socat tcp-listen:60368,reuseaddr,fork file:/dev/wbm0 &
 
@@ -62,6 +75,10 @@ log 'setting up dbus acounts'
 echo 'dbus:*:100:100:DBus:/:' >> /etc/passwd
 echo 'dbus:*:100:' >> /etc/group
 mkdir /var/run/dbus
+mkdir run
+cd run
+mkdir dbus
+cd ..
 
 log 'starting services'
 chrt -r 25 dbus-daemon --system

@@ -1,10 +1,11 @@
 #! /bin/bash
 #PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
 BEL_BRANCH="doomsday"
-BEL_RELEASE=""
+BEL_RELEASE="doomsday-v4.0.4"
+BEL_BUILD_ADMIN="yes"
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
-DEPLOY_TARGET="/dev/null"
+DEPLOY_TARGET="/common/export/timing-rte/tg-doomsday-v4.0.4-admin"
 
 # FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
 # YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
@@ -54,12 +55,7 @@ if [ -n "$BEL_RELEASE" ]; then
   git checkout $BEL_RELEASE
 fi
 git pull origin $BEL_BRANCH
-git submodule init
-git submodule update --recursive
-# depending on the git version, nested (max 3) submodules can be fetched
-cd ip_cores/fpga-config-space
-git submodule init
-git submodule update --recursive
+./fix-git.sh
 
 cd $TMP_DIR
 # Get the kernel
@@ -102,10 +98,56 @@ make eca DESTDIR=$RTE_DIR EXTRA_FLAGS=-I"$RTE_DIR/lib/" EB=$TMP_DIR/$BEL_PROJECT
 
 cd $TMP_DIR/$BEL_PROJECTS/tools
 make -j $JOBS
+# Default tools
 for i in flash console info sflash reset time config-nv; do
   cp eb-$i $RTE_DIR/bin
 done
 cp monitoring/eb-mon $RTE_DIR/bin
+
+# Admin tools
+if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
+  echo "INSTALLING ADMIN TOOLS"
+  echo "----------------------"
+  cp eb-iflash $RTE_DIR/bin
+  cp monitoring/eb-massmon $RTE_DIR/bin
+  cd ../ip_cores/wrpc-sw/tools
+  make eb-w1-write EB="../../etherbone-core/api/" LDFLAGS=""
+  cp eb-w1-write $RTE_DIR/bin
+fi
+
+# Data Master tools
+if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
+  echo "INSTALLING DATA MASTER TOOLS"
+  echo "----------------------------"
+  cd ../modules/ftm/ftmx86
+  make
+  cp libcarpedm.so $RTE_DIR/lib
+  cp dm-cmd $RTE_DIR/bin
+  cp dm-sched $RTE_DIR/bin
+  cp /usr/lib64/libicudata* $RTE_DIR/lib
+  cp /usr/lib64/libicui18n* $RTE_DIR/lib
+  cp /usr/lib64/libicuuc* $RTE_DIR/lib
+  cp /usr/lib64/libboost_* $RTE_DIR/lib
+fi
+
+# Get missing libs from system
+cp /usr/lib64/libsystemd* $RTE_DIR/lib
+cp /usr/lib64/libcap* $RTE_DIR/lib
+cp /usr/lib64/libgcrypt* $RTE_DIR/lib
+cp /usr/lib64/libgpg-error* $RTE_DIR/lib
+cp /usr/lib64/libdw* $RTE_DIR/lib
+cp /usr/lib64/libattr* $RTE_DIR/lib
+cp /usr/lib64/libelf* $RTE_DIR/lib
+cp /usr/lib64/libbz2* $RTE_DIR/lib
+cp /lib/libpthread* $RTE_DIR/lib
+cp /lib/libpthread* $RTE_DIR/lib
+cp /usr/lib64/libc* $RTE_DIR/lib
+
+# Get busctl and ldd
+if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
+  cp /usr/bin/busctl $RTE_DIR/bin/busctl
+  cp /usr/bin/ldd $RTE_DIR/bin/ldd
+fi
 
 # Build driver
 echo "BUILDING DRIVER"
@@ -127,6 +169,9 @@ for i in $TMP_DIR/lib/*; do rpm2cpio "$i" | cpio -idmv; done
 sed -i 1,1d $ROOT_DIR/usr/lib64/pkgconfig/*
 sed -i "1i prefix=$ROOT_DIR" $ROOT_DIR/usr/lib64/pkgconfig/*
 
+# Get dbus system.conf
+cp $RTE_DIR/rte-build/usr/share/
+
 #building saftlib
 echo "BUILDING SAFTLIB"
 echo "----------------"
@@ -138,7 +183,8 @@ cd $TMP_DIR/$BEL_PROJECTS/ip_cores/saftlib
 git clean -xfd .
 ./autogen.sh
 ./configure --prefix="" --sysconfdir=/etc
-make -j $JOBS DESTDIR=$RTE_DIR install
+#make -j $JOBS DESTDIR=$RTE_DIR install
+make DESTDIR=$RTE_DIR install
 
 # Saftlib runtime dependencies
 yumdownloader --destdir $TMP_DIR/rpm glib2.$ARCH dbus libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH dbus-devel.$ARCH dbus-glib.$ARCH dbus-glib-devel.$ARCH dbus-libs.$ARCH libffi.$ARCH pcre.$ARCH xz-libs.$ARCH libuuid.$ARCH libblkid.$ARCH libmount.$ARCH glibmm24.$ARCH libsigc++20.$ARCH
@@ -189,9 +235,23 @@ echo "$(parse_git_last_commits)" >> $BUILD_INFO
 echo "DEPLOYMENT"
 echo "----------"
 
+# Copy stuff
+mkdir $RTE_DIR/etc/dbus-1/
+cp $BASE_DIR/system.conf $RTE_DIR/etc/dbus-1/system.conf
+
+# Copy admin stuff
+# Admin tools
+if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
+  mkdir $RTE_DIR/etc/profile.d/
+  cp $BASE_DIR/dummy.sh $RTE_DIR/etc/profile.d/dummy.sh
+  echo "1" > admin
+  cp admin $RTE_DIR/etc/
+fi
+
 rm -rf $DEPLOY_TARGET/*
 mkdir $DEPLOY_TARGET/$ARCH
 cp -r $RTE_DIR/* $DEPLOY_TARGET/$ARCH
 
 #run init script
 cp $BASE_DIR/timing-rte.sh $DEPLOY_TARGET
+
