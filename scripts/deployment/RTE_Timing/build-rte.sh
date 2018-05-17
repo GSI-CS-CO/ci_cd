@@ -1,11 +1,11 @@
 #! /bin/bash
 #PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
-BEL_BRANCH="doomsday"
-BEL_RELEASE="doomsday-v4.0.4"
-BEL_BUILD_ADMIN="yes"
+BEL_BRANCH=""
+BEL_RELEASE=""
+BEL_BUILD_ADMIN=""
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
-DEPLOY_TARGET="/common/export/timing-rte/tg-doomsday-v4.0.4-admin"
+DEPLOY_TARGET="/dev/null"
 
 # FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
 # YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
