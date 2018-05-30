@@ -2,7 +2,7 @@
 #PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
 BEL_BRANCH=""
 BEL_RELEASE=""
-BEL_BUILD_ADMIN=""
+BEL_BUILD_ADMIN="yes"
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
 DEPLOY_TARGET="/dev/null"
@@ -119,7 +119,7 @@ fi
 if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
   echo "INSTALLING DATA MASTER TOOLS"
   echo "----------------------------"
-  cd ../modules/ftm/ftmx86
+  cd ../../../modules/ftm/ftmx86
   make
   cp libcarpedm.so $RTE_DIR/lib
   cp dm-cmd $RTE_DIR/bin
@@ -139,7 +139,6 @@ cp /usr/lib64/libdw* $RTE_DIR/lib
 cp /usr/lib64/libattr* $RTE_DIR/lib
 cp /usr/lib64/libelf* $RTE_DIR/lib
 cp /usr/lib64/libbz2* $RTE_DIR/lib
-cp /lib/libpthread* $RTE_DIR/lib
 cp /lib/libpthread* $RTE_DIR/lib
 cp /usr/lib64/libc* $RTE_DIR/lib
 
@@ -254,4 +253,3 @@ cp -r $RTE_DIR/* $DEPLOY_TARGET/$ARCH
 
 #run init script
 cp $BASE_DIR/timing-rte.sh $DEPLOY_TARGET
-
