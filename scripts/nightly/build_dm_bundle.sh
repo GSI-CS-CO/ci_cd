@@ -48,10 +48,10 @@ export GSI_BUILD_TYPE=$v_build_type
 make
 export PATH=$PATH:`pwd`/toolchain/bin
 echo $PATH
-cd modules/ftm/ftmfw
-make ftm.bin
-cp ftm.bin $v_webserver_base$v_webserver_target/ftm.bin
-cp ftm.elf $v_webserver_base$v_webserver_target/ftm.elf
+#cd modules/ftm/ftmfw
+#make ftm.bin
+#cp ftm.bin $v_webserver_base$v_webserver_target/ftm.bin
+#cp ftm.elf $v_webserver_base$v_webserver_target/ftm.elf
 
 # Build tools?
 #cd ../ftmx86
