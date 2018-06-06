@@ -52,14 +52,17 @@ cd modules/ftm/ftmfw
 make ftm.bin
 cp ftm.bin $v_webserver_base$v_webserver_target/ftm.bin
 cp ftm.elf $v_webserver_base$v_webserver_target/ftm.elf
-cd ../ftmx86
-make
-cp dm-cmd $v_webserver_base$v_webserver_target/dm-cmd
-cp dm-sched $v_webserver_base$v_webserver_target/dm-sched
-cp libcarpedm.so $v_webserver_base$v_webserver_target/libcarpedm.so
+
+# Build tools?
+#cd ../ftmx86
+#make
+#cp dm-cmd $v_webserver_base$v_webserver_target/dm-cmd
+#cp dm-sched $v_webserver_base$v_webserver_target/dm-sched
+#cp libcarpedm.so $v_webserver_base$v_webserver_target/libcarpedm.so
+
 cd ../../../syn/gsi_pexarria5/ftm/
-make clean
-make
+true || make clean
+true || make
 cd ../../../
 
 # =============================================================================
