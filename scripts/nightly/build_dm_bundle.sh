@@ -47,22 +47,9 @@ fi
 export GSI_BUILD_TYPE=$v_build_type
 make
 export PATH=$PATH:`pwd`/toolchain/bin
-echo $PATH
-#cd modules/ftm/ftmfw
-#make ftm.bin
-#cp ftm.bin $v_webserver_base$v_webserver_target/ftm.bin
-#cp ftm.elf $v_webserver_base$v_webserver_target/ftm.elf
-
-# Build tools?
-#cd ../ftmx86
-#make
-#cp dm-cmd $v_webserver_base$v_webserver_target/dm-cmd
-#cp dm-sched $v_webserver_base$v_webserver_target/dm-sched
-#cp libcarpedm.so $v_webserver_base$v_webserver_target/libcarpedm.so
-
-cd ../../../syn/gsi_pexarria5/ftm/
-true || make clean
-true || make
+cd syn/gsi_pexarria5/ftm/
+make clean || true
+make || true
 cd ../../../
 
 # =============================================================================
