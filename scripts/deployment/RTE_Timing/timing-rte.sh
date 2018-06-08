@@ -66,7 +66,7 @@ test -f /usr/bin/socat || cp -a /opt/$NAME/socat /usr/bin
 # vme_wb driver is loaded if vmebus is already loaded
 if [ `ls /proc/vme/info | grep -o info` ]
 then
-	/sbin/rmmod pcie_wb
+	# /sbin/rmmod pcie_wb
 	# Load different slot numbers for "automatic" card detection up to slot 8 (loading the vme_wb driver with non-existing slots does not harm)
 	/sbin/insmod /lib/modules/$KERNEL_VERSION/extra/vme_wb.ko slot=1,2,3,4,5,6,7,8 vmebase=0,0,0,0,0,0,0,0 vector=1,2,3,4,5,6,7,8 level=7,7,7,7,7,7,7,7 lun=1,2,3,4,5,6,7,8
 fi
