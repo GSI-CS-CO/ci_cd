@@ -28,6 +28,8 @@ v_max_events = 10
 ########################################################################################################################
 # Global settings  (do not change this)
 v_data_master = ""
+v_data_master_login = ""
+v_data_master_slot = ""
 v_total_events_dm = 0
 v_test_iterations = 0
 v_test_finished = 0
@@ -130,7 +132,7 @@ def generate_schedules(ver):
 def get_time_from_data_master(ver):
     # Get the current WR time from dm-cmd <eb-device> status call
     global v_current_time
-    cmd = "dm-cmd %s %s %s" % (v_data_master, "status", "| grep \"WR-Time: 0x\"")
+    cmd = "ssh %s@%s dm-cmd %s %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status", "| grep \"WR-Time: 0x\"")
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
     data = out.split()
@@ -183,31 +185,35 @@ def patch_comparison_files(ver):
 
 ########################################################################################################################
 def start_data_master(ver):
-    cmd = "dm-sched %s %s" % (v_data_master, "status")
+    cmd = "ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status")
     subprocess.call(cmd.split())
     if ver == 1:
         print cmd
-    cmd = "dm-sched %s %s" % (v_data_master, "clear")
+    cmd = "ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "clear")
     subprocess.call(cmd.split())
     if ver == 1:
         print cmd
     for cpu_id in range(0, v_total_cores):
         print "Uploading schedule to CPU %d..." % (cpu_id)
         file_name = "%s_cpu%s.dot" % (v_schedule_name, cpu_id)
-        cmd = "dm-sched %s add -s %s" % (v_data_master, file_name)
+        cmd = "scp %s %s@%s:/" % (file_name, v_data_master_login, v_data_master)
+        subprocess.call(cmd.split())
+        if ver == 1:
+            print cmd
+        cmd = "ssh %s@%s dm-sched %s add -s %s" % (v_data_master_login, v_data_master, v_data_master_slot, file_name)
         subprocess.call(cmd.split())
         if ver == 1:
             print cmd
         starter = "CPU%s_START" % (cpu_id)
-        cmd = "dm-cmd %s origin -c %s %s" % (v_data_master, cpu_id, starter)
+        cmd = "ssh %s@%s dm-cmd %s origin -c %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, cpu_id, starter)
         subprocess.call(cmd.split())
         if ver == 1:
             print cmd
-        cmd = "dm-cmd %s -c %s -t 0 starttime %s" % (v_data_master, cpu_id, v_start_time)
+        cmd = "ssh %s@%s dm-cmd %s -c %s -t 0 starttime %s" % (v_data_master_login, v_data_master, v_data_master_slot, cpu_id, v_start_time)
         subprocess.call(cmd.split())
         if ver == 1:
             print cmd
-        cmd = "dm-cmd %s start -c %s" % (v_data_master, cpu_id)
+        cmd = "ssh %s@%s dm-cmd %s start -c %s" % (v_data_master_login, v_data_master, v_data_master_slot, cpu_id)
         subprocess.call(cmd.split())
         if ver == 1:
             print cmd
@@ -397,7 +403,9 @@ def archive_reports(ver):
     copy_cmd = "cp %s %s" % (dot_files, timestamp_dir)
     subprocess.call(copy_cmd.split())
     # Save DM status
-    cmd = "dm-cmd %s details" % (v_data_master)
+    cmd = "ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "clear")
+    subprocess.call(cmd.split())
+    cmd = "ssh %s@%s dm-cmd %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "details")
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
     save_file = open("dm_status.rpt", 'w+')
@@ -411,10 +419,12 @@ def archive_reports(ver):
     subprocess.call(copy_cmd.split())
 
 ########################################################################################################################
-def func_get_rnd_data_master():
+def func_get_data_master():
     # Find data master in config file
     global v_data_master
+    global v_data_master_login
     global v_data_master_alias
+    global v_data_master_slot
     v_data_master_found = 0
     try:
         with open('../devices.json') as json_file:
@@ -423,13 +433,15 @@ def func_get_rnd_data_master():
                 saftd_stop_found = 0
                 for q in p['receivers']:
                     if ("data_master_rnd" == str(q['role'])):
-                        v_data_master = "tcp/%s%s" % (str(p['name']), str(p['extension']))
+                        v_data_master = "%s%s" % (str(p['name']), str(p['extension']))
                         v_data_master_alias = str(q['dev_name'])
                         v_data_master_found = 1
+			v_data_master_login = str(p['login'])
+                        v_data_master_slot = str(q['slot'])
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     if (v_data_master_found == 1):
-        print "Found data master [%s@%s]!" % (v_data_master_alias, v_data_master)
+        print "Found data master [%s:%s@%s]!" % (v_data_master_alias, v_data_master_login, v_data_master)
         return 0
     else:
         print "No data master found!"
@@ -454,7 +466,7 @@ def main():
         try:
             signal.signal(signal.SIGINT, signal_handler)
             v_test_iterations = int(sys.argv[1])
-            if func_get_rnd_data_master():
+            if func_get_data_master():
                 exit(1)
         except:
             print "Error: Could not parse given arguments!"
@@ -463,26 +475,26 @@ def main():
     # Start test
     while (v_test_finished == 0):
         # Clean up and build random schedule
-        clean_up_and_build(1)
-        generate_schedules(1)
+        clean_up_and_build(0)
+        generate_schedules(0)
 
         # Prepare Data Master
-        get_time_from_data_master(1)
-        set_start_time(1)
-        patch_comparison_files(1)
-        start_data_master(1)
+        get_time_from_data_master(0)
+        set_start_time(0)
+        patch_comparison_files(0)
+        start_data_master(0)
 
         # Clean up (stop) and start snooping
-        stop_snooping(1)
-        start_snooping(1)
+        stop_snooping(0)
+        start_snooping(0)
 
         # Wait until test should have finished
-        wait_until_end(1)
+        wait_until_end(0)
 
         # Check test results
-        get_comparison_files(1)
-        compare_results(1)
-        test_result = evaluate_reports(1)
+        get_comparison_files(0)
+        compare_results(0)
+        test_result = evaluate_reports(0)
 
         iteration_cnt += 1
         # End test?
@@ -492,9 +504,9 @@ def main():
 
         # Generate new parameters for the next run
         if v_test_finished == 0:
-            func_gen_random_parameters(1)
+            func_gen_random_parameters(0)
         else:
-            stop_snooping(1)
+            stop_snooping(0)
 
     # Done
     exit(test_result)
