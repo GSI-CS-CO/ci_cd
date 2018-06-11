@@ -10,6 +10,8 @@ import time
 ########################################################################################################################
 v_data_master = ""
 v_data_master_alias = ""
+v_data_master_login = ""
+v_data_master_slot = ""
 v_operation = "none"
 v_debug = 0
 
@@ -17,33 +19,35 @@ v_debug = 0
 def func_start():
     # Start data master
     print "Starting data master..."
-    cmd = "timeout 30 dm-sched %s %s" % (v_data_master, "status")
+    cmd = "timeout 30 ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status")
     subprocess.call(cmd.split())
-    cmd = "timeout 30 dm-sched %s %s" % (v_data_master, "clear")
+    cmd = "timeout 30 ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "clear")
     subprocess.call(cmd.split())
-    cmd = "timeout 30 dm-sched %s add -s pps.dot" % (v_data_master)
+    cmd = "scp %s %s@%s:/" % ("pps.dot", v_data_master_login, v_data_master)
     subprocess.call(cmd.split())
-    cmd = "timeout 30 dm-cmd %s %s %s" % (v_data_master, "status", "| grep \"WR-Time: 0x\"")
+    cmd = "timeout 30 ssh %s@%s dm-sched %s add -s pps.dot" % (v_data_master_login, v_data_master, v_data_master_slot,)
+    subprocess.call(cmd.split())
+    cmd = "timeout 30 ssh %s@%s dm-cmd %s %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status", "| grep \"WR-Time: 0x\"")
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
     data = out.split()
     v_start_time = data[5]
-    cmd = "timeout 30 dm-cmd %s origin -c 0 CPU0_START" % (v_data_master)
+    cmd = "timeout 30 ssh %s@%s dm-cmd %s origin -c 0 CPU0_START" % (v_data_master_login, v_data_master, v_data_master_slot)
     subprocess.call(cmd.split())
-    cmd = "timeout 30 dm-cmd %s -c 0 -t 0 starttime %s" % (v_data_master, v_start_time)
+    cmd = "timeout 30 ssh %s@%s dm-cmd %s -c 0 -t 0 starttime %s" % (v_data_master_login, v_data_master, v_data_master_slot, v_start_time)
     subprocess.call(cmd.split())
-    cmd = "timeout 30 dm-cmd %s start -c 0" % (v_data_master)
+    cmd = "timeout 30 ssh %s@%s dm-cmd %s start -c 0" % (v_data_master_login, v_data_master, v_data_master_slot)
     subprocess.call(cmd.split())
 
 ########################################################################################################################
 def func_stop():
     # Stop data master
     print "Stopping data master..."
-    cmd = "timeout 30 dm-cmd %s abort" % (v_data_master)
+    cmd = "timeout 30 ssh %s@%s dm-cmd %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "abort")
     subprocess.call(cmd.split())
-    cmd = "timeout 30 dm-sched %s %s" % (v_data_master, "clear")
+    cmd = "timeout 30 ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "clear")
     subprocess.call(cmd.split())
-    cmd = "timeout 30 dm-sched %s %s" % (v_data_master, "status")
+    cmd = "timeout 30 ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status")
     subprocess.call(cmd.split())
 
 ########################################################################################################################
@@ -85,6 +89,8 @@ def func_get_pps_data_master():
     # Find data master in config file
     global v_data_master
     global v_data_master_alias
+    global v_data_master_login
+    global v_data_master_slot
     v_data_master_found = 0
     try:
         with open('../devices.json') as json_file:
@@ -93,8 +99,10 @@ def func_get_pps_data_master():
                 saftd_stop_found = 0
                 for q in p['receivers']:
                     if ("data_master_pps" == str(q['role'])):
-                        v_data_master = "udp/%s" % (str(q['iptg']))
+                        v_data_master = "%s%s" % (str(p['name']), str(p['extension']))
                         v_data_master_alias = str(q['dev_name'])
+                        v_data_master_slot = str(q['slot'])
+                        v_data_master_login = str(p['login'])
                         v_data_master_found = 1
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
