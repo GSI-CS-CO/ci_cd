@@ -49,8 +49,7 @@
     "name" : "kp1cx02", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
     "receivers":
     [
-       { "dev_name" : "pmc_proto_104398revb_0001t", "type" : "pmc", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.22", "mactg" : "02:ff:00:02:00:06" },
-       { "dev_name" : "pmc_proto_XXXXXXrevb_0002t", "type" : "pmc", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.23", "mactg" : "02:ff:00:02:00:07" }
+       { "dev_name" : "pmc_proto_104398revb_0001t", "type" : "pmc", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.22", "mactg" : "02:ff:00:02:00:06" }
     ]
   },
   {
@@ -65,13 +64,6 @@
     "receivers":
     [
        { "dev_name" : "scuxl0001t", "type" : "scu3", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.107", "mactg" : "00:26:7b:00:03:d5" }
-    ]
-  },
-  {
-    "name" : "scuxl0097", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
-    "receivers":
-    [
-       { "dev_name" : "scuxl0097t", "type" : "scu3", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.97", "mactg" : "00:26:7b:00:03:b2" }
     ]
   },
   {
