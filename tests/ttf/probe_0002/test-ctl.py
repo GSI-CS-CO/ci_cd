@@ -126,7 +126,7 @@ def func_reset():
                 host_has_target_devices = 0
                 for q in p['receivers']:
                     if (v_target == str(q['type'])) or (v_target == "all"):
-                        cmd = "timeout 5 ssh %s@%s%s eb-reset %s" % (p['login'], p['name'], p['extension'], q['slot'])
+                        cmd = "timeout 5 ssh %s@%s%s eb-reset %s fpgareset" % (p['login'], p['name'], p['extension'], q['slot'])
                         cmd_list.append(cmd)
                         host_has_target_devices = 1
                 if (p['reset2host'] == "no") and (host_has_target_devices == 1):
