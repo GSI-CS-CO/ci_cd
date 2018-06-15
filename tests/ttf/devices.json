@@ -88,13 +88,6 @@
     ]
   },
   {
-    "name" : "scuxl0119", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
-    "receivers":
-    [
-       { "dev_name" : "scuxl0119t", "type" : "scu2", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.17", "mactg" : "00:26:7b:00:03:77" }
-    ]
-  },
-  {
     "name" : "scuxl0133", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
     "receivers":
     [
