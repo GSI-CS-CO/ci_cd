@@ -25,7 +25,7 @@ def func_start():
     subprocess.call(cmd.split())
     cmd = "scp %s %s@%s:/" % ("pps.dot", v_data_master_login, v_data_master)
     subprocess.call(cmd.split())
-    cmd = "timeout 30 ssh %s@%s dm-sched %s add -s pps.dot" % (v_data_master_login, v_data_master, v_data_master_slot,)
+    cmd = "timeout 30 ssh %s@%s dm-sched %s add -s pps.dot" % (v_data_master_login, v_data_master, v_data_master_slot)
     subprocess.call(cmd.split())
     cmd = "timeout 30 ssh %s@%s dm-cmd %s %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status", "| grep \"WR-Time: 0x\"")
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
@@ -34,6 +34,12 @@ def func_start():
     v_start_time = data[5]
     cmd = "timeout 30 ssh %s@%s dm-cmd %s origin -c 0 CPU0_START" % (v_data_master_login, v_data_master, v_data_master_slot)
     subprocess.call(cmd.split())
+
+    print v_start_time
+    print int(v_start_time, 16)
+    v_start_time =  int(v_start_time, 16) - (int(v_start_time, 16) % 1000000000)
+    print v_start_time
+
     cmd = "timeout 30 ssh %s@%s dm-cmd %s -c 0 -t 0 starttime %s" % (v_data_master_login, v_data_master, v_data_master_slot, v_start_time)
     subprocess.call(cmd.split())
     cmd = "timeout 30 ssh %s@%s dm-cmd %s start -c 0" % (v_data_master_login, v_data_master, v_data_master_slot)
