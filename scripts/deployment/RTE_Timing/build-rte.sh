@@ -2,7 +2,7 @@
 #PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
 BEL_BRANCH=""
 BEL_RELEASE=""
-BEL_BUILD_ADMIN="yes"
+BEL_BUILD_ADMIN="no"
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
 DEPLOY_TARGET="/dev/null"
