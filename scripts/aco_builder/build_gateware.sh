@@ -14,11 +14,6 @@ export QUARTUS_64BIT=1
 export PATH=$PATH:$QUARTUS
 
 # =========================================================
-# GIT Settings (Don't Edit This Area!)
-git config --global user.name "Timing Group Jenkins"
-git config --global user.email "csco-tg@gsi.de"
-
-# =========================================================
 # Build Steps (Don't Edit This Area!)
 git clone https://github.com/GSI-CS-CO/bel_projects.git
 cd bel_projects
