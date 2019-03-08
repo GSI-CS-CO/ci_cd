@@ -8,10 +8,11 @@ export CFG_TARGET=scu2 # scu2, scu3, vetar2a, vetar2a-ee-butis, exploder5, pexar
 
 # =========================================================
 # Environmental Settings (Don't Edit This Area!)
-export QUARTUS_ROOTDIR=/opt/quartus/$CFG_QUARTUS_VERSION/quartus
-export QUARTUS=$QUARTUS_ROOTDIR
-export QUARTUS_64BIT=1
+export QUARTUS=/opt/quartus/$CFG_QUARTUS_VERSION/quartus
+export QSYS_ROOTDIR=$QUARTUS/sopc_builder/bin
 export PATH=$PATH:$QUARTUS
+export PATH=$PATH:$QSYS_ROOTDIR
+export QUARTUS_64BIT=1
 
 # =========================================================
 # Build Steps (Don't Edit This Area!)
