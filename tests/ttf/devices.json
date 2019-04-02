@@ -4,9 +4,9 @@
     "receivers":
     [
        { "dev_name" : "pexaria51t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.193", "mactg" : "00:26:7b:00:04:4b" },
-       { "dev_name" : "pexaria27t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.84", "mactg" : "00:26:7b:00:04:27" },
+       { "dev_name" : "pexaria27t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.84",  "mactg" : "00:26:7b:00:04:27" },
        { "dev_name" : "pexaria41t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm2", "iptg" : "192.168.128.103", "mactg" : "00:26:7b:00:04:41" },
-       { "dev_name" : "pexaria15t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm3", "iptg" : "192.168.128.71", "mactg" : "00:26:7b:00:04:15" },
+       { "dev_name" : "pexaria15t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm3", "iptg" : "192.168.128.71",  "mactg" : "00:26:7b:00:04:15" },
        { "dev_name" : "pexaria50t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm4", "iptg" : "192.168.128.192", "mactg" : "00:26:7b:00:04:4a" },
        { "dev_name" : "pexaria43t", "type" : "pexarria5", "role" : "node", "slot" : "dev/wbm5", "iptg" : "192.168.128.105", "mactg" : "00:26:7b:00:04:43" }
     ]
@@ -17,7 +17,7 @@
     [
        { "dev_name" : "expl004t", "type" : "exploder5", "role" : "pps_monitor", "slot" : "dev/wbm0", "iptg" : "192.168.128.139", "mactg" : "00:26:7b:00:02:11" },
        { "dev_name" : "expl007t", "type" : "exploder5", "role" : "pps_monitor", "slot" : "dev/wbm1", "iptg" : "192.168.128.142", "mactg" : "00:26:7b:00:02:14" },
-       { "dev_name" : "expl011t", "type" : "exploder5", "role" : "node", "slot" : "dev/wbm2", "iptg" : "192.168.128.146", "mactg" : "00:26:7b:00:02:18" },
+       { "dev_name" : "expl011t", "type" : "exploder5", "role" : "node",        "slot" : "dev/wbm2", "iptg" : "192.168.128.146", "mactg" : "00:26:7b:00:02:18" },
        { "dev_name" : "expl013t", "type" : "exploder5", "role" : "pps_monitor", "slot" : "dev/wbm3", "iptg" : "192.168.128.148", "mactg" : "00:26:7b:00:02:1a" }
     ]
   },
@@ -25,8 +25,7 @@
     "name" : "tgtca002", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "no",
     "receivers":
     [
-       { "dev_name" : "microtca_proto_0001t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.20", "mactg" : "02:ff:00:02:00:04" },
-       { "dev_name" : "microtca_proto_0002t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.21", "mactg" : "02:ff:00:02:00:05" }
+       { "dev_name" : "amc127797t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.129.115", "mactg" : "70:b3:d5:63:50:17" }
     ]
   },
   {
