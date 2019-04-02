@@ -48,7 +48,8 @@
     "name" : "kp1cx02", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
     "receivers":
     [
-       { "dev_name" : "pmc_proto_104398revb_0001t", "type" : "pmc", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.22", "mactg" : "02:ff:00:02:00:06" }
+       { "dev_name" : "pmc122300t", "type" : "pmc", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.129.110", "mactg" : "70:b3:d5:63:50:0f" },
+       { "dev_name" : "pmc122304t", "type" : "pmc", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.129.111", "mactg" : "70:b3:d5:63:50:13" }
     ]
   },
   {
