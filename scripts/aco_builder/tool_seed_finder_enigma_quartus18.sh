@@ -21,6 +21,26 @@
 # command fails, use either shabang explicitly or add "set +e" line.
 # Otherwise, Jenkins build terminates with message:
 #   Build step 'Execute shell' marked build as failure
+#
+# Configurations
+# General:
+# - Discard old builds
+# --> Strategy = Log Rotation (Max # of builds to keep = 7)
+# - Restrict where this project can be run
+# --> Label Expression = quartus
+# Build Environment
+# - Run Xvnc during build
+# --> Create a dedicated Xauthority file per build? (checked)
+# Build
+# - Execute shell
+# --> Command = this script (copy & paste)
+# Post-build Actions
+# - Archive the artifacts
+# --> Files to archive = seed_finder.log
+# - Editable Email Notification
+# --> Project Recipient List = your email address
+# --> Attachments = seed_finder.log
+# --> Advanced Settings... -> Triggers = Always (Send To = Recipient List)
 
 # ==============================================================================
 # Job Settings (User Settings)
