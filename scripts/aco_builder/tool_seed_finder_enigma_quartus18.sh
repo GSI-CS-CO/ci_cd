@@ -40,7 +40,7 @@
 # - Editable Email Notification
 # --> Project Recipient List = your email address
 # --> Attachments = seed_finder.log
-# --> Advanced Settings... -> Triggers = Always (Send To = Recipient List)
+# --> Advanced Settings... -> Triggers = Success (Send To = Recipient List)
 
 # ==============================================================================
 # Job Settings (User Settings)
