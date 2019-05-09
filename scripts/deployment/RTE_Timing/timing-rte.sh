@@ -86,3 +86,5 @@ chrt -r 25 dbus-daemon --system
 saftlib_devices=$(for dev in /dev/wbm*; do echo tr${dev#/dev/wbm}:${dev#/}; done)
 saftd $saftlib_devices >/tmp/saftd.log 2>&1 &
 dbus-uuidgen > /etc/machine-id
+# disable the watchdog timer
+for dev in /dev/wbm*; do eval eb-reset ${dev#/} wddisable; done
