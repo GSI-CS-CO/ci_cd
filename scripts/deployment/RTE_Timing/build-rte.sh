@@ -142,9 +142,8 @@ cp /usr/lib64/libbz2* $RTE_DIR/lib
 cp /lib/libpthread* $RTE_DIR/lib
 cp /usr/lib64/libc* $RTE_DIR/lib
 
-# Get busctl and ldd
+# Get ldd
 if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
-  cp /usr/bin/busctl $RTE_DIR/bin/busctl
   cp /usr/bin/ldd $RTE_DIR/bin/ldd
 fi
 
@@ -157,19 +156,10 @@ make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external distclean dr
 make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver
 make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver-install
 
-# Saftlib lib dependencies
-yumdownloader --destdir $TMP_DIR/lib libuuid-devel.$ARCH libblkid-devel.$ARCH libmount-devel.$ARCH glibmm24-devel.$ARCH glibmm24.$ARCH libsigc++20-devel.$ARCH libsigc++20.$ARCH dbus-libs.$ARCH dbus-glib.$ARCH
-# Extract all rpms
-cd $ROOT_DIR
-for i in $TMP_DIR/lib/*; do rpm2cpio "$i" | cpio -idmv; done
-
 #cp $BASE_DIR/pkgconfig/* $ROOT_DIR/usr/lib64/pkgconfig
 #patch the pkgconfig with a right prefix path
 sed -i 1,1d $ROOT_DIR/usr/lib64/pkgconfig/*
 sed -i "1i prefix=$ROOT_DIR" $ROOT_DIR/usr/lib64/pkgconfig/*
-
-# Get dbus system.conf
-cp $RTE_DIR/rte-build/usr/share/
 
 #building saftlib
 echo "BUILDING SAFTLIB"
@@ -186,7 +176,7 @@ git clean -xfd .
 make DESTDIR=$RTE_DIR install
 
 # Saftlib runtime dependencies
-yumdownloader --destdir $TMP_DIR/rpm glib2.$ARCH dbus libselinux.$ARCH libcap-ng.$ARCH audit-libs.$ARCH expat.$ARCH dbus-devel.$ARCH dbus-glib.$ARCH dbus-glib-devel.$ARCH dbus-libs.$ARCH libffi.$ARCH pcre.$ARCH xz-libs.$ARCH libuuid.$ARCH libblkid.$ARCH libmount.$ARCH glibmm24.$ARCH libsigc++20.$ARCH
+yumdownloader --destdir $TMP_DIR/rpm libsigc++20.$ARCH
 #installing socat & dependencies
 yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH lz4.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs.$ARCH tcp_wrappers.$ARCH tcp_wrappers-libs.$ARCH glibc.$ARCH
 
@@ -233,10 +223,6 @@ echo "$(parse_git_last_commits)" >> $BUILD_INFO
 # Deployment
 echo "DEPLOYMENT"
 echo "----------"
-
-# Copy stuff
-mkdir $RTE_DIR/etc/dbus-1/
-cp $BASE_DIR/system.conf $RTE_DIR/etc/dbus-1/system.conf
 
 # Copy admin stuff
 # Admin tools

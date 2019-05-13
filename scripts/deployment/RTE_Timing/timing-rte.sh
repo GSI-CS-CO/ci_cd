@@ -71,20 +71,10 @@ then
 	/sbin/insmod /lib/modules/$KERNEL_VERSION/extra/vme_wb.ko slot=1,2,3,4,5,6,7,8 vmebase=0,0,0,0,0,0,0,0 vector=1,2,3,4,5,6,7,8 level=7,7,7,7,7,7,7,7 lun=1,2,3,4,5,6,7,8
 fi
 
-log 'setting up dbus acounts'
-echo 'dbus:*:100:100:DBus:/:' >> /etc/passwd
-echo 'dbus:*:100:' >> /etc/group
-mkdir /var/run/dbus
-mkdir run
-cd run
-mkdir dbus
-cd ..
 
 log 'starting services'
-chrt -r 25 dbus-daemon --system
 # start saftlib for multiple devices: saftd tr0:dev/wbm0 tr1:dev/wbm1 tr2:dev/wbm2 ... trXYZ:dev/wbmXYZ
 saftlib_devices=$(for dev in /dev/wbm*; do echo tr${dev#/dev/wbm}:${dev#/}; done)
-saftd $saftlib_devices >/tmp/saftd.log 2>&1 &
-dbus-uuidgen > /etc/machine-id
+chrt -r 25 saftd $saftlib_devices >/tmp/saftd.log 2>&1 &
 # disable the watchdog timer
 for dev in /dev/wbm*; do eval eb-reset ${dev#/} wddisable; done
