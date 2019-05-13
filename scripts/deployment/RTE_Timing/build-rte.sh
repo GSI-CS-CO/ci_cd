@@ -3,6 +3,7 @@
 BEL_BRANCH=""
 BEL_RELEASE=""
 BEL_BUILD_ADMIN="no"
+BEL_BUILD_WRMILGW="no"  # can be "SIS18" or "ESR" to activate the gateway
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
 DEPLOY_TARGET="/dev/null"
@@ -184,6 +185,27 @@ yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH lz4.$ARCH readline
 cd $RTE_DIR
 for i in $TMP_DIR/rpm/*.rpm; do rpm2cpio "$i" | cpio -idmv; done
 
+# wr-mil gateway: tools and firmware
+if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
+	cd $TMP_DIR/$BEL_PROJECTS
+    echo "INSTALLING WR-MIL-GATEWAY TOOLS"
+    echo "----------------------"
+    make -C modules/wr-mil-gw/saft-control PREFIX=/home/bel/mreese/lnx/ci_cd/scripts/deployment/RTE_Timing/rte-build
+    make -C modules/wr-mil-gw/saft-control PREFIX=/home/bel/mreese/lnx/ci_cd/scripts/deployment/RTE_Timing/rte-build install
+    make -C tools eb-fwload
+	cp tools/eb-fwload $RTE_DIR/bin
+    echo "BUILDING WR-MIL-GATEWAY FW"
+    echo "----------------------------"
+    pwd
+    ./install-hdl-make
+    make firmware
+    source export-lm32-bin.sh 
+	make -C modules/wr-mil-gw/firmware
+	mkdir $RTE_DIR/firmware
+	cp modules/wr-mil-gw/firmware/wr_mil.bin $RTE_DIR/firmware/
+	sed -i #WR-MIL-GATEAY-FIRMWARE-LOAD: 
+fi
+
 # Build display tool
 cd $TMP_DIR/$BEL_PROJECTS/ip_cores/etherbone-core/api
 ./autogen.sh
@@ -239,3 +261,8 @@ cp -r $RTE_DIR/* $DEPLOY_TARGET/$ARCH
 
 #run init script
 cp $BASE_DIR/timing-rte.sh $DEPLOY_TARGET
+
+# activate WrMil Gateway by adding a call to eb-fwload to the deployed init script 
+if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
+	sed -i '/^log .starting services.*/a eb-fwload dev/wbm0 u1 0 /opt/$NAME/$ARCH/firmware/wr_mil.bin; sleep 1' $DEPLOY_TARGET/timing-rte.sh
+fi
