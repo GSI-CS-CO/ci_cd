@@ -179,7 +179,7 @@ make DESTDIR=$RTE_DIR install
 # Saftlib runtime dependencies
 yumdownloader --destdir $TMP_DIR/rpm libsigc++20.$ARCH
 #installing socat & dependencies
-yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH lz4.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs.$ARCH tcp_wrappers.$ARCH tcp_wrappers-libs.$ARCH glibc.$ARCH
+yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH lz4.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs.$ARCH tcp_wrappers.$ARCH tcp_wrappers-libs.$ARCH glibc.$ARCH  libselinux.$ARCH pcre.$ARCH
 
 # Extract all rpms
 cd $RTE_DIR
