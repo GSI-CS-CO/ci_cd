@@ -4,6 +4,7 @@ BEL_BRANCH=""
 BEL_RELEASE=""
 BEL_BUILD_ADMIN="no"
 BEL_BUILD_WRMILGW="no"  # can be "SIS18" or "ESR" to activate the gateway
+BEL_BUILD_KERNEL4="no" # build for kernel 4+
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
 DEPLOY_TARGET="/dev/null"
@@ -16,8 +17,13 @@ BEL_PROJECTS="bel_projects"
 RTE_DIR=`pwd`"/"$BUILD_DIR
 TMP_DIR=`pwd`"/rte-tmp"
 ROOT_DIR=`pwd`"/rte-root"
-LINUX_KERNEL="linux-scu-source-3.10.101-01"
-KERNEL="linux-scu-source_3.10.101-01"
+if [ "$BEL_BUILD_KERNEL4" = "no" ]; then
+  LINUX_KERNEL="linux-scu-source-3.10.101-01"
+  KERNEL="linux-scu-source_3.10.101-01"
+else
+  LINUX_KERNEL="linux-edge-source_4.14.18-01"
+  KERNEL="linux-edge-source_4.14.18-01"
+fi
 JOBS=32
 ARCH=x86_64
 
@@ -66,7 +72,11 @@ if [ ! -d "$LINUX_KERNEL" ]; then
   rm "$KERNEL"_x86_64.opk
 fi
 
-export KERNELDIR=`pwd`/linux-scu-source-3.10.101-01
+if [ "$BEL_BUILD_KERNEL4" = "no" ]; then
+  export KERNELDIR=`pwd`/linux-scu-source-3.10.101-01
+else
+  export KERNELDIR=`pwd`/linux-edge-source-4.14.18-01
+fi
 
 # Build etherbone
 echo "BUILDING ETHERBONE"
@@ -199,11 +209,11 @@ if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
     pwd
     ./install-hdl-make
     make firmware
-    source export-lm32-bin.sh 
+    source export-lm32-bin.sh
 	make -C modules/wr-mil-gw/firmware
 	mkdir $RTE_DIR/firmware
 	cp modules/wr-mil-gw/firmware/wr_mil.bin $RTE_DIR/firmware/
-	sed -i #WR-MIL-GATEAY-FIRMWARE-LOAD: 
+	sed -i #WR-MIL-GATEAY-FIRMWARE-LOAD:
 fi
 
 # Build display tool
@@ -262,7 +272,7 @@ cp -r $RTE_DIR/* $DEPLOY_TARGET/$ARCH
 #run init script
 cp $BASE_DIR/timing-rte.sh $DEPLOY_TARGET
 
-# activate WrMil Gateway by adding a call to eb-fwload to the deployed init script 
+# activate WrMil Gateway by adding a call to eb-fwload to the deployed init script
 if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
 	sed -i '/^log .starting services.*/a eb-fwload dev/wbm0 u1 0 /opt/$NAME/$ARCH/firmware/wr_mil.bin; sleep 1' $DEPLOY_TARGET/timing-rte.sh
 fi
