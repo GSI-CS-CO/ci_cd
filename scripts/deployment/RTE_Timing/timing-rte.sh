@@ -33,8 +33,11 @@ cp -a /opt/$NAME/$ARCH/usr/lib64/* /lib
 cp -a /opt/$NAME/$ARCH/lib/*.so* /usr/lib
 cp -a /opt/$NAME/$ARCH/lib64/*.so* /usr/lib
 mkdir /lib/modules/3.10.101-rt111-scu01/extra/
+mkdir /lib/modules/4.14.18-rt15-edge01/extra/
 cp -a /opt/$NAME/$ARCH/lib/modules/3.10.101-rt111-scu01/extra/*.ko* /lib/modules/3.10.101-rt111-scu01/extra/
 cp -a /opt/$NAME/$ARCH/lib/modules/3.10.101-rt111-scu01/legacy-vme64x-core/drv/driver/*.ko* /lib/modules/3.10.101-rt111-scu01/extra/
+cp -a /opt/$NAME/$ARCH/lib/modules/4.14.18-rt15-edge01/extra/*.ko* /lib/modules/4.14.18-rt15-edge01/extra/
+cp -a /opt/$NAME/$ARCH/lib/modules/4.14.18-rt15-edge01/legacy-vme64x-core/drv/driver/*.ko* /lib/modules/4.14.18-rt15-edge01/extra/
 cp -a /opt/$NAME/$ARCH/etc/* /etc/
 cp /opt/$NAME/$ARCH/etc/profile.d/dummy.sh /etc/profile.d/dummy.sh
 cp /opt/$NAME/$ARCH/etc/dbus-1/system.conf /etc/dbus-1/system.conf
