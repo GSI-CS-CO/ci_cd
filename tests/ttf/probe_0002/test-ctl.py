@@ -14,6 +14,10 @@ v_gateware_source = "none"
 v_debug = 0
 
 ########################################################################################################################
+def func_print_space():
+    print "----------------------------------------------------------------------------------------------------"
+
+########################################################################################################################
 def func_probe():
     # Check gateware
     cmd_list = []
@@ -23,11 +27,11 @@ def func_probe():
             for p in data:
                 for q in p['receivers']:
                     if (v_target == str(q['type'])) or (v_target == "all"):
-                        cmd = "timeout 5 ssh %s@%s%s eb-info %s" % (p['login'], p['name'], p['extension'], q['slot'])
+                        cmd = "timeout 10 ssh %s@%s%s eb-info %s" % (p['login'], p['name'], p['extension'], q['slot'])
                         cmd_list.append(cmd)
-                        cmd = "timeout 5 ssh %s@%s%s saft-ctl %s -i" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                        cmd = "timeout 10 ssh %s@%s%s saft-ctl %s -i" % (p['login'], p['name'], p['extension'], q['dev_name'])
                         cmd_list.append(cmd)
-                        cmd = "timeout 5 ssh %s@%s%s saft-ctl %s -s" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                        cmd = "timeout 10 ssh %s@%s%s saft-ctl %s -s" % (p['login'], p['name'], p['extension'], q['dev_name'])
                         cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
@@ -36,7 +40,7 @@ def func_probe():
             subprocess.call(cmd_list[i].split())
         else:
             print cmd_list[i]
-        print "----------------------------------------------------------------------------------------------------"
+        func_print_space()
 
 ########################################################################################################################
 def func_start():
@@ -55,9 +59,9 @@ def func_start():
                         receivers_string = ' '.join(str(x) for x in receivers)
                 if receivers_string:
                     if p['csco_ramdisk'] == "no":
-                        cmd = "timeout 5 ssh %s@%s%s `saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
+                        cmd = "timeout 10 ssh %s@%s%s `saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
                     else:
-                        cmd = "timeout 5 ssh %s@%s%s `/usr/sbin/saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
+                        cmd = "timeout 10 ssh %s@%s%s `/usr/sbin/saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
                     cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
@@ -70,7 +74,7 @@ def func_start():
             time.sleep(1)
         else:
             print cmd_list[i]
-        print "----------------------------------------------------------------------------------------------------"
+        func_print_space()
 
 ########################################################################################################################
 def func_stop():
@@ -84,13 +88,13 @@ def func_stop():
                 for q in p['receivers']:
                     if (v_target == str(q['type'])) or (v_target == "all"):
                         if saftd_stop_found == 0:
-                            cmd = "timeout 5 ssh %s@%s%s killall saftd" % (p['login'], p['name'], p['extension'])
+                            cmd = "timeout 10 ssh %s@%s%s killall saftd" % (p['login'], p['name'], p['extension'])
                             cmd_list.append(cmd)
-                            cmd = "timeout 5 ssh %s@%s%s killall saft-ctl" % (p['login'], p['name'], p['extension'])
+                            cmd = "timeout 10 ssh %s@%s%s killall saft-ctl" % (p['login'], p['name'], p['extension'])
                             cmd_list.append(cmd)
-                            cmd = "timeout 5 ssh %s@%s%s killall saft-pps-gen" % (p['login'], p['name'], p['extension'])
+                            cmd = "timeout 10 ssh %s@%s%s killall saft-pps-gen" % (p['login'], p['name'], p['extension'])
                             cmd_list.append(cmd)
-                            cmd = "timeout 5 ssh %s@%s%s killall saft-io-ctl" % (p['login'], p['name'], p['extension'])
+                            cmd = "timeout 10 ssh %s@%s%s killall saft-io-ctl" % (p['login'], p['name'], p['extension'])
                             cmd_list.append(cmd)
                             saftd_stop_found = 1
     except (ValueError, KeyError, TypeError):
@@ -104,7 +108,7 @@ def func_stop():
             time.sleep(1)
         else:
             print cmd_list[i]
-        print "----------------------------------------------------------------------------------------------------"
+        func_print_space()
 
 ########################################################################################################################
 def func_restart():
@@ -126,15 +130,15 @@ def func_reset():
                 host_has_target_devices = 0
                 for q in p['receivers']:
                     if (v_target == str(q['type'])) or (v_target == "all"):
-                        cmd = "timeout 5 ssh %s@%s%s eb-reset %s fpgareset" % (p['login'], p['name'], p['extension'], q['slot'])
+                        cmd = "timeout 10 ssh %s@%s%s eb-reset %s fpgareset" % (p['login'], p['name'], p['extension'], q['slot'])
                         cmd_list.append(cmd)
                         host_has_target_devices = 1
                 if (p['reset2host'] == "no") and (host_has_target_devices == 1):
                     if host_reset_found == 0:
                         if p['csco_ramdisk'] == "no":
-                            cmd = "timeout 5 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
+                            cmd = "timeout 10 ssh %s@%s%s reboot" % (p['login'], p['name'], p['extension'])
                         else:
-                            cmd = "timeout 5 ssh %s@%s%s /sbin/reboot" % (p['login'], p['name'], p['extension'])
+                            cmd = "timeout 10 ssh %s@%s%s /sbin/reboot" % (p['login'], p['name'], p['extension'])
                         cmd_list.append(cmd)
                         host_reset_found = 1
     except (ValueError, KeyError, TypeError):
@@ -148,7 +152,7 @@ def func_reset():
             time.sleep(1)
         else:
             print cmd_list[i]
-        print "----------------------------------------------------------------------------------------------------"
+        func_print_space()
 
 ########################################################################################################################
 def func_flash():
@@ -160,7 +164,7 @@ def func_flash():
             for p in data:
                 for q in p['receivers']:
                     if (v_target == str(q['type'])) or (v_target == "all"):
-                        cmd = "timeout 5 ssh %s@%s%s rm %s.rpd" % (p['login'], p['name'], p['extension'], q['type'])
+                        cmd = "timeout 10 ssh %s@%s%s rm %s.rpd" % (p['login'], p['name'], p['extension'], q['type'])
                         cmd_list.append(cmd)
                         if str(q['type']) == "ftm":
                             cmd = "timeout 30 ssh %s@%s%s wget %s/ftm/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
@@ -180,7 +184,7 @@ def func_flash():
             time.sleep(1)
         else:
             print cmd_list[i]
-        print "----------------------------------------------------------------------------------------------------"
+        func_print_space()
 
 ########################################################################################################################
 def main():
