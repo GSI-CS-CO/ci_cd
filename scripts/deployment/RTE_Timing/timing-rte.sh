@@ -23,6 +23,7 @@ fi
 log 'copying utilities to ramdisk'
 cp -a /opt/$NAME/$ARCH/bin/* /usr/bin/
 cp -a /opt/$NAME/$ARCH/sbin/* /usr/sbin/
+cp -a /opt/$NAME/$ARCH/share /
 cp -a /opt/$NAME/$ARCH/usr/bin/* /usr/bin/
 cp -a /opt/$NAME/$ARCH/usr/sbin/* /sbin
 cp -a /opt/$NAME/$ARCH/usr/share/* /share
