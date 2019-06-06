@@ -37,6 +37,8 @@ def func_probe():
         print "JSON format error"
     for i in range(len(cmd_list)):
         if v_debug == 0:
+            cmd_to_perform_info = cmd_list[i].split()[3]
+            print "Probing %s..." % (cmd_to_perform_info)
             subprocess.call(cmd_list[i].split())
         else:
             print cmd_list[i]
