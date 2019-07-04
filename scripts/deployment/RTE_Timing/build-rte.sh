@@ -1,13 +1,13 @@
 #! /bin/bash
 #PLEASE ADJUST THIS SCRIPT FOR YOUR NEED
-BEL_BRANCH=""
-BEL_RELEASE=""
+BEL_BRANCH="enigma"
+BEL_RELEASE="enigma-v5.0.0-pre-alpha"
 BEL_BUILD_ADMIN="no"
 BEL_BUILD_WRMILGW="no"  # can be "SIS18" or "ESR" to activate the gateway
 BEL_BUILD_KERNEL4="no" # build for kernel 4+
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
 #For the rest of the Groups, you can create one for your need
-DEPLOY_TARGET="/dev/null"
+DEPLOY_TARGET="/common/export/timing-rte/tg-enigma-v5.0.0-pre-alpha"
 
 # FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
 # YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
@@ -189,7 +189,7 @@ make DESTDIR=$RTE_DIR install
 # Saftlib runtime dependencies
 yumdownloader --destdir $TMP_DIR/rpm libsigc++20.$ARCH
 #installing socat & dependencies
-yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH lz4.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs.$ARCH tcp_wrappers.$ARCH tcp_wrappers-libs.$ARCH glibc.$ARCH  libselinux.$ARCH pcre.$ARCH
+yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH lz4.$ARCH readline.$ARCH openssl-libs.$ARCH ncurses-libs.$ARCH libcom_err.$ARCH keyutils-libs.$ARCH krb5-libs.$ARCH tcp_wrappers.$ARCH tcp_wrappers-libs.$ARCH glibc.$ARCH  libselinux.$ARCH pcre.$ARCH xz-libs.$ARCH
 
 # Extract all rpms
 cd $RTE_DIR
