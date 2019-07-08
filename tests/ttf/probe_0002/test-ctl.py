@@ -165,15 +165,14 @@ def func_flash():
             data = json.load(json_file)
             for p in data:
                 for q in p['receivers']:
-                    if (v_target == str(q['type'])) or (v_target == "all"):
-                        cmd = "timeout 10 ssh %s@%s%s rm %s.rpd" % (p['login'], p['name'], p['extension'], q['type'])
+                    if (v_target == "all"):
+                        pass
+                    elif (v_target == str(q['type'])):
+                        cmd = "timeout 10 ssh %s@%s%s rm %s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source)
                         cmd_list.append(cmd)
-                        if str(q['type']) == "ftm":
-                            cmd = "timeout 30 ssh %s@%s%s wget %s/ftm/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
-                        else:
-                            cmd = "timeout 30 ssh %s@%s%s wget %s/gateware/%s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source, q['type'])
+                        cmd = "timeout 120 scp %s %s@%s%s:/ " % (v_gateware_source, p['login'], p['name'], p['extension'])
                         cmd_list.append(cmd)
-                        cmd = "timeout 720 ssh %s@%s%s eb-flash %s %s.rpd" % (p['login'], p['name'], p['extension'], q['slot'], q['type'])
+                        cmd = "timeout 720 ssh %s@%s%s eb-flash %s /%s" % (p['login'], p['name'], p['extension'], q['slot'], v_gateware_source)
                         cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
@@ -181,7 +180,7 @@ def func_flash():
         if v_debug == 0:
             cmd_to_perform = cmd_list[i].split()
             cmd_to_perform_info = cmd_to_perform[3]
-            print "Flashing device(s) at %s..." % (cmd_to_perform_info)
+            print "Flashing device(s) at/with %s..." % (cmd_to_perform_info)
             subprocess.call(cmd_list[i].split())
             time.sleep(1)
         else:
@@ -207,9 +206,9 @@ def main():
             v_target = str(sys.argv[2])
             v_gateware_source = str(sys.argv[3])
         else:
-            print "Error: Please provide operation name [start target/stop target/restart target/probe target/reset target/{flash target [source URL]}"
+            print "Error: Please provide operation name [start target, stop target, restart target, probe target, reset target, flash target [bitstream.rpd]"
             print "Targets: all scu2 scu3 pexarria5 exploder5 microtca pmc vetar2a vetar2a-ee-butis ftm"
-            print "Flash example: flash all http://tsl002.acc.gsi.de/releases/doomsday"
+            print "Flashing: Target <<all>> is ignored here, please provide a dedicated bitstream here"
             exit(1)
     except:
         print "Error: Could not parse given arguments!"
@@ -227,7 +226,11 @@ def main():
     elif v_operation == "reset":
         func_reset()
     elif v_operation == "flash":
-        func_flash()
+        if cmdtotal != 4:
+            print "Error: Missing bitstream!"
+            exit(1)
+        else:
+            func_flash()
     else:
         print "Error: Ambiguous arguments!"
         exit(1)
