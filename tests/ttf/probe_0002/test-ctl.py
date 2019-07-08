@@ -168,7 +168,7 @@ def func_flash():
                     if (v_target == "all"):
                         pass
                     elif (v_target == str(q['type'])):
-                        cmd = "timeout 10 ssh %s@%s%s rm %s.rpd" % (p['login'], p['name'], p['extension'], v_gateware_source)
+                        cmd = "timeout 10 ssh %s@%s%s rm %s" % (p['login'], p['name'], p['extension'], v_gateware_source)
                         cmd_list.append(cmd)
                         cmd = "timeout 120 scp %s %s@%s%s:/ " % (v_gateware_source, p['login'], p['name'], p['extension'])
                         cmd_list.append(cmd)
