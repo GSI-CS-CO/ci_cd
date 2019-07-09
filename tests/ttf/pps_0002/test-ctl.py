@@ -52,7 +52,7 @@ def func_stop():
     subprocess.call(cmd.split())
 
 ########################################################################################################################
-def func_init():
+def func_init(local_mode):
     # Start saft-pps-gen
     cmd_list = []
     try:
@@ -61,8 +61,12 @@ def func_init():
             for p in data:
                 for q in p['receivers']:
                     if q['role'] == "node":
-                        cmd = "nohup ssh %s@%s%s saft-pps-gen %s -s -e >> /dev/null &" % (p['login'], p['name'], p['extension'], q['dev_name'])
-                        cmd_list.append(cmd)
+                        if local_mode == 0:
+                            cmd = "nohup ssh %s@%s%s saft-pps-gen %s -s -e >> /dev/null &" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                            cmd_list.append(cmd)
+                        else:
+                            cmd = "nohup ssh %s@%s%s saft-pps-gen %s -s >> /dev/null &" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                            cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -125,7 +129,7 @@ def main():
         if cmdtotal == 2:
             v_operation = str(sys.argv[1])
         else:
-            print "Error: Please provide operation name [start/stop/init/deinit]"
+            print "Error: Please provide operation name [start/stop/init/init_local/deinit]"
             exit(1)
     except:
         print "Error: Could not parse given arguments!"
@@ -141,7 +145,9 @@ def main():
     elif v_operation == "stop":
         func_stop()
     elif v_operation == "init":
-        func_init()
+        func_init(0)
+    elif v_operation == "init_local":
+        func_init(1)
     elif v_operation == "deinit":
         func_deinit()
     else:
