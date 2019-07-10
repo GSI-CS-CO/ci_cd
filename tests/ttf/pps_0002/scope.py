@@ -102,7 +102,7 @@ class PrettyWidget(QtGui.QWidget):
                   ts_end_min = l_sorted_positive_edges[i][len(l_sorted_positive_edges[i])-1]
             ax.plot(l_sorted_positive_edges[i],time_diff, linewidth=2, marker='p', label=l_io_mapping_table[i],)
         ax.set_xlim(ts_start_max,ts_end_min)
-        ax.legend()
+        ax.legend(loc=2)
         ax.set_title('Timestamp vs Offset to Reference')
         ax.set_xlabel('Timestamp TAI [ns]')
         ax.set_ylabel('$\delta$t [ns]')
