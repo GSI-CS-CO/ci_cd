@@ -27,7 +27,7 @@ def func_start():
     subprocess.call(cmd.split())
     cmd = "timeout 30 ssh %s@%s dm-sched %s add -s pps.dot" % (v_data_master_login, v_data_master, v_data_master_slot)
     subprocess.call(cmd.split())
-    cmd = "timeout 30 ssh %s@%s dm-cmd %s %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status", "| grep \"WR-Time: 0x\"")
+    cmd = "timeout 30 ssh %s@%s dm-cmd %s %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status", "| grep \"ECA-Time: 0x\"")
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
     data = out.split()
