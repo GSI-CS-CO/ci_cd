@@ -44,6 +44,10 @@ def func_start():
 def func_stop():
     # Stop data master
     print "Stopping data master..."
+    cmd = "timeout 30 ssh %s@%s dm-cmd %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "stop")
+    subprocess.call(cmd.split())
+    cmd = "timeout 30 ssh %s@%s dm-cmd %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "halt")
+    subprocess.call(cmd.split())
     cmd = "timeout 30 ssh %s@%s dm-cmd %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "abort")
     subprocess.call(cmd.split())
     cmd = "timeout 30 ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "clear")
