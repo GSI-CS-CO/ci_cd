@@ -185,6 +185,10 @@ def patch_comparison_files(ver):
 
 ########################################################################################################################
 def start_data_master(ver):
+    cmd = "ssh %s@%s dm-cmd %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "stop")
+    subprocess.call(cmd.split())
+    cmd = "ssh %s@%s dm-cmd %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "halt")
+    subprocess.call(cmd.split())
     cmd = "ssh %s@%s dm-sched %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status")
     subprocess.call(cmd.split())
     if ver == 1:
