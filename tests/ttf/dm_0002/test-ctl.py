@@ -132,7 +132,7 @@ def generate_schedules(ver):
 def get_time_from_data_master(ver):
     # Get the current WR time from dm-cmd <eb-device> status call
     global v_current_time
-    cmd = "ssh %s@%s dm-cmd %s %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status", "| grep \"WR-Time: 0x\"")
+    cmd = "ssh %s@%s dm-cmd %s %s %s" % (v_data_master_login, v_data_master, v_data_master_slot, "status", "| grep \"ECA-Time: 0x\"")
     proc = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
     (out, err) = proc.communicate()
     data = out.split()
