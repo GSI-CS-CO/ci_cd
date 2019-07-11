@@ -436,7 +436,7 @@ def func_get_data_master():
                         v_data_master = "%s%s" % (str(p['name']), str(p['extension']))
                         v_data_master_alias = str(q['dev_name'])
                         v_data_master_found = 1
-			v_data_master_login = str(p['login'])
+                        v_data_master_login = str(p['login'])
                         v_data_master_slot = str(q['slot'])
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
@@ -460,7 +460,8 @@ def main():
 
     # Plausibility check
     if cmdtotal != 2:
-        print "Error: Please provide a data master name and amount of test iterations!"
+        print "Error: Please provide a data master name (devices.json) and amount of test iterations!"
+        print "Example: %s <<iterations>>" % (sys.argv[0])
         exit(1)
     else:
         try:
