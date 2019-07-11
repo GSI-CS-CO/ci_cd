@@ -48,14 +48,6 @@ else
   echo -e "[\e[38;5;196mfail\e[0m] Socat is not running..."
 fi
 
-status=$(ps | grep dbus-daemon | grep -v grep)
-if [ $? -eq 0 ]; then
-  pid=$(ps | grep dbus-daemon | grep -v grep | awk '{print $1}')
-  echo -e "[\e[38;5;82m ok \e[0m] DBus daemon is running (PID $pid)..."
-else
-  echo -e "[\e[38;5;196mfail\e[0m] DBus daemon is not running..."
-fi
-
 status=$(ps | grep saftd | grep -v grep)
 if [ $? -eq 0 ]; then
   pid=$(ps | grep saftd | grep -v grep | awk '{print $1}')
