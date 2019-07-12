@@ -12,11 +12,11 @@ H) addr=${OPTARG};;
  esac
 done
 
-# If there is a NUL character anywhere in the file, grep will consider it as a binary file. TR will help here.
-gateware=$(eb-info udp/$addr | tr -d '\000' | grep "Build type")
+# Check gateware
+gateware=$(eb-mon udp/$addr -a)
 ret_val=$?
 if [ $ret_val -ne 0 ]; then
-    echo "Error : Firmware unknown"
+    echo "Gateware: Unknown"
     exit 2
 fi
 
@@ -24,9 +24,9 @@ fi
 res=$(echo $gateware | grep $current_release)
 ret_val=$?
 if [ $ret_val -ne 0 ]; then
-    echo $gateware
+    echo "Gateware: $gateware"
     exit 1
 else
-    echo $gateware
+    echo "Gateware: $gateware"
     exit 0
 fi
