@@ -10,6 +10,7 @@ import signal
 import sys
 import glob
 import random
+import time
 from time import gmtime, strftime
 
 ########################################################################################################################
@@ -356,6 +357,7 @@ def wait_until_end(ver):
     ns_left = 0
     while True:
         get_time_from_data_master(1)
+        time.sleep(5)
         ns_left = (int(v_stop_time,16) - int(v_current_time,16))
         if ns_left < 0:
             break
