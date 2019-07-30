@@ -18,8 +18,8 @@ RTE_DIR=`pwd`"/"$BUILD_DIR
 TMP_DIR=`pwd`"/rte-tmp"
 ROOT_DIR=`pwd`"/rte-root"
 if [ "$BEL_BUILD_KERNEL4" = "no" ]; then
-  LINUX_KERNEL="linux-scu-source-3.10.101-01"
-  KERNEL="linux-scu-source_3.10.101-01"
+  LINUX_KERNEL="linux-scu-source-3.10.101-03"
+  KERNEL="linux-scu-source_3.10.101-03"
 else
   LINUX_KERNEL="linux-edge-source_4.14.18-01"
   KERNEL="linux-edge-source_4.14.18-01"
@@ -73,7 +73,7 @@ if [ ! -d "$LINUX_KERNEL" ]; then
 fi
 
 if [ "$BEL_BUILD_KERNEL4" = "no" ]; then
-  export KERNELDIR=`pwd`/linux-scu-source-3.10.101-01
+  export KERNELDIR=`pwd`/linux-scu-source-3.10.101-03
 else
   export KERNELDIR=`pwd`/linux-edge-source-4.14.18-01
 fi
