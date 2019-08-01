@@ -198,23 +198,19 @@ for i in $TMP_DIR/rpm/*.rpm; do rpm2cpio "$i" | cpio -idmv; done
 
 # wr-mil gateway: tools and firmware
 if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
-	cd $TMP_DIR/$BEL_PROJECTS
-    echo "INSTALLING WR-MIL-GATEWAY TOOLS"
-    echo "----------------------"
-    make -C modules/wr-mil-gw/saft-control PREFIX=/home/bel/mreese/lnx/ci_cd/scripts/deployment/RTE_Timing/rte-build
-    make -C modules/wr-mil-gw/saft-control PREFIX=/home/bel/mreese/lnx/ci_cd/scripts/deployment/RTE_Timing/rte-build install
-    make -C tools eb-fwload
-	cp tools/eb-fwload $RTE_DIR/bin
-    echo "BUILDING WR-MIL-GATEWAY FW"
-    echo "----------------------------"
-    pwd
-    ./install-hdl-make
-    make firmware
-    source export-lm32-bin.sh
-	make -C modules/wr-mil-gw/firmware
-	mkdir $RTE_DIR/firmware
-	cp modules/wr-mil-gw/firmware/wr_mil.bin $RTE_DIR/firmware/
-	sed -i #WR-MIL-GATEAY-FIRMWARE-LOAD:
+  echo "INSTALLING WR-MIL-GATEWAY"
+  echo "----------------------" 
+  export PKG_CONFIG_PATH=$RTE_DIR/lib/pkgconfig
+  make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/saft-control STAGING=$RTE_DIR PREFIX="" 
+  make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/saft-control STAGING=$RTE_DIR PREFIX="" install
+  make -C $TMP_DIR/$BEL_PROJECTS/tools eb-fwload
+  cp $TMP_DIR/$BEL_PROJECTS/tools/eb-fwload $RTE_DIR/bin
+  # firmware
+  make -C $TMP_DIR/$BEL_PROJECTS firmware
+  export PATH="$TMP_DIR/$BEL_PROJECTS/toolchain/bin/:$PATH" 
+  make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/firmware 
+  mkdir $RTE_DIR/firmware
+  cp $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/firmware/wr_mil.bin $RTE_DIR/firmware/
 fi
 
 # Build display tool
