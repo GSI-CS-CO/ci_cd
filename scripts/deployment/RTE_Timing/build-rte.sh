@@ -114,6 +114,7 @@ for i in flash console info sflash reset time config-nv; do
   cp eb-$i $RTE_DIR/bin
 done
 cp monitoring/eb-mon $RTE_DIR/bin
+cp eb-flash-secure $RTE_DIR/bin
 
 # Admin tools
 if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
