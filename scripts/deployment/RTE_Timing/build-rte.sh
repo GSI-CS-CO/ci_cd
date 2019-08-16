@@ -272,5 +272,6 @@ cp $BASE_DIR/timing-rte.sh $DEPLOY_TARGET
 # activate WrMil Gateway by adding a call to eb-fwload to the deployed init script
 if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
 	sed -i '/^log .starting services.*/a eb-fwload dev/wbm0 u1 0 /opt/$NAME/$ARCH/firmware/wr_mil.bin; sleep 1' $DEPLOY_TARGET/timing-rte.sh
-  echo "saft-wrmilgw-ctl tr0 -d 0 -u 0 -l 200 -s -m | logger -t wrmilgw-$BEL_BUILD_WRMILGW -sp local0.info &" >> $DEPLOY_TARGET/timing-rte.sh
+  echo "saft-wrmilgw-ctl tr0 -w -l 600 -s -m | logger -t wrmilgw-$BEL_BUILD_WRMILGW -sp local0.info &" >> $DEPLOY_TARGET/timing-rte.sh
+  echo "saft-ctl tr0 snoop 0xffffffff00000000 0xffffffff00000000 0 -xv | grep late | logger -t wrmilgw-$BEL_BUILD_WRMILGW-LATE-MIL -sp local0.info &" >> $DEPLOY_TARGET/timing-rte.sh
 fi
