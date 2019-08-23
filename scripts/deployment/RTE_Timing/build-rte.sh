@@ -307,9 +307,8 @@ cp $BASE_DIR/timing-rte.sh $DEPLOY_TARGET
 # activate WrMil Gateway by adding a call to eb-fwload to the deployed init script
 if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
 	sed -i '/^log .starting services.*/a eb-fwload dev/wbm0 u1 0 /opt/$NAME/$ARCH/firmware/wr_mil.bin; sleep 1' $DEPLOY_TARGET/timing-rte.sh
-fi
 
-# burst generator: install the burst generator firmware
-if [ "$BEL_DEF_FW" = "burstgen" ] ; then
-	sed -i '/^log .starting services.*/a eb-fwload dev/wbm0 u 0 /opt/$NAME/$ARCH/firmware/burstgen.bin; sleep 1' $DEPLOY_TARGET/timing-rte.sh
+# install the given firmware binary
+elif [ "$BEL_DEF_FW" ] && [ "$BEL_DEF_FW" != "no" ] ; then
+	sed -i "/^log .starting services.*/a eb-fwload dev/wbm0 u 0 /opt/\$NAME/\$ARCH/firmware/${BEL_DEF_FW}.bin; sleep 1" $DEPLOY_TARGET/timing-rte.sh
 fi
