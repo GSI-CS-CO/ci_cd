@@ -285,6 +285,23 @@ echo " - ${GIT_BRANCH}" >> $BUILD_INFO
 echo "Last Commits in repo:" >> $BUILD_INFO
 echo "$(parse_git_last_commits)" >> $BUILD_INFO
 
+# SAFTLIB
+cd $TMP_DIR/$BEL_PROJECTS/ip_cores/saftlib
+
+if [ -n "$SAFTLIB_BRANCH" ]; then
+  GIT_BRANCH=$(parse_git_branch)$(parse_git_hash)
+else
+  GIT_BRANCH=$(parse_git_tag)$(parse_git_hash)
+fi
+
+echo "SAFTLIB" >> $BUILD_INFO
+echo " - $(git config --get remote.origin.url)" >> $BUILD_INFO
+echo " - ${GIT_BRANCH}" >> $BUILD_INFO
+echo "Last Commits in repo:" >> $BUILD_INFO
+echo "$(parse_git_last_commits)" >> $BUILD_INFO
+
+cd $TMP_DIR/$BEL_PROJECTS
+
 # Deployment
 echo "DEPLOYMENT"
 echo "----------"
