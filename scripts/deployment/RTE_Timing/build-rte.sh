@@ -196,6 +196,7 @@ cd $TMP_DIR/$BEL_PROJECTS/ip_cores/saftlib
 # burst generator
 if [ "$SAFTLIB_BRANCH" != "" ] ; then 
 git checkout $SAFTLIB_BRANCH
+git pull
 fi
 
 git clean -xfd .
