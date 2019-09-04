@@ -3,6 +3,7 @@
 BEL_BRANCH="enigma_burst_generator"
 BEL_RELEASE=""
 BEL_BUILD_ADMIN="no"
+BEL_BUILD_ALL_FW="yes"  # build all firmware (wr_mil_gw, burstgen)
 BEL_BUILD_WRMILGW="no"  # can be "SIS18" or "ESR" to activate the gateway
 BEL_BUILD_KERNEL4="no" # build for kernel 4+
 #Targets for the TG: R8-balloon_0 RC8-balloon_0 tg-dev tg-testing
@@ -11,7 +12,7 @@ DEPLOY_TARGET="/common/export/timing-rte/tg-enigma-v5.0.1-burst-generator"
 
 # burst generator: specify the saftlib branch and the default firmware for lm32
 SAFTLIB_BRANCH="burst-ctl" # set empty to build the master branch
-BEL_DEF_FW="burstgen" # set "no" to disable building the default firmware
+BEL_LOAD_FW="burstgen.bin" # specify the default firmware to be load on start
 
 # FROM HERE ON, IF YOU WANT TO MODIFY SOMETHING
 # YOU'RE ON YOUR OWN. MAY THE FORCE BE WITH YOU
@@ -120,8 +121,8 @@ done
 cp monitoring/eb-mon $RTE_DIR/bin
 cp eb-flash-secure $RTE_DIR/bin
 
-# burst generator: build firmware tool
-if [ "$BEL_DEF_FW" = "burstgen" ] ; then
+# build firmware tool & create directory that contains binaries
+if [ "$BEL_BUILD_ALL_FW" == "yes" ]; then
 	echo "BUILD ETHERBONE FIRMWARE TOOL"
 	echo "----------------------"
 	make eb-fwload && cp eb-fwload $RTE_DIR/bin
@@ -214,39 +215,44 @@ yumdownloader --destdir $TMP_DIR/rpm socat openssl-libs.$ARCH lz4.$ARCH readline
 cd $RTE_DIR
 for i in $TMP_DIR/rpm/*.rpm; do rpm2cpio "$i" | cpio -idmv; done
 
-# wr-mil gateway: tools and firmware
-if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
+# build firmware
+if [ "$dBEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
 	cd $TMP_DIR/$BEL_PROJECTS
     echo "INSTALLING WR-MIL-GATEWAY TOOLS"
     echo "----------------------"
     make -C modules/wr-mil-gw/saft-control PREFIX=/home/bel/mreese/lnx/ci_cd/scripts/deployment/RTE_Timing/rte-build
     make -C modules/wr-mil-gw/saft-control PREFIX=/home/bel/mreese/lnx/ci_cd/scripts/deployment/RTE_Timing/rte-build install
-    make -C tools eb-fwload
-	cp tools/eb-fwload $RTE_DIR/bin
-    echo "BUILDING WR-MIL-GATEWAY FW"
-    echo "----------------------------"
-    pwd
-    ./install-hdl-make
-    make firmware
-    source export-lm32-bin.sh
-	make -C modules/wr-mil-gw/firmware
-	mkdir $RTE_DIR/firmware
-	cp modules/wr-mil-gw/firmware/wr_mil.bin $RTE_DIR/firmware/
-	sed -i #WR-MIL-GATEAY-FIRMWARE-LOAD:
+#    echo "BUILDING WR-MIL-GATEWAY FW"
+#    echo "----------------------------"
+#    pwd
+#    ./install-hdl-make
+#    make firmware
+#    source export-lm32-bin.sh
+#	make -C modules/wr-mil-gw/firmware
+#	mkdir $RTE_DIR/firmware
+#	cp modules/wr-mil-gw/firmware/wr_mil.bin $RTE_DIR/firmware/
+#	sed -i #WR-MIL-GATEAY-FIRMWARE-LOAD:
 fi
 
-# burst generator: build firmware
-if [ "$BEL_DEF_FW" = "burstgen" ] ; then
+# build the firmware binaries
+if [ "$BEL_BUILD_ALL_FW" == "yes" ]; then
 	cd $TMP_DIR/$BEL_PROJECTS
-	echo "BUILDING A FIRMWARE $BEL_DEF_FW"
+	./install-hdl-make
+	mkdir -p $RTE_DIR/firmware/
+	make firmware
+	source export-lm32-bin.sh
+	echo "BUILDING BURST GENERATOR FW"
 	echo "----------------------------"
-    	pwd
-    	./install-hdl-make
-    	make firmware
-    	source export-lm32-bin.sh
 	make -C modules/burst_generator
-	mkdir $RTE_DIR/firmware
-	cp modules/burst_generator/${BEL_DEF_FW}.bin $RTE_DIR/firmware/
+	if [ -f modules/burst_generator/burstgen.bin ]; then
+		cp modules/burst_generator/burstgen.bin $RTE_DIR/firmware/
+	fi
+	echo "BUILDING WR-MIL-GATEWAY FW"
+	echo "----------------------------"
+	make -C modules/wr-mil-gw/firmware
+	if [ -f modules/wr-mil-gw/firmware/wr_mil.bin ]; then
+		cp modules/wr-mil-gw/firmware/wr_mil.bin $RTE_DIR/firmware/
+	fi
 fi
 
 # Build display tool
@@ -315,18 +321,16 @@ if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
   cp admin $RTE_DIR/etc/
 fi
 
+# specify the default firmware
+fw_conf="$RTE_DIR/etc/timing-rte_fw.conf"
+
+if [ -n "$BEL_LOAD_FW" ] && [ -f $RTE_DIR/firmware/$BEL_LOAD_FW ] ; then
+	echo "$BEL_LOAD_FW" > $fw_conf
+fi
+
 rm -rf $DEPLOY_TARGET/*
 mkdir $DEPLOY_TARGET/$ARCH
 cp -r $RTE_DIR/* $DEPLOY_TARGET/$ARCH
 
 #run init script
 cp $BASE_DIR/timing-rte.sh $DEPLOY_TARGET
-
-# activate WrMil Gateway by adding a call to eb-fwload to the deployed init script
-if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
-	sed -i '/^log .starting services.*/a eb-fwload dev/wbm0 u1 0 /opt/$NAME/$ARCH/firmware/wr_mil.bin; sleep 1' $DEPLOY_TARGET/timing-rte.sh
-
-# install the given firmware binary
-elif [ "$BEL_DEF_FW" ] && [ "$BEL_DEF_FW" != "no" ] ; then
-	sed -i "/^log .starting services.*/a eb-fwload dev/wbm0 u 0 /opt/\$NAME/\$ARCH/firmware/${BEL_DEF_FW}.bin; sleep 1" $DEPLOY_TARGET/timing-rte.sh
-fi

@@ -43,6 +43,7 @@ cp -a /opt/$NAME/$ARCH/etc/* /etc/
 cp /opt/$NAME/$ARCH/etc/profile.d/dummy.sh /etc/profile.d/dummy.sh
 cp /opt/$NAME/$ARCH/etc/dbus-1/system.conf /etc/dbus-1/system.conf
 
+
 # super ugly libpthread patch (tbd: clean up this script)
 cp ./lib/libpthread-2.17.so ./usr/lib/libpthread-2.17.so
 
@@ -77,6 +78,22 @@ fi
 
 
 log 'starting services'
+
+# copy firmware binaries
+if [ -d /opt/$NAME/$ARCH/firmware ]; then
+	mkdir -p /firmware && cp /opt/$NAME/$ARCH/firmware/* /firmware
+
+	# load the default firmware if it is specified
+	fw_conf="etc/timing-rte_fw.conf"
+	if [ -f /opt/$NAME/$ARCH/$fw_conf ]; then
+		cp /opt/$NAME/$ARCH/$fw_conf $fw_conf
+		binary=$(cat $fw_conf)
+		if [ -f /firmware/$binary ]; then
+			eb-fwload dev/wbm0 u1 0 /firmware/$binary; sleep 1
+		fi
+	fi
+fi
+
 # start saftlib for multiple devices: saftd tr0:dev/wbm0 tr1:dev/wbm1 tr2:dev/wbm2 ... trXYZ:dev/wbmXYZ
 saftlib_devices=$(for dev in /dev/wbm*; do echo tr${dev#/dev/wbm}:${dev#/}; done)
 chrt -r 25 saftd $saftlib_devices >/tmp/saftd.log 2>&1 &
