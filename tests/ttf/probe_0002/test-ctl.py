@@ -172,6 +172,8 @@ def func_flash():
                         cmd_list.append(cmd)
                         cmd = "timeout 120 scp %s %s@%s%s:/ " % (v_gateware_source, p['login'], p['name'], p['extension'])
                         cmd_list.append(cmd)
+                        cmd = "timeout 720 ssh %s@%s%s eb-reset %s cpuhalt 0xff" % (p['login'], p['name'], p['extension'], q['slot'])
+                        cmd_list.append(cmd)
                         cmd = "timeout 720 ssh %s@%s%s eb-flash %s /%s" % (p['login'], p['name'], p['extension'], q['slot'], v_gateware_source)
                         cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
