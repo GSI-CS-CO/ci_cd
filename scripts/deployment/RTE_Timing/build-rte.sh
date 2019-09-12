@@ -201,7 +201,7 @@ if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
   echo "INSTALLING WR-MIL-GATEWAY"
   echo "----------------------" 
   export PKG_CONFIG_PATH=$RTE_DIR/lib/pkgconfig
-  make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/saft-control STAGING=$RTE_DIR PREFIX="" 
+  make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/saft-control STAGING=$RTE_DIR PREFIX="" MASP=YES
   make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/saft-control STAGING=$RTE_DIR PREFIX="" install
   make -C $TMP_DIR/$BEL_PROJECTS/tools eb-fwload
   cp $TMP_DIR/$BEL_PROJECTS/tools/eb-fwload $RTE_DIR/bin
@@ -273,5 +273,4 @@ cp $BASE_DIR/timing-rte.sh $DEPLOY_TARGET
 if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
 	sed -i '/^log .starting services.*/a eb-fwload dev/wbm0 u1 0 /opt/$NAME/$ARCH/firmware/wr_mil.bin; sleep 1' $DEPLOY_TARGET/timing-rte.sh
   echo "saft-wrmilgw-ctl tr0 -w -l 600 -s -m | logger -t wrmilgw-$BEL_BUILD_WRMILGW -sp local0.info &" >> $DEPLOY_TARGET/timing-rte.sh
-  echo "saft-ctl tr0 snoop 0xffffffff00000000 0xffffffff00000000 0 -xv | grep late | logger -t wrmilgw-$BEL_BUILD_WRMILGW-LATE-MIL -sp local0.info &" >> $DEPLOY_TARGET/timing-rte.sh
 fi
