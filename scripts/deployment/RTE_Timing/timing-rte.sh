@@ -82,3 +82,5 @@ saftlib_devices=$(for dev in /dev/wbm*; do echo tr${dev#/dev/wbm}:${dev#/}; done
 chrt -r 25 saftd $saftlib_devices >/tmp/saftd.log 2>&1 &
 # disable the watchdog timer
 for dev in /dev/wbm*; do eval eb-reset ${dev#/} wddisable; done
+# reset statistics for eCPU stalls and WR time
+for dev in /dev/wbm*; do eval eb-mon ${dev#/} wrstatreset 8 50000; done
