@@ -84,3 +84,6 @@ chrt -r 25 saftd $saftlib_devices >/tmp/saftd.log 2>&1 &
 for dev in /dev/wbm*; do eval eb-reset ${dev#/} wddisable; done
 # reset statistics for eCPU stalls and WR time
 for dev in /dev/wbm*; do eval eb-mon ${dev#/} wrstatreset 8 50000; done
+
+#create version file
+cat /etc/timing-rte_buildinfo | grep BEL_PROJECTS -A 2 | tail -n 1 | cut -d "-" -f 3 | cut -d "@" -f1 | cut -c 2- > /etc/timing-rte_version
