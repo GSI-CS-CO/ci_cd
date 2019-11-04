@@ -20,10 +20,16 @@ v_port = 2003
 v_interval_seconds = 60
 v_graphite_addr = (v_host, v_port)
 v_graphite_prefix = "ttf"
-v_metrics = {"temp":"temp", "offset":"offset", "sync":"sync", "offsyn":"offsyn"}
+
+# metrics (metric_name:metric_key_for_graphite)
+# metric_name: temp = FPGA temperature, offset = difference between TAI and UTC,
+#              sync = WR sync status, temp1w = board temperature (1-wire sensor),
+v_metrics = {"temp":"temp", "offset":"offset", "sync":"sync", "temp1w":"temp1w"}
 v_msg_graphite = ""
 v_sync_map = """[{ "status": "TRACKING", "value": "100"},
                  { "status": "NO SYNC",  "value": "20"}]"""
+# boards with 1-wire temperature sensor (board:family_code)
+v_1w_boards = {"scu2":"0x42", "scu3":"0x42", "exploder5":"0x28", "pexarria5":"0x28"}
 
 ########################################################################################################################
 def func_print_space():
@@ -33,6 +39,14 @@ def func_print_space():
 def func_is_int(string):
     try:
         num = int(string)
+    except ValueError:
+        return False
+    return True
+
+########################################################################################################################
+def func_is_float(string):
+    try:
+        num = float(string)
     except ValueError:
         return False
     return True
@@ -82,7 +96,8 @@ def func_build_graphite_metric(cmd_output, metric_key, timestamp):
     # cmd_output: output message from timing tool (eb-mon, saft-ctl)
     # returns: a list with graphite compatible metric strings
     metric_list = []
-    if v_metrics['temp'] in metric_key:
+    key_parts = metric_key.rpartition('.'); # [host.domain, ".", metrics]
+    if v_metrics['temp'] == key_parts[2]:
         # cmd_output depends on device capability and can be one of followings:
         # - current temperature (Celsius): 56
         # - no temperature sensor is available in this device!
@@ -90,34 +105,31 @@ def func_build_graphite_metric(cmd_output, metric_key, timestamp):
             value = cmd_output.partition("(Celsius):")[2].strip()
             metric = "%s %s %s" % (metric_key, value, timestamp)
             metric_list.append(metric)
-    elif v_metrics['offset'] in metric_key:
-        # cmd_output has only a numeric value: 36999 or 37000
-        if cmd_output:
-            value = str(cmd_output).rstrip('\n')
-            metric = "%s %s %s" % (metric_key, value, timestamp)
-            metric_list.append(metric)
-    elif v_metrics['sync'] in metric_key:
-        # cmd_output has the WR sync status in text: TRACKING | NO SYNC | TIME | PPS
-        if cmd_output:
-            # Map text to numeric value
-            value = func_numeric_sync(cmd_output)
-            if value:
-                metric = "%s %s %s" % (metric_key, value, timestamp)
-                metric_list.append(metric)
-    elif v_metrics['offsyn'] in metric_key:
-        # cmd_output has values of "offset" and "sync" metrics
-        values = cmd_output.split('\n')
+    elif key_parts[2]:
+        # metric_key can contain more keys, such as "offset:sync:temp1w" or "offset:sync"
+        keys = key_parts[2]
+        values = cmd_output.split('\n')  # ["37000" , "TRACKING", "34.5678"]
         for value in values:
-            if func_is_int(value):
-                # offset
-                metric = "%s %s %s" % (metric_key.replace(v_metrics['offsyn'], v_metrics['offset']), str(value), timestamp)
+            if func_is_int(value) and v_metrics['offset'] in keys:
+                # get offset value
+                metric = "%s %s %s" % (key_parts[0] + key_parts[1] + v_metrics['offset'], str(value), timestamp)
                 metric_list.append(metric)
-            elif value:
-                # sync
+                # remove the key to avoid re-use
+                keys = keys.replace(v_metrics['offset'], " ")
+            elif func_is_float(value) and v_metrics['temp1w'] in key_parts[2]:
+                # get board temperature value
+                metric = "%s %s %s" % (key_parts[0] + key_parts[1] + v_metrics['temp1w'], str(value), timestamp)
+                metric_list.append(metric)
+                # remove the key to avoid re-use
+                keys = keys.replace(v_metrics['temp1w'], "")
+            elif value and v_metrics['sync'] in key_parts[2]:
+                # get sync value
                 val = func_numeric_sync(value)
                 if val:
-                    metric = "%s %s %s" % (metric_key.replace(v_metrics['offsyn'], v_metrics['sync']), val, timestamp)
+                    metric = "%s %s %s" % (key_parts[0] + key_parts[1] + v_metrics['sync'], val, timestamp)
                     metric_list.append(metric)
+                    # remove the key to avoid re-use
+                    keys = keys.replace(v_metrics['sync'], "")
     return metric_list
 
 ########################################################################################################################
@@ -125,6 +137,19 @@ def func_send_metric(metric_list):
     # send metric set through UDP socket (on remote side run 'nc -ulk <v_port>' to check socket transmission)
     for i in range(len(metric_list)):
         v_sock.sendto(metric_list[i], v_graphite_addr)
+
+########################################################################################################################
+def func_get_1w_bus(login_to_host, slot):
+    try:
+        idx = ""
+        cmd = "timeout 5 ssh %s eb-ls %s | grep User-1Wire" % (login_to_host, slot)
+        output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
+        if output:
+            idx = output.split(".")[0]
+        return idx
+
+    except subprocess.CalledProcessError as e:
+        print e
 
 ########################################################################################################################
 def func_find_option(login_to_host, opt_key):
@@ -150,20 +175,38 @@ def func_find_option(login_to_host, opt_key):
 def func_start_poll():
     # Poll metric periodically (temperature, offset, sync etc)
     cmd_list = []
-    test_target = "" # developer test device, <user>@<host.domain>
+    test_target = "" # fill it to test with a developer local device: <user>@<host.domain>
 
     # Build strings with metric key and polling command (either test device or devices in facility)
     if "@" in test_target:
         # Build a header of metric key with "test.host"
         m_head = "test.%s" % (test_target.partition('@')[2].split('.')[0])
+
         # Build a string with metric key and polling command
+        # - FPGA temperature
         cmd = "%s.%s timeout 10 ssh %s saft-ctl -ft bla" % (m_head, v_metrics['temp'], test_target)
         cmd_list.append(cmd)
-        #cmd = "%s.%s timeout 10 ssh %s eb-mon -o dev/wbm0" % (m_head, v_metrics['offset'], test_target)
-        #cmd_list.append(cmd)
-        # Find a valid option to get the WR sync status because the option varies for eb-mon
+
+        # Multiple metrics are obtained with single command 'eb-mon'
+        # - offset (-o)
+        opts = "-o"
+        metric_key = v_metrics['offset']
+        # - WR sync (-y or -z, find a valid option to get the WR sync status because the option varies for eb-mon)
         sync_opt = func_find_option(test_target, "sync")
-        cmd = "%s.%s timeout 10 ssh %s eb-mon -o %s dev/wbm0" % (m_head, v_metrics['offsyn'], test_target, sync_opt)
+        # - board temperature (-t<bus_idx> -f<family>)
+        temp_1w_opt = ""
+        # Get board temperature if 1-wire temperature sensor is available in target
+        if v_target in v_1w_boards:
+            bus_idx = func_get_1w_bus(test_target, "dev/wbm0")
+            if bus_idx:
+                temp_1w_opt = "-t%s -f%s" % (bus_idx, v_1w_boards[v_target])
+        if sync_opt:
+            opts += " " + sync_opt
+            metric_key += ":" + v_metrics['sync']
+        if temp_1w_opt:
+            opts += " " + temp_1w_opt
+            metric_key += ":" + v_metrics['temp1w']
+        cmd = "%s.%s timeout 10 ssh %s eb-mon dev/wbm0 %s" % (m_head, metric_key, test_target, opts)
         cmd_list.append(cmd)
     else:
         try:
@@ -178,13 +221,29 @@ def func_start_poll():
                             # Build a string with metric key and polling command
                             cmd = "%s.%s timeout 10 ssh %s saft-ctl -t %s" % (m_head, v_metrics['temp'], login_to_host, q['dev_name'])
                             cmd_list.append(cmd)
-                            # Find a valid option to get the WR sync status because the option varies for eb-mon
+
+                            # Multiple metrics are obtained with single command 'eb-mon'
+                            # - offset (-o)
+                            opts = "-o"
+                            metric_key = v_metrics['offset']
+                            # - WR sync (-y or -z, find a valid option to get the WR sync status because the option varies for eb-mon)
                             sync_opt = func_find_option(login_to_host, "sync")
+                            # - board temperature (-t<bus_idx> -f<family>)
+                            temp_1w_opt = ""
+                            # Get board temperature if 1-wire temperature sensor is available in target
+                            if v_target in v_1w_boards:
+                                bus_idx = func_get_1w_bus(login_to_host, q['slot'])
+                                if bus_idx:
+                                    temp_1w_opt = "-t%s -f%s" % (bus_idx, v_1w_boards[v_target])
                             if sync_opt:
-                                cmd = "%s.%s timeout 10 ssh %s eb-mon -o %s %s" % (m_head, v_metrics['offsyn'], login_to_host, sync_opt, q['slot'])
-                            else:
-                                cmd = "%s.%s timeout 10 ssh %s eb-mon -o %s" % (m_head, v_metrics['offsyn'], login_to_host, q['slot'])
+                                opts += " " + sync_opt
+                                metric_key += ":" + v_metrics['sync']
+                            if temp_1w_opt:
+                                opts += " " + temp_1w_opt
+                                metric_key += ":" + v_metrics['temp1w']
+                            cmd = "%s.%s timeout 10 ssh %s eb-mon %s %s" % (m_head, metric_key, login_to_host, q['slot'], opts)
                             cmd_list.append(cmd)
+
         except (ValueError, KeyError, TypeError):
             print "JSON format error"
 
