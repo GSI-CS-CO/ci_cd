@@ -283,7 +283,7 @@ def func_start_poll():
                         metric_list.append(string)
 
                 except subprocess.CalledProcessError as e:
-                    print e
+                    print "Failed (%d): %s -- %s" % (e.returncode, e.output, e.cmd)
 
             # Send metrics to Graphite host
             if metric_list:
