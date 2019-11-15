@@ -64,8 +64,8 @@ insmod /lib/modules/$KERNEL_VERSION/extra/pcie_wb.ko
 insmod /lib/modules/$KERNEL_VERSION/extra/vmebus.ko
 
 # start etherbone TCP->PCIe gateway
-test -f /usr/bin/socat || cp -a /opt/$NAME/socat /usr/bin
-/usr/bin/socat tcp-listen:60368,reuseaddr,fork file:/dev/wbm0 &
+#test -f /usr/bin/socat || cp -a /opt/$NAME/socat /usr/bin
+#/usr/bin/socat tcp-listen:60368,reuseaddr,fork file:/dev/wbm0 &
 
 # vme_wb driver is loaded if vmebus is already loaded
 if [ `ls /proc/vme/info | grep -o info` ]
