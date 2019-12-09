@@ -157,7 +157,7 @@ def func_reset():
         func_print_space()
 
 ########################################################################################################################
-def func_flash():
+def func_flash(secure_mode):
     # Flash devices
     cmd_list = []
     try:
@@ -174,7 +174,13 @@ def func_flash():
                         cmd_list.append(cmd)
                         cmd = "timeout 720 ssh %s@%s%s eb-reset %s cpuhalt 0xff" % (p['login'], p['name'], p['extension'], q['slot'])
                         cmd_list.append(cmd)
-                        cmd = "timeout 720 ssh %s@%s%s eb-flash %s /%s" % (p['login'], p['name'], p['extension'], q['slot'], v_gateware_source)
+                        if secure_mode:
+                            if (v_target == "scu2" or v_target == "scu3" or v_target == "vetar2a" or v_target == "vetar2a-ee-butis"):
+                                cmd = "timeout 900 ssh %s@%s%s eb-flash -s 0x40000 -w 3 %s /%s" % (p['login'], p['name'], p['extension'], q['slot'], v_gateware_source)
+                            else:
+                                cmd = "timeout 900 ssh %s@%s%s eb-flash -s 0x10000 -w 3 %s /%s" % (p['login'], p['name'], p['extension'], q['slot'], v_gateware_source)
+                        else:
+                            cmd = "timeout 720 ssh %s@%s%s eb-flash %s /%s" % (p['login'], p['name'], p['extension'], q['slot'], v_gateware_source)
                         cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
@@ -208,7 +214,7 @@ def main():
             v_target = str(sys.argv[2])
             v_gateware_source = str(sys.argv[3])
         else:
-            print "Error: Please provide operation name [start target, stop target, restart target, probe target, reset target, flash target [bitstream.rpd]"
+            print "Error: Please provide operation name [start target, stop target, restart target, probe target, reset target, flash(_secure) target [bitstream.rpd]"
             print "Targets: all scu2 scu3 pexarria5 exploder5 microtca pmc vetar2a vetar2a-ee-butis ftm"
             print "Flashing: Target <<all>> is ignored here, please provide a dedicated bitstream here"
             exit(1)
@@ -232,7 +238,13 @@ def main():
             print "Error: Missing bitstream!"
             exit(1)
         else:
-            func_flash()
+            func_flash(0)
+    elif v_operation == "flash_secure":
+        if cmdtotal != 4:
+            print "Error: Missing bitstream!"
+            exit(1)
+        else:
+            func_flash(1)
     else:
         print "Error: Ambiguous arguments!"
         exit(1)
