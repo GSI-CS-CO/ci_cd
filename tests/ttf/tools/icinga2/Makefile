@@ -40,4 +40,4 @@ clean:
 	rm $(GROUPS) || true
 	rm $(HOSTS) || true
 
-.PHONY: all confs install remote_install restart remote_restart clean
+.PHONY: all conf install remote_install restart remote_restart clean
