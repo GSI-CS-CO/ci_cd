@@ -13,7 +13,7 @@ H) addr=${OPTARG};;
 done
 
 # Check White Rabbit Status
-state=$(eb-mon udp/$addr -s)
+state=$(eb-mon udp/$addr -y)
 ret_val=$?
 if [ $ret_val -ne 0 ]; then
     echo "White Rabbit state: Unknown"
