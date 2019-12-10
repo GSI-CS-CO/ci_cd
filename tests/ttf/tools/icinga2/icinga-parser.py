@@ -66,30 +66,9 @@ def func_get_nodes(ver):
     global l_dev_roles
     global l_all_lines
 
-    func_get_node_types(ver)
-
     # Create config file for each type
+    func_get_node_types(ver)
     for x in l_types:
-        # Hostgroup
-        #cfgfile.write("define hostgroup {\n")
-        #print_line =  "        hostgroup_name %s\n" % x
-        #cfgfile.write (print_line)
-        #print_line =  "        alias %s\n" % x
-        #cfgfile.write (print_line)
-        #print_line =  "        "
-        #cfgfile.write (print_line)
-        #members_printed = 0
-        #for i in range(len(l_dev_types)):
-        #    if l_dev_types[i] == x:
-        #        if members_printed == 0:
-        #            members_printed = 1
-        #            cfgfile.write("members ")
-        #        gather_devices = "%s, " % (l_dev_nodes[i])
-        #        cfgfile.write(gather_devices)
-        #print_line =  "\n        }\n\n"
-        #cfgfile.write(print_line)
-
-        # Devices
         for i in range(len(l_dev_types)):
             if l_dev_types[i] == x:
                 print_line = "object Host \"wrn_%s_%s\" {\n" % (l_dev_nodes[i], l_dev_roles[i])
@@ -190,6 +169,7 @@ def main():
     func_create_groups_dot_conf(0)
 
     # Done
+    print "Success! Created all dot conf files!"
     exit(0)
 
 # Main
