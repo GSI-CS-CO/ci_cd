@@ -157,6 +157,32 @@ def func_reset():
         func_print_space()
 
 ########################################################################################################################
+def func_wrstatreset():
+    # Reset statistics for eCPU stalls and WR time
+    cmd_list = []
+    try:
+        with open('../devices.json') as json_file:
+            data = json.load(json_file)
+            for p in data:
+                host_has_target_devices = 0
+                for q in p['receivers']:
+                    if (v_target == str(q['type'])) or (v_target == "all"):
+                        cmd = "timeout 10 ssh %s@%s%s eb-mon %s wrstatreset 8 50000;" % (p['login'], p['name'], p['extension'], q['slot'])
+                        cmd_list.append(cmd)
+    except (ValueError, KeyError, TypeError):
+        print "JSON format error"
+    for i in range(len(cmd_list)):
+        if v_debug == 0:
+            cmd_to_perform = cmd_list[i].split()
+            cmd_to_perform_info = cmd_to_perform[3]
+            print "Resetting statistics for eCPU stalls and WR time at %s..." % (cmd_to_perform_info)
+            subprocess.call(cmd_to_perform)
+            time.sleep(1)
+        else:
+            print cmd_list[i]
+        func_print_space()
+
+########################################################################################################################
 def func_flash(secure_mode):
     # Flash devices
     cmd_list = []
@@ -214,7 +240,7 @@ def main():
             v_target = str(sys.argv[2])
             v_gateware_source = str(sys.argv[3])
         else:
-            print "Error: Please provide operation name [start target, stop target, restart target, probe target, reset target, flash(_secure) target [bitstream.rpd]"
+            print "Error: Please provide operation name [start target, stop target, restart target, probe target, reset target, wrstatreset target, flash(_secure) target [bitstream.rpd]"
             print "Targets: all scu2 scu3 pexarria5 exploder5 microtca pmc vetar2a vetar2a-ee-butis ftm"
             print "Flashing: Target <<all>> is ignored here, please provide a dedicated bitstream here"
             exit(1)
@@ -233,6 +259,8 @@ def main():
         func_probe()
     elif v_operation == "reset":
         func_reset()
+    elif v_operation == "wrstatreset":
+        func_wrstatreset()
     elif v_operation == "flash":
         if cmdtotal != 4:
             print "Error: Missing bitstream!"
