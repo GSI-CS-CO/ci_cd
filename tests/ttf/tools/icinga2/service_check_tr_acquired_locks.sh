@@ -12,7 +12,7 @@ H) addr=${OPTARG};;
 done
 
 # Get acquired locks
-locks=$(eb-mon udp/$addr -g | grep locks | awk '{print $5}')
+locks=$(eb-mon udp/$addr -g | grep "of acquired locks" | awk '{print $5}')
 ret_val=$?
 if [ $ret_val -ne 0 ]; then
     echo "Acquired locks unknown"
@@ -21,12 +21,12 @@ fi
 
 # Process number of acquired locks
 if [ $locks -eq 0 ]; then
-    echo "Lock never acquired"
-    exit 2
-elif [ $locks -gt 2 ]; then
+    echo "Lock acquired once"
+    exit 0
+elif [ $locks -gt 0 ]; then
     echo "Lock(s) acquired: $locks"
     exit 1
 else
     echo "Lock(s) acquired: $locks"
-    exit 0
+    exit 2
 fi
