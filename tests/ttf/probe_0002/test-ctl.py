@@ -57,10 +57,15 @@ def func_start():
                 receivers_string = []
                 receivers = []
                 for q in p['receivers']:
-                    if (v_target == str(q['type'])) or (v_target == "all"):
+                    if ("ftm" == str(q['type'])) or (v_target == "ftm"):
+                        pass
+                    elif (v_target == str(q['type'])) or (v_target == "all"):
                         relation = "%s:%s" % ((q['dev_name']), (q['slot']))
                         receivers.append(relation)
                         receivers_string = ' '.join(str(x) for x in receivers)
+                    else:
+                        print "Undefined ELSE statement @ func_start!"
+                        exit(1)
                 if receivers_string:
                     if p['csco_ramdisk'] == "no":
                         cmd = "timeout 10 ssh %s@%s%s `saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
@@ -90,7 +95,9 @@ def func_stop():
             for p in data:
                 saftd_stop_found = 0
                 for q in p['receivers']:
-                    if (v_target == str(q['type'])) or (v_target == "all"):
+                    if ("ftm" == str(q['type'])) or (v_target == "ftm"):
+                        pass
+                    elif (v_target == str(q['type'])) or (v_target == "all"):
                         if saftd_stop_found == 0:
                             cmd = "timeout 10 ssh %s@%s%s killall saftd" % (p['login'], p['name'], p['extension'])
                             cmd_list.append(cmd)
@@ -101,6 +108,9 @@ def func_stop():
                             cmd = "timeout 10 ssh %s@%s%s killall saft-io-ctl" % (p['login'], p['name'], p['extension'])
                             cmd_list.append(cmd)
                             saftd_stop_found = 1
+                    else:
+                        print "Undefined ELSE statement @ func_stop!"
+                        exit(1)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
