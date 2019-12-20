@@ -29,6 +29,8 @@ def func_probe():
                     if (v_target == str(q['type'])) or (v_target == "all"):
                         cmd = "timeout 10 ssh %s@%s%s eb-info %s" % (p['login'], p['name'], p['extension'], q['slot'])
                         cmd_list.append(cmd)
+                        cmd = "timeout 10 ssh %s@%s%s eb-ls %s" % (p['login'], p['name'], p['extension'], q['slot'])
+                        cmd_list.append(cmd)
                         cmd = "timeout 10 ssh %s@%s%s saft-ctl %s -i" % (p['login'], p['name'], p['extension'], q['dev_name'])
                         cmd_list.append(cmd)
                         cmd = "timeout 10 ssh %s@%s%s saft-ctl %s -s" % (p['login'], p['name'], p['extension'], q['dev_name'])
