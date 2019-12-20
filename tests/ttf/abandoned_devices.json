@@ -1,12 +1,5 @@
 [
   {
-    "name" : "tgtca002", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "no",
-    "receivers":
-    [
-       { "dev_name" : "amc127797t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.129.115", "mactg" : "70:b3:d5:63:50:17" }
-    ]
-  },
-  {
     "name" : "scuxl0099", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
     "receivers":
     [

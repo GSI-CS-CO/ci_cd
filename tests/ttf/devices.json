@@ -79,5 +79,12 @@
     [
        { "dev_name" : "scuxl0133t", "type" : "scu2", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.160.34", "mactg" : "00:26:7b:00:03:85" }
     ]
+  },
+  {
+    "name" : "tgtca002", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "no",
+    "receivers":
+    [
+       { "dev_name" : "amc127797t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.129.115", "mactg" : "70:b3:d5:63:50:17" }
+    ]
   }
 ]
