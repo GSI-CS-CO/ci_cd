@@ -52,11 +52,11 @@ This folder contains all test cases and configurations for the timing test facil
 
 ## Example
 
-`./test-ctl.py scu2 restart` - Restarts saftd on every scu2 device.
+`./test-ctl.py restart scu2` - Restarts saftd on every scu2 device.
 
-`./test-ctl.py all probe` - Probes all devices.
+`./test-ctl.py probe all` - Probes all devices.
 
-`./test-ctl.py exploder5 flash_secure exploder5_gateware.rpd` - Flashes all Exploder5 devices (secure mode).
+`./test-ctl.py flash_secure exploder5 exploder5_gateware.rpd` - Flashes all Exploder5 devices (secure mode).
 
 ## Arguments
 
