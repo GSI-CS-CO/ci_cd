@@ -11,7 +11,7 @@ import time
 v_target = "none"
 v_operation = "none"
 v_gateware_source = "none"
-v_debug = 1
+v_debug = 0
 
 ########################################################################################################################
 def func_print_space():
