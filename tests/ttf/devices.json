@@ -33,8 +33,7 @@
     "name" : "kp1cx01", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
     "receivers":
     [
-       { "dev_name" : "vmel014t", "type" : "vetar2a", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.111", "mactg" : "00:26:7b:00:05:0f" },
-       { "dev_name" : "vmel016t", "type" : "vetar2a", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.128.113", "mactg" : "00:26:7b:00:05:11" }
+       { "dev_name" : "vmel014t", "type" : "vetar2a", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.111", "mactg" : "00:26:7b:00:05:0f" }
     ]
   },
   {
@@ -85,6 +84,14 @@
     "receivers":
     [
        { "dev_name" : "amc127797t", "type" : "microtca", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.129.115", "mactg" : "70:b3:d5:63:50:17" }
+    ]
+  },
+  {
+    "name" : "dal028", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
+    "receivers":
+    [
+       { "dev_name" : "pexp137182t", "type" : "pexp", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.129.117", "mactg" : "70:b3:d5:63:52:27" },
+       { "dev_name" : "pexp137181t", "type" : "pexp", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.129.116", "mactg" : "70:b3:d5:63:52:26" }
     ]
   }
 ]
