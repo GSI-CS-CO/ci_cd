@@ -258,7 +258,7 @@ def main():
             v_gateware_source = str(sys.argv[3])
         else:
             print "Error: Please provide operation name [start target, stop target, restart target, probe target, reset target, wrstatreset target, flash(_secure) target [bitstream.rpd]"
-            print "Targets: all scu2 scu3 pexarria5 exploder5 microtca pmc vetar2a vetar2a-ee-butis ftm"
+            print "Targets: all scu2 scu3 pexarria5 exploder5 microtca pmc pexp vetar2a vetar2a-ee-butis ftm"
             print "Flashing: Target <<all>> is ignored here, please provide a dedicated bitstream here"
             exit(1)
     except:
