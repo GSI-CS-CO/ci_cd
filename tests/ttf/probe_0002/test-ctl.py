@@ -11,7 +11,7 @@ import time
 v_target = "none"
 v_operation = "none"
 v_gateware_source = "none"
-v_debug = 0
+v_debug = 1
 
 ########################################################################################################################
 def func_print_space():
@@ -20,6 +20,7 @@ def func_print_space():
 ########################################################################################################################
 def func_probe():
     # Check gateware
+    global v_target
     cmd_list = []
     try:
         with open('../devices.json') as json_file:
@@ -49,6 +50,7 @@ def func_probe():
 ########################################################################################################################
 def func_start():
     # Start saftd
+    global v_target
     cmd_list = []
     try:
         with open('../devices.json') as json_file:
@@ -64,8 +66,7 @@ def func_start():
                         receivers.append(relation)
                         receivers_string = ' '.join(str(x) for x in receivers)
                     else:
-                        print "Undefined ELSE statement @ func_start!"
-                        exit(1)
+                        pass
                 if receivers_string:
                     if p['csco_ramdisk'] == "no":
                         cmd = "timeout 10 ssh %s@%s%s `saftd %s`" % (p['login'], p['name'], p['extension'], receivers_string)
@@ -88,6 +89,7 @@ def func_start():
 ########################################################################################################################
 def func_stop():
     # Stop saftd
+    global v_target
     cmd_list = []
     try:
         with open('../devices.json') as json_file:
@@ -109,8 +111,7 @@ def func_stop():
                             cmd_list.append(cmd)
                             saftd_stop_found = 1
                     else:
-                        print "Undefined ELSE statement @ func_stop!"
-                        exit(1)
+                        pass
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -127,6 +128,7 @@ def func_stop():
 ########################################################################################################################
 def func_restart():
     # Restart saftd
+    global v_target
     func_stop()
     print "Going to sleep for 10 seconds..."
     time.sleep(10+1)
@@ -135,6 +137,7 @@ def func_restart():
 ########################################################################################################################
 def func_reset():
     # Reset devices and hosts
+    global v_target
     cmd_list = []
     try:
         with open('../devices.json') as json_file:
@@ -171,6 +174,7 @@ def func_reset():
 ########################################################################################################################
 def func_wrstatreset():
     # Reset statistics for eCPU stalls and WR time
+    global v_target
     cmd_list = []
     try:
         with open('../devices.json') as json_file:
@@ -197,6 +201,7 @@ def func_wrstatreset():
 ########################################################################################################################
 def func_flash(secure_mode):
     # Flash devices
+    global v_target
     cmd_list = []
     try:
         with open('../devices.json') as json_file:
