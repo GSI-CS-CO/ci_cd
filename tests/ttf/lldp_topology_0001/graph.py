@@ -103,7 +103,8 @@ def build_graph(devicelist, root):
             if neighbour not in checked or (root in links.keys() and neighbour not in links[root]):
                 links[str(neighbour)].append(root)
                 logger.info("Adding relationship to graph")
-                edge = pydot.Edge(device.get('sysname'), interface.get('neighbour'), minlen='1.5', headlabel="wri1", taillabel=interface.get('name'), labeldistance=2,labelstyle="sloped", color="gray" )
+                edge = pydot.Edge(device.get('sysname'), interface.get('neighbour'), minlen='1.5', headlabel=interface.get('neighbour_port'),
+                                  taillabel=interface.get('name'), labeldistance=2, labelstyle="sloped", color="gray" )
                 if interface.get('speed', 10) > 100:
                     edge.set_style('bold')
                 graph.add_edge(edge)

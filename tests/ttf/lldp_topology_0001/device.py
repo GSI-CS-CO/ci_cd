@@ -110,6 +110,17 @@ class Device:
         if not chassis:
             return None
         return chassis
+
+    #
+    # Get the remote port description of LLDP neighbours from SMTP information, returns dict of oid:port_desc pairs.
+    #
+    def getRemotePortDesc(self):
+        oid = self.oid
+        port_desc = self.snmp.walk(oid['lldp']['remoteportdesc'])
+        if not port_desc:
+            return None
+        return port_desc
+
     #
     # Collects LLDP neighbours from SMTP information, returns dict of oid:neighbour pairs.
     #
@@ -144,6 +155,9 @@ class Device:
         if not neighbours:
             return None
 
+        # get port description (ie., wri1) of each neighbour
+        remote_port_desc = self.getRemotePortDesc()
+
         for n in neighbours.keys():
             # Take the OID's second to last dot separated number. That's our local interface.
             ifnumber = n.split('.')[-2]
@@ -154,8 +168,15 @@ class Device:
                 ifnumber = self.getParentInterface(ifnumber, ifname)
             ifspeed = self.getInterfaceSpeed(ifnumber)
 
+            port_desc_oid = str(n.replace(self.oid['lldp']['remotesysname'], self.oid['lldp']['remoteportdesc']))
+            if port_desc_oid in remote_port_desc.keys():
+                remote_port = remote_port_desc[port_desc_oid]
+            else:
+                remote_port = 'u'
+
             logger.info("%s interface %s has neighbour %s, speed %s", self.hostname, ifname, neighbours[n], ifspeed)
-            iflist.append({'number': ifnumber, 'name': ifname, 'speed': ifspeed, 'neighbour': neighbours[n]})
+            iflist.append({'number': ifnumber, 'name': ifname, 'speed': ifspeed, 'neighbour': neighbours[n],
+                           'neighbour_port': remote_port})
 
         return iflist
 
