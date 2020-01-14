@@ -86,9 +86,9 @@ def build_graph(devicelist, root):
     logger.info("Checking %s" % device.get('sysname'))
     node = pydot.Node(device.get('sysname'))
     node.set_style('filled')
-    if (device.get('sysname').startswith("wrs")):
+    if (device.get('sysname').startswith("nwt")):
         node.set_fillcolor('orange')
-    if (device.get('sysname').startswith("node")):
+    if (device.get('sysname').startswith("WR")):
         node.set_fillcolor('yellow')
 
     graph.add_node(node)
