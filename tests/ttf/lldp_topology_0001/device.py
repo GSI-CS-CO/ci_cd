@@ -2,6 +2,8 @@
 import snmp
 import logging
 
+# timing domain name
+domain='.timing'
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -11,7 +13,7 @@ class Device:
     info = {}
 
     def __init__(self, hostname):
-        self.hostname = hostname
+        self.hostname = hostname + domain
 
     def snmpConfig(self, oid, version=2, community="public", test=False):
         self.snmp = snmp.Connection(host=self.hostname, version=version, community=community)
