@@ -2,8 +2,15 @@
 import snmp
 import logging
 
+import binascii
+import socket
+
 # timing domain name
 domain='.timing'
+
+# default remote system name for timing receivers
+def_remote_sysname='WR PTP Core'
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
@@ -95,15 +102,35 @@ class Device:
         return speed
 
     #
+    # Get the remote chassis ID of LLDP neighbours from SMTP information, returns dict of oid:chassis pairs.
+    #
+    def getRemoteChassisId(self):
+        oid = self.oid
+        chassis = self.snmp.walk(oid['lldp']['remotechassis'])
+        if not chassis:
+            return None
+        return chassis
+    #
     # Collects LLDP neighbours from SMTP information, returns dict of oid:neighbour pairs.
     #
     def getNeighbours(self):
         oid = self.oid
-        lldp = self.snmp.walk(oid['lldp']['remotesysname'])
-        if not lldp:
+        n_sysname = self.snmp.walk(oid['lldp']['remotesysname'])
+        if not n_sysname:
             return None
-        logger.debug(lldp)
-        return lldp
+        logger.debug(n_sysname)
+
+        # Modify the remote system name if it has the default value
+        chassis = self.getRemoteChassisId()
+        if chassis:
+            for key in n_sysname.keys():
+                if def_remote_sysname in str(n_sysname[key]):
+                    chass_oid = str(key.replace(oid['lldp']['remotesysname'], oid['lldp']['remotechassis']))
+                    if chass_oid in chassis.keys():
+                        extended = n_sysname[key] + '\n' + binascii.b2a_hex(chassis[chass_oid])
+                        logger.debug("name modification: %s -> %s", n_sysname[key], extended)
+                        n_sysname[key] = extended
+        return n_sysname
 
     #
     # Returns list of dicts with interface number, name, speed and neighbour.
