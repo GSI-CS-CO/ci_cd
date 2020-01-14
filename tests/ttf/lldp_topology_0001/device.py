@@ -84,13 +84,13 @@ class Device:
         if format.upper() not in divide:
             format = 'M'
 
-            # <interface speeds OID><interface number> is what we're looking for
-            speed = snmp.get(oid['if']['ifspeed'] + str(interface))
-            if speed:
-                    speedInBits = int(speed)
-            speed = speedInBits / divide[format.upper()]
-            logger.info("Returning interface speed %s", speed)
-            return speed
+        # <interface speeds OID><interface number> is what we're looking for
+        speed = snmp.get(oid['if']['ifspeed'] + str(interface))
+        if speed:
+                speedInBits = int(speed)
+        speed = speedInBits / divide[format.upper()]
+        logger.info("Returning interface speed %s", speed)
+        return speed
 
     #
     # Collects LLDP neighbours from SMTP information, returns dict of oid:neighbour pairs.
