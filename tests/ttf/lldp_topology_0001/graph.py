@@ -90,6 +90,9 @@ def build_graph(devicelist, root):
         node.set_fillcolor('orange')
     if (device.get('sysname').startswith("WR")):
         node.set_fillcolor('yellow')
+    else:
+        node.set_width(3)
+        node.set_height(1)
 
     graph.add_node(node)
 
