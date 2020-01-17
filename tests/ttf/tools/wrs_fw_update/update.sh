@@ -78,7 +78,7 @@ done < "$SWITCHES_DOT_CONF"
 
 # Ask if user is sure to update them
 echo "ARE YOU SURE TO UPDATE ABOVE SWITCH(ES)? (y/n)"
-read answer
+read -r answer
 
 if [ "$answer" != "y" ] && [ "$answer" != "Y" ]; then
   echo "User disagreed. Exit!"
@@ -86,9 +86,9 @@ if [ "$answer" != "y" ] && [ "$answer" != "Y" ]; then
 fi
 
 # Prompt passwords for proxy and remote users
-read -s -p "Password for $PROXY_LOGIN: " proxy_user_passwd
+read -r -s -p "Password for $PROXY_LOGIN: " proxy_user_passwd
 echo
-read -s -p "Password for root (WRS): " wrs_root_passwd
+read -r -s -p "Password for root (WRS): " wrs_root_passwd
 echo
 
 # Command prototypes
