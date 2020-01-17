@@ -8,7 +8,7 @@ RUN_DIR="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 #"
 
 usage() {
-    echo "Usage: $0 -s <switch hostname> -o <file.png>" 1>&2; 
+    echo "Usage: $0 -s <switch hostname> -o <file.svg>" 1>&2;
     echo "  -s <hostname>     - hostname of a switch which will be represented as a root of a graph" 1>&2;
     echo "                      Note: It does not have to be Grand master switch" 1>&2;
     echo "  -o <filename.svg> - File to store a topology graph" 1>&2;
