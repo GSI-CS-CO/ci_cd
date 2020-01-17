@@ -1,5 +1,21 @@
 #!/usr/bin/env python
 
+# Script: test-metric-ctl.py
+# Author: Enkhbold Ochirsuren, GSI Helmholtz Centre for Heavy Ion Research GmbH
+# Date:   Jan 17, 2020
+
+# Description: This script is used to monitor certain metrics from
+# timing receivers located in the GSI TTF.
+# If the script should be launched in a different host (not the same host with
+# Graphite), then user can easily specify/change the default Graphite host
+# in the 'host' entry of the 'graphite.conf' configuration file.
+
+# Usage: python test-metric-ctl.py <command> <device>
+# - command : control commands (start, stop)
+# - device  : timing receivers (scu2, scu3, pexarria5, exploder5, pmc, vetar2a)
+#
+# Example: python test-metric-ctl.py start scu3
+
 ########################################################################################################################
 import os
 import subprocess
