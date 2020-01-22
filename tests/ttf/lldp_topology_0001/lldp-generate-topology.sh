@@ -35,8 +35,11 @@ fi
 
 set -e
 TMP_JSON=`mktemp --suffix=.json`
+WR_TPLG_JSON="$RUN_DIR"/wr_topology.json
+LOG_FILE="$RUN_DIR"/topology.log
 export OIDFILE="$RUN_DIR"/oid.json
-"$RUN_DIR"/lldp.py list "$host" | "$RUN_DIR"/getinfo.py > $TMP_JSON
-"$RUN_DIR"/graph.py -i $TMP_JSON -o "$graph_file" "$host"
+"$RUN_DIR"/lldp.py list "$host" -l $LOG_FILE | "$RUN_DIR"/getinfo.py > $TMP_JSON
+"$RUN_DIR"/wrs.py -i $TMP_JSON
+"$RUN_DIR"/graph.py -i $WR_TPLG_JSON -o "$graph_file" "$host" -l $LOG_FILE
 
 rm $TMP_JSON

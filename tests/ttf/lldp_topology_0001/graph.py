@@ -18,6 +18,8 @@ checked = []
 links = defaultdict(list) # unique links between devices
 graph = pydot.Dot(graph_type='graph', ranksep='1', filled=True)
 
+ptp_servo_track_phase = '4'      # numeric value of 'track phase' (WR-SWITCH-MIB.txt)
+ptp_synched_states = ['6', '9']  # PTP FSM states (master, slave) of WR port (White Rabbit Specification v2.0)
 
 def get_object_from_file(filename):
     '''
@@ -62,7 +64,7 @@ def get_object_from_stdin():
     return j
 
 
-def build_graph(devicelist, root):
+def build_graph(devicelist, root, ptp_state = '0'):
     global checked
     global graph
     global links
@@ -88,8 +90,12 @@ def build_graph(devicelist, root):
     node.set_style('filled')
     if (device.get('sysname').startswith("nwt")):
         node.set_fillcolor('orange')
+        if 'ptp_servo_n' in device and device.get('ptp_servo_n') == ptp_servo_track_phase:
+            node.set_fillcolor('deepskyblue')
     if (device.get('sysname').startswith("WR")):
         node.set_fillcolor('yellow')
+        if ptp_state in ptp_synched_states:
+            node.set_fillcolor('greenyellow')
     else:
         node.set_width(3)
         node.set_height(1)
@@ -108,7 +114,13 @@ def build_graph(devicelist, root):
                 if interface.get('speed', 10) > 100:
                     edge.set_style('bold')
                 graph.add_edge(edge)
-                build_graph(devicelist, interface.get('neighbour'))
+
+                # PTP state extension
+                ptp_state = '0'
+                if 'ptp_state' in interface:                           # PTP state is known for this interface
+                    ptp_state = interface.get('ptp_state')
+
+                build_graph(devicelist, interface.get('neighbour'), ptp_state)
 
 if __name__ == "__main__":
     # Fallback values
