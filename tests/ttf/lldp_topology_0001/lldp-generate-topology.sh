@@ -34,7 +34,7 @@ if [ -z "${host}" ] || [ -z "${graph_file}" ]; then
 fi
 
 set -e
-TMP_JSON=`mktemp --suffix=.json`
+TMP_JSON=$(mktemp --suffix=.json)
 WR_TPLG_JSON="$RUN_DIR"/wr_topology.json
 LOG_FILE="$RUN_DIR"/topology.log
 export OIDFILE="$RUN_DIR"/oid.json

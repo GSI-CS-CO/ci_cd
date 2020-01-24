@@ -85,19 +85,19 @@ class Device:
     #
     # returns interface speed
     #
-    def getInterfaceSpeed(self, interface, format='M'):
+    def getInterfaceSpeed(self, interface, user_format='M'):
         snmp = self.snmp
         oid = self.oid
         speed = None
         divide = {'G': 1000000000, 'M': 1000000, 'K': 1000, 'B': 1}
-        if format.upper() not in divide:
-            format = 'M'
+        if user_format.upper() not in divide:
+            user_format = 'M'
 
         # <interface speeds OID><interface number> is what we're looking for
         speed = snmp.get(oid['if']['ifspeed'] + str(interface))
         if speed:
                 speedInBits = int(speed)
-        speed = speedInBits / divide[format.upper()]
+        speed = speedInBits / divide[user_format.upper()]
         logger.info("Returning interface speed %s", speed)
         return speed
 
