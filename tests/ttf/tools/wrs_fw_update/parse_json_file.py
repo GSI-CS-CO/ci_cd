@@ -30,7 +30,7 @@ def func_get_switches(switches_dot_json):
         with open(switches_dot_json) as json_file:
             data = json.load(json_file)
             for p in data:
-                print_line = "%s.timing\n" % (p['name'])
+                print_line = "%s%s\n" % (p['name'], p['extension'])
                 l_all_lines.append(print_line)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
