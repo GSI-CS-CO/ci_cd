@@ -6,7 +6,7 @@ import binascii
 import socket
 
 # timing domain name
-domain='.timing'
+domain='.timing.acc.gsi.de'
 
 # default remote system name for timing receivers
 def_remote_sysname='WR PTP Core'
