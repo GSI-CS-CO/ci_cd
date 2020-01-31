@@ -124,7 +124,7 @@ git checkout $CFG_BRANCH
 git pull
 
 # check out submobules, install hdlmake 3.0
-./autogen.sh
+#./autogen.sh
 
 # get git hash of the project
 bel_git_hash=$(git log --oneline | head -1 | cut -d" " -f1)
