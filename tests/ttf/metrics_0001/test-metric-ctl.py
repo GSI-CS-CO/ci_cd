@@ -36,6 +36,7 @@ v_port = 2003
 v_interval_seconds = 60
 v_graphite_addr = (v_host, v_port)
 v_graphite_prefix = "ttf"
+v_devices_json = "../devices.json" # configuration file with test devices
 
 # metrics (metric_name:metric_key_for_graphite)
 # metric_name: temp = FPGA temperature, offset = difference between TAI and UTC,
@@ -226,7 +227,7 @@ def func_start_poll():
         cmd_list.append(cmd)
     else:
         try:
-            with open('../devices.json') as json_file:
+            with open(v_devices_json) as json_file:
                 data = json.load(json_file)
                 for p in data:
                     for q in p['receivers']:
@@ -262,6 +263,10 @@ def func_start_poll():
 
         except (ValueError, KeyError, TypeError):
             print "JSON format error"
+
+        if len(cmd_list) == 0:
+            print "Failed: %s target not found in %s. Exit!" % (v_target, v_devices_json)
+            return
 
     # Print metric keys with corresponding polling commands
     for entry in cmd_list:
