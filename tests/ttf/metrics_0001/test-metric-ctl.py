@@ -16,6 +16,10 @@
 #
 # Example: python test-metric-ctl.py start scu3
 
+# Note: Since the timing metrics are obtained from remote timing receivers via
+# SSH access, please ensure that your SSH key has been added into the SSH
+# authentication agent (ie., on your local host invoke: ssh-add ~/.ssh/id_rsa).
+
 ########################################################################################################################
 import os
 import subprocess
@@ -43,6 +47,8 @@ v_devices_json = "../devices.json" # configuration file with test devices
 #              sync = WR sync status, temp1w = board temperature (1-wire sensor),
 v_metrics = {"temp":"temp", "offset":"offset", "sync":"sync", "temp1w":"temp1w"}
 v_msg_graphite = ""
+v_msg_timeout_ssh = "Failed: SSH access to target might be timed out at password prompt. \
+    \nYou may need to invoke 'ssh-add ~/.ssh/id_rsa' to add SSH key into ssh-agent!"
 v_sync_map = """[{ "status": "TRACKING", "value": "100"},
                  { "status": "NO SYNC",  "value": "20"}]"""
 # boards with 1-wire temperature sensor (board:family_code)
@@ -166,6 +172,9 @@ def func_get_1w_bus(login_to_host, slot):
         return idx
 
     except subprocess.CalledProcessError as e:
+        if e.returncode == 124: # timed out
+            print v_msg_timeout_ssh
+
         print e
 
 ########################################################################################################################
@@ -186,6 +195,9 @@ def func_find_option(login_to_host, opt_key):
                     return opt
 
     except subprocess.CalledProcessError as e:
+        if e.returncode == 124: # timed out
+            print v_msg_timeout_ssh
+
         print e
 
 ########################################################################################################################
@@ -304,6 +316,9 @@ def func_start_poll():
                         metric_list.append(string)
 
                 except subprocess.CalledProcessError as e:
+                    if e.returncode == 124: # timed out
+                        print v_msg_timeout_ssh
+
                     print "Failed (%d): %s -- %s" % (e.returncode, e.output, e.cmd)
 
             # Send metrics to Graphite host
