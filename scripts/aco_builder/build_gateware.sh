@@ -9,11 +9,13 @@ export GSI_BUILD_TYPE="Doomsday-v4.X.Y" # release name
 
 # =========================================================
 # Environmental Settings (Don't Edit This Area!)
-export QUARTUS=/opt/quartus/$CFG_QUARTUS_VERSION/quartus
-export QSYS_ROOTDIR=$QUARTUS/sopc_builder/bin
+export QSYS_ROOTDIR=/opt/quartus/$CFG_QUARTUS_VERSION/quartus/sopc_builder/bin
+export QUARTUS_ROOTDIR=/opt/quartus/$CFG_QUARTUS_VERSION/quartus
+export QUARTUS=$QUARTUS_ROOTDIR
+export QUARTUS_64BIT=1
 export PATH=$PATH:$QUARTUS
 export PATH=$PATH:$QSYS_ROOTDIR
-export QUARTUS_64BIT=1
+export CHECKOUT_NAME=bel_projects
 
 # =========================================================
 # Build Steps (Don't Edit This Area!)
@@ -24,3 +26,4 @@ git checkout $CFG_BRANCH
 make
 make $CFG_TARGET-clean
 make $CFG_TARGET
+make $CFG_TARGET-check
