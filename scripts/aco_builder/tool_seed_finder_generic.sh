@@ -125,15 +125,19 @@ function sumSlacks {
 }
 
 function locateSynDirectory {
+  # assume we handle with newer Makefile where synthesis directory path is
+  # stored in a variable with prefix PATH_<target>
 
-  local syn_dir=$(sed -n "/^${CFG_TARGET}:/,/^$/p" Makefile | sed -n '/MAKE/p' | cut -d" " -f3)
+  # some target includes dash in its name (vetar2a-ee-butis)
+  # but its synthesis directory has underscore (vetar2a_ee_butis)
+  target_underscore=$(echo $CFG_TARGET | sed -e 's/-/_/g')
 
-  # syn_dir might have invalid value of '$(PATH_TARGET)' because of changes in Makefile
-  is_invalid_path=$(echo "$syn_dir" | grep -e '^\$' )
+  # get the synthesis directory path from PATH_<target>
+  local syn_dir=$(grep -e "^PATH_${target_underscore^^}\s*=" Makefile | cut -d"=" -f2 | sed 's/^ *//g')
 
-  # get the synthesis directory path from PATH_<target>, if it's dealt with newer Makefile
-  if [ "$is_invalid_path" != "" ]; then
-    syn_dir=$(grep -e "^PATH_${CFG_TARGET^^}\s*=" Makefile | cut -d"=" -f2 | sed 's/^ *//g')
+  # if directory path is not found, then we might handle with legacy  Makefile
+  if [ "$syn_dir" == "" ]; then
+    syn_dir=$(sed -n "/^${CFG_TARGET}:/,/^$/p" Makefile | sed -n '/MAKE/p' | cut -d" " -f3)
   fi
 
   echo "$syn_dir"
