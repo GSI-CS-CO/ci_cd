@@ -93,8 +93,8 @@ fi
 
 # Copy the local firmware image file to the proxy server
 sshpass -p "$proxy_user_passwd" scp "$PATH_TO_LOCAL_FW_IMG" "$PROXY_LOGIN:."
-echo "PASS: copied $PATH_TO_LOCAL_FW_IMG to $PROXY_LOGIN"
 exit_if_failed $? " FAIL: failed to copy $FW_IMG_FILE to $PROXY_LOGIN"
+echo " PASS: copied $PATH_TO_LOCAL_FW_IMG to $PROXY_LOGIN"
 
 # Update all WR switches specified in SWITCHES_DOT_CONF file
 while IFS= read -r line; do
@@ -111,19 +111,21 @@ while IFS= read -r line; do
   # Copy the firmware image file from the proxy server to the target WR switch
   REMOTE_CMD="sshpass -p \"$wrs_root_passwd\" scp -o StrictHostKeyChecking=no $FW_IMG_FILE root@${REMOTE_WRS}:${PATH_TO_REMOTE_FW_IMG}"
   $SSH_TO_PROXY "$REMOTE_CMD"
-  echo "PASS: copied $FW_IMG_FILE firmware image to $REMOTE_WRS"
   exit_if_failed $? " FAIL: failed to copy $FW_IMG_FILE to $REMOTE_WRS"
+  echo " PASS: copied $FW_IMG_FILE firmware image to $REMOTE_WRS"
 
   # Reboot the target WR switch after copying the firmware image
   REMOTE_CMD="sshpass -p \"$wrs_root_passwd\" ssh -o StrictHostKeyChecking=no root@$REMOTE_WRS \"/sbin/reboot\""
   $SSH_TO_PROXY "$REMOTE_CMD"
-  echo "PASS: $REMOTE_WRS is going to reboot for installing the firmware!"
   exit_if_failed $? " FAIL: failed to invoke user commands in $REMOTE_WRS"
+  echo " PASS: $REMOTE_WRS is going to reboot for installing the firmware!"
 
   # Remove old host key
   REMOTE_CMD="ssh-keygen -R $REMOTE_WRS"
   $SSH_TO_PROXY "$REMOTE_CMD"
-  echo "PASS: removed old host key for $REMOTE_WRS"
   exit_if_failed $? " FAIL: failed to remove old host key for $REMOTE_WRS"
+  echo " PASS: removed old host key for $REMOTE_WRS"
+
+  echo
 
 done < "$SWITCHES_DOT_CONF"
