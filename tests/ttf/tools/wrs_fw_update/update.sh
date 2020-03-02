@@ -102,6 +102,12 @@ while IFS= read -r line; do
   # Get name of a target WR switch from the provided conf file
   REMOTE_WRS=$line
 
+  # Names started with '#' are ignored
+  if [ "${REMOTE_WRS:0:1}" == "#" ]; then
+    echo "Ignore ${REMOTE_WRS:1}"
+    continue
+  fi
+
   # Copy the firmware image file from the proxy server to the target WR switch
   REMOTE_CMD="sshpass -p \"$wrs_root_passwd\" scp -o StrictHostKeyChecking=no $FW_IMG_FILE root@${REMOTE_WRS}:${PATH_TO_REMOTE_FW_IMG}"
   $SSH_TO_PROXY "$REMOTE_CMD"
