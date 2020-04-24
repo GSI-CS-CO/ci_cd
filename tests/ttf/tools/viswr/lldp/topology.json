@@ -1,0 +1,486 @@
+{
+    "nwt0050m66": {
+        "sysname": "nwt0050m66",
+        "uptime": "56448",
+        "sysdesc": "Linux nwt0050m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "15",
+        "if": [
+            {
+                "neighbour": "nwe4006m",
+                "neighbour_port": "6",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            },
+            {
+                "neighbour": "nwt0025m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            },
+            {
+                "neighbour": "nwt0049m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            }
+        ]
+    },
+    "nwt0010m66": {
+        "sysname": "nwt0010m66",
+        "uptime": "56829",
+        "sysdesc": "Linux nwt0010m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "3",
+        "if": [
+            {
+                "neighbour": "WR 00267b0003d5",
+                "neighbour_port": "192.168.160.107",
+                "speed": 1000,
+                "number": "17",
+                "name": "wri15"
+            },
+            {
+                "neighbour": "nwt0016m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            },
+            {
+                "neighbour": "WR 00267b000214",
+                "neighbour_port": "192.168.128.142",
+                "speed": 1000,
+                "number": "11",
+                "name": "wri9"
+            },
+            {
+                "neighbour": "nwe4006m",
+                "neighbour_port": "3",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            },
+            {
+                "neighbour": "nwt0009m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            }
+        ]
+    },
+    "WR 70b3d563500f": {
+        "sysname": "WR 70b3d563500f",
+        "id": "25"
+    },
+    "WR 00267b000428": {
+        "sysname": "WR 00267b000428",
+        "id": "26"
+    },
+    "nwt0009m66": {
+        "sysname": "nwt0009m66",
+        "uptime": "56943",
+        "sysdesc": "Linux nwt0009m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "2",
+        "if": [
+            {
+                "neighbour": "nwt0010m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            },
+            {
+                "neighbour": "WR 00267b000377",
+                "neighbour_port": "192.168.160.17",
+                "speed": 1000,
+                "number": "20",
+                "name": "wri18"
+            },
+            {
+                "neighbour": "WR 00267b00021a",
+                "neighbour_port": "192.168.128.148",
+                "speed": 1000,
+                "number": "11",
+                "name": "wri9"
+            },
+            {
+                "neighbour": "nwe4006m",
+                "neighbour_port": "1",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            },
+            {
+                "neighbour": "nwt0042m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            },
+            {
+                "neighbour": "192.168.129.115",
+                "neighbour_port": "wr0",
+                "speed": 1000,
+                "number": "6",
+                "name": "wri4"
+            },
+            {
+                "neighbour": "WR 70b3d563500f",
+                "neighbour_port": "192.168.129.110",
+                "speed": 1000,
+                "number": "5",
+                "name": "wri3"
+            }
+        ]
+    },
+    "nwt0049m66": {
+        "sysname": "nwt0049m66",
+        "uptime": "56315",
+        "sysdesc": "Linux nwt0049m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "16",
+        "if": [
+            {
+                "neighbour": "nwe4006m",
+                "neighbour_port": "8",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            },
+            {
+                "neighbour": "nwt0050m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            }
+        ]
+    },
+    "nwt0016m66": {
+        "sysname": "nwt0016m66",
+        "uptime": "56544",
+        "sysdesc": "Linux nwt0016m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "5",
+        "if": [
+            {
+                "neighbour": "nwt0010m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            },
+            {
+                "neighbour": "WR 00267b000385",
+                "neighbour_port": "192.168.160.34",
+                "speed": 1000,
+                "number": "20",
+                "name": "wri18"
+            },
+            {
+                "neighbour": "nwt0018m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            },
+            {
+                "neighbour": "WR 00267b000415",
+                "neighbour_port": "192.168.128.71",
+                "speed": 1000,
+                "number": "5",
+                "name": "wri3"
+            },
+            {
+                "neighbour": "nwe4006m",
+                "neighbour_port": "5",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            },
+            {
+                "neighbour": "WR 22330a62e06d",
+                "neighbour_port": "0.0.0.0",
+                "speed": 1000,
+                "number": "18",
+                "name": "wri16"
+            },
+            {
+                "neighbour": "WR 00267b000307",
+                "neighbour_port": "192.168.160.32",
+                "speed": 1000,
+                "number": "17",
+                "name": "wri15"
+            },
+            {
+                "neighbour": "WR 00267b000218",
+                "neighbour_port": "192.168.128.146",
+                "speed": 1000,
+                "number": "11",
+                "name": "wri9"
+            }
+        ]
+    },
+    "nwt0011m66": {
+        "sysname": "nwt0011m66",
+        "uptime": "56376",
+        "sysdesc": "Linux nwt0011m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "12",
+        "if": [
+            {
+                "neighbour": "nwt0025m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            },
+            {
+                "neighbour": "nwt0018m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            },
+            {
+                "neighbour": "nwe4006m",
+                "neighbour_port": "2",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            }
+        ]
+    },
+    "WR 00267b00021a": {
+        "sysname": "WR 00267b00021a",
+        "id": "23"
+    },
+    "WR 00267b0003d5": {
+        "sysname": "WR 00267b0003d5",
+        "id": "4"
+    },
+    "nwe3004m": {
+        "sysname": "nwe3004m",
+        "id": "28"
+    },
+    "WR 00267b000307": {
+        "sysname": "WR 00267b000307",
+        "id": "19"
+    },
+    "WR 00267b000218": {
+        "sysname": "WR 00267b000218",
+        "id": "20"
+    },
+    "WR 22330a62e06d": {
+        "sysname": "WR 22330a62e06d",
+        "id": "18"
+    },
+    "WR 00267b00050f": {
+        "sysname": "WR 00267b00050f",
+        "id": "8"
+    },
+    "nwe4006m": {
+        "sysname": "nwe4006m",
+        "id": "14"
+    },
+    "WR 00267b000211": {
+        "sysname": "WR 00267b000211",
+        "id": "11"
+    },
+    "nwt0042m66": {
+        "sysname": "nwt0042m66",
+        "uptime": "18074877",
+        "sysdesc": "Linux nwt0042m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "1",
+        "if": [
+            {
+                "neighbour": "nwt0037m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            },
+            {
+                "neighbour": "nwt0009m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            },
+            {
+                "neighbour": "WR 00267b000428",
+                "neighbour_port": "192.168.128.85",
+                "speed": 1000,
+                "number": "19",
+                "name": "wri17"
+            },
+            {
+                "neighbour": "nwe4046m",
+                "neighbour_port": "6",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            }
+        ]
+    },
+    "WR 00267b000214": {
+        "sysname": "WR 00267b000214",
+        "id": "21"
+    },
+    "WR 00267b000358": {
+        "sysname": "WR 00267b000358",
+        "id": "10"
+    },
+    "nwt0025m66": {
+        "sysname": "nwt0025m66",
+        "uptime": "56446",
+        "sysdesc": "Linux nwt0025m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "13",
+        "if": [
+            {
+                "neighbour": "nwt0011m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            },
+            {
+                "neighbour": "nwe4006m",
+                "neighbour_port": "4",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            },
+            {
+                "neighbour": "nwt0050m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            }
+        ]
+    },
+    "WR 00267b000377": {
+        "sysname": "WR 00267b000377",
+        "id": "22"
+    },
+    "192.168.129.115": {
+        "sysname": "192.168.129.115",
+        "id": "24"
+    },
+    "WR 00267b000355": {
+        "sysname": "WR 00267b000355",
+        "id": "9"
+    },
+    "nwt0018m66": {
+        "sysname": "nwt0018m66",
+        "uptime": "56378",
+        "sysdesc": "Linux nwt0018m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "7",
+        "if": [
+            {
+                "neighbour": "WR 00267b00050f",
+                "neighbour_port": "192.168.128.111",
+                "speed": 1000,
+                "number": "14",
+                "name": "wri12"
+            },
+            {
+                "neighbour": "WR 00267b000355",
+                "neighbour_port": "192.168.160.51",
+                "speed": 1000,
+                "number": "17",
+                "name": "wri15"
+            },
+            {
+                "neighbour": "WR 00267b000358",
+                "neighbour_port": "192.168.160.52",
+                "speed": 1000,
+                "number": "20",
+                "name": "wri18"
+            },
+            {
+                "neighbour": "nwt0016m66",
+                "neighbour_port": "wri2",
+                "speed": 1000,
+                "number": "3",
+                "name": "wri1"
+            },
+            {
+                "neighbour": "WR 00267b000211",
+                "neighbour_port": "192.168.128.139",
+                "speed": 1000,
+                "number": "11",
+                "name": "wri9"
+            },
+            {
+                "neighbour": "nwt0011m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            },
+            {
+                "neighbour": "nwe4006m",
+                "neighbour_port": "7",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            }
+        ]
+    },
+    "nwt0037m66": {
+        "sysname": "nwt0037m66",
+        "uptime": "18115080",
+        "sysdesc": "Linux nwt0037m66 3.16.38 #1 Fri Feb 21 16:25:47 CET 2020 armv5tejl",
+        "contact": "root@localhost",
+        "location": "Unknown",
+        "id": "0",
+        "if": [
+            {
+                "neighbour": "nwt0042m66",
+                "neighbour_port": "wri1",
+                "speed": 1000,
+                "number": "4",
+                "name": "wri2"
+            },
+            {
+                "neighbour": "nwe3004m",
+                "neighbour_port": "GigabitEthernet1/0/23 Interface",
+                "speed": 100,
+                "number": "2",
+                "name": "eth0"
+            }
+        ]
+    },
+    "nwe4046m": {
+        "sysname": "nwe4046m",
+        "id": "27"
+    },
+    "WR 00267b000415": {
+        "sysname": "WR 00267b000415",
+        "id": "17"
+    },
+    "WR 00267b000385": {
+        "sysname": "WR 00267b000385",
+        "id": "6"
+    }
+}

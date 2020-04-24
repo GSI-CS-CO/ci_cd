@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<!-- inspired from https://visjs.github.io/vis-network/examples/network/data/importingFromGephi.html -->
+<!-- inspired from https://visjs.github.io/vis-network/examples/network/exampleApplications/neighbourhoodHighlight.html -->
+<html>
+<head>
+  <meta http-equiv="content-type" content="text/html; charset=UTF8">
+  <title>VisWR | White Rabbit Network Topology</title>
+
+  <meta name="example-screenshot-selector" content="body" />
+
+  <!-- load vis-network from unpkg (fast, global content delivery network for everything on npm -->
+  <!-- unpkg.com/package@version/file -->
+  <script
+    type="text/javascript"
+    src="https://unpkg.com/vis-network@7.3.3/standalone/umd/vis-network.min.js"
+  ></script>
+
+  <link href="http://thomasf.github.io/solarized-css/solarized-dark.min.css" rel="stylesheet"></link>
+  <!-- Gentle tutorial about positioning at https://internetingishard.com/html-and-css/advanced-positioning/ -->
+
+  <style type="text/css">
+
+    html {
+      height: 100%;
+    }
+
+    body {
+      max-width: 100%;
+      min-height: 100%;
+    }
+
+    .topBar {
+      width: 100%;
+      overflow: hidden;
+      font-size: 14px;
+      text-align: justify;
+    }
+
+    .topBar ul {
+      float: left;
+      list-style-type: none;
+      margin: 10px;
+      padding: 0px;
+    }
+
+    .box {
+      float: left;
+      margin: 10px;
+    }
+
+    .nodeContent {
+      width: 20%;
+      height: 67vh;
+      float: right;
+      overflow: auto;
+    }
+
+    .mynetwork {
+      width: 79%;
+      height: 67vh;
+      float: left;
+      border: 1px solid #586e75;
+    }
+
+    pre {
+      padding: 5px;
+      margin: 5px;
+    }
+
+    input {
+      display: block;
+    }
+
+    .string {
+      color: green;
+    }
+
+    .number {
+      color: darkorange;
+    }
+
+    .boolean {
+      color: blue;
+    }
+
+    .null {
+      color: magenta;
+    }
+
+    .key {
+      color: red;
+    }
+  </style>
+
+</head>
+
+<body>
+
+<div class="topBar">
+  <h3>White Rabbit network topology</h3>
+
+  <!--This example is derived from one of the vis-network
+  <a href="https://visjs.github.io/vis-network/examples/network/data/importingFromGephi.html">examples</a>:
+  It shows how to present a network topology from a Gephi-compatible JSON file.
+  <a href="https://gephi.org">Gephi</a> is an open-source software (in Java) for
+  visualization and exploration of all kinds of graphs and networks.
+  <br/>
+  This is the visualization of the TTF (Timing Test Facility) network topology.
+  The two options available for the import are available through the checkboxes.
+  Some of Gephi's attributes are also contained within the node elements. This
+  means you can access all of this data through the DataSet.-->
+
+  <!--<label>Parse GephiJSON<input type="checkbox" id="fixed" checked="checked"/> Fix in place after import.</label><br>
+  <label><input type="checkbox" id="parseColor"/> Parse the color instead of
+  copy (adds borders, highlights etc.)</label><br>-->
+
+  Under development! Please consider following limitations:
+  <ol>
+    <li>node lookup in local allTimingDevices.txt (later via HTTP or database)</li>
+    <li>no user authentification (use existing auth system, consult with AH, CH)</li>
+  </ol>
+  <div class="box">
+    <ul>Nodes:
+      <li>
+        <select id="nodeTypeSelector">
+          <option value="all">all</option>
+          <option value="wrs">WR switches</option>
+          <option value="switches">all switches</option>
+        </select>
+      </li>
+    </ul>
+    <ul>View:
+      <li>
+        <select id="viewModeSelector">
+          <option value="free">free</option>
+          <option value="hierarchy">hierarchy</option>
+        </select>
+    </ul>
+    <ul>Select node:
+     <li><input type="text" id="selectNode" placeholder="nwt0037m66"/></li>
+     <li><button id="selectNodeBtn">Select</button></li>
+    </ul>
+    <ul>Look up selected node:
+      <!-- Web server must have directive for setting CORS headers to allow CORS request done by XMLHttpRequest.
+        Refer to:
+        https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+        https://stackoverflow.com/questions/10636611/how-does-access-control-allow-origin-header-work
+
+        The ACC web server (www-acc.gsi.de) must have such directive to allow
+        an access to its resource from other domain (like tsl.acc.gsi.de/viswr/).
+        The administrator of the ACC web server is responsible to configure this! -->
+      <li><button id="lookup" onclick="lookupNode()">Look up</button></li>
+    </ul>
+  </div>
+
+  <div class="box">
+  <!-- Flask forms -->
+    <ul>Rebuild topology
+      <li>
+        <form action="{{ url_for('get') }}" method="get">
+          <!-- The URL for the action attribute is generated with url_for(). [3] -->
+          <!-- 'url_for()' binds an URL to function in app. -->
+          <input type="text" placeholder="root switch, ie., nwt0037m66" name="rootWrs">
+          <input type="submit" value="Rebuild" name="rebuildBtn">
+        </form>
+      </li>
+    </ul>
+    <ul>Update WR status
+      <li><form action="{{ url_for('get') }}" method="get">
+            <input type="submit" value="Update" name="updateBtn">
+          </form>
+      </li>
+    </ul>
+    <ul>Export to SVG
+      <li><form action="{{ url_for('get') }}" method="get">
+            <input type="submit" value="Export" name="exportBtn">
+          </form>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="nodeContent">
+  <h4>Node Status:</h4>
+  <ul>
+    <li>WR servo = <font color="#00bfff">TRACK PHASE </font>, <font color="#ff9900">other</font></li>
+    <li>PTP state = <font color="#adff2f">master/slave</font>, <font color="#dc322f">other</font></li>
+    <li>non-WR device = <font color="#808080">n/a</font></li>
+  </ul>
+  <h4>Node Content:</h4>
+  <pre id="nodeContent"></pre>
+</div>
+
+<div class="mynetwork" id="mynetwork"></div>
+
+<script type="text/javascript">
+  var network;
+
+  var nodes = new vis.DataSet();      // all nodes
+  var vis_nodes = new vis.DataSet();  // nodes chosen for visualization
+  var edges = new vis.DataSet();
+  var gephiImported;
+  /*var fixedCheckbox = document.getElementById('fixed');
+  fixedCheckbox.onchange = redrawAll;
+
+  var parseColorCheckbox = document.getElementById('parseColor');
+  parseColorCheckbox.onchange = redrawAll;*/
+
+  var nodeContent = document.getElementById('nodeContent');
+  var selectNode = document.getElementById('selectNode');
+  selectNode.onchange = findAndHighlight;
+  var selectNodeBtn = document.getElementById('selectNodeBtn');
+  selectNodeBtn.onclick = findAndHighlight;
+
+  // View mode
+  var viewModeSelector = document.getElementById('viewModeSelector');
+  viewModeSelector.value = 'free';
+  viewModeSelector.addEventListener('change', (e) => {
+    redrawAll();
+  });
+
+  // Choose nodes for visualization
+  var nodeTypeSelector = document.getElementById('nodeTypeSelector');
+  nodeTypeSelector.value = 'all';
+  nodeTypeSelector.addEventListener('change', (e) => {
+    redrawAll();
+  });
+
+  var highlightActive = false;
+  var selectedNode = undefined;
+  const replacer = ['label', 'title', 'group', 'attributes', 'if',
+    'name', 'neighbour', 'neighbour_port'];
+
+  var fontFaceColor = {
+    solarized_orange: {
+      face: 'Arial',
+      color: 'cb4b16',
+      strokeWidth: 0
+    },
+    solarized_red: {
+      face: 'Arial',
+      color: 'dc322f',
+      strokeWidth: 0
+    },
+    solarized_green: {
+      face: 'Arial',
+      color: '#859900',
+      strokeWidth: 0
+    },
+    solarized_cyan: {
+      face: 'Arial',
+      color: '2aa198',
+      strokeWidth: 0
+    }
+  };
+
+  var networkModuleNodes = {
+    shape: 'dot',
+    scaling: {
+      min: 5, max: 15,
+      label: {
+        min: 5, max: 15,
+        drawThreshold: 5,
+        maxVisible: 15
+      }
+    },
+    font: fontFaceColor.solarized_green
+  }
+
+  var networkModuleInteraction = {
+    tooltipDelay: 200,
+    hideEdgesOnDrag: true,
+    hideEdgesOnZoom: true,
+  }
+
+  var networkOptFree = {
+    nodes: networkModuleNodes,
+    edges: {
+      width: 0.15,
+      color: {inherit: 'both'},
+      smooth: {
+        type: 'continuous'
+      },
+      arrows: {
+        to: true
+      },
+      font: fontFaceColor.solarized_cyan
+    },
+    physics: {
+      stabilization: {
+        fit: true
+      },
+      barnesHut: {
+        gravitationalConstant: -10000,
+        centralGravity: 0.3,
+        springConstant: 0.002,
+        springLength: 95
+      }
+    },
+    interaction: networkModuleInteraction
+  };
+
+  // options for hierarchical view
+  var networkOptHierarchy = {
+    layout: {
+      hierarchical: {
+        direction: 'UD',
+        sortMethod: 'directed',
+        shakeTowards: 'roots'
+      }
+    },
+    nodes: networkModuleNodes,
+    edges: {
+      arrows: 'to',
+      color: {inherit: 'both'},
+      smooth: {
+        type: 'cubicBezier',
+        forceDirection: 'vertical',
+        roundness: 0.4
+      },
+      font: fontFaceColor.solarized_cyan
+    },
+    physics: {
+      stabilization: {
+        fit: true
+      },
+      hierarchicalRepulsion: {
+        avoidOverlap: 1
+      }
+    },
+    interaction: networkModuleInteraction
+  };
+
+  var data = {{ data|safe }};
+  console.log("{{data.ret_code|safe}}");
+  var ret_code = {{ data.ret_code }}
+  if (ret_code === 0) {
+
+    // convert the given object into JSON string, use Jinja2's tojson() function
+    console.log({{ data.gephi|tojson }});
+    var gephi = JSON.parse({{ data.gephi|tojson }});
+    setupDataset(gephi);
+    createNetwork();
+    redrawAll();
+  }
+  else {
+    alert("{{ data.ret_msg|safe }}")
+  }
+
+
+  /**
+   * This function fills the DataSets. These DataSets will update the network.
+   */
+  function setupDataset(gephiJSON) {
+    gephiImported = gephiJSON;
+
+    // clear DataSets
+    nodes.clear();
+    edges.clear();
+
+    /*var fixed = fixedCheckbox.checked;
+    var parseColor = parseColorCheckbox.checked;
+
+    var parsed = vis.parseGephiNetwork(gephiJSON, {
+      fixed: fixed,
+      parseColor: parseColor
+    });*/
+    var parsed = vis.parseGephiNetwork(gephiJSON);
+
+    // add the parsed data to the DataSets.
+    nodes.add(parsed.nodes);
+    edges.add(parsed.edges);
+  }
+
+  /**
+   * This function creates a network.
+   */
+  function createNetwork() {
+
+    var container = document.getElementById('mynetwork');
+
+    var data = {
+      nodes: vis_nodes,
+      edges: edges
+    };
+
+    network = new vis.Network(container, data, networkOptFree);
+
+    network.on('click', neighbourhoodHighlight); // add event listener
+  }
+
+  /**
+   * This function update the network.
+   */
+  function redrawAll() {
+
+    var filtered = nodes.get({
+      filter: function(item) {
+        if (nodeTypeSelector.value === 'all')
+          return true;
+        else if (nodeTypeSelector.value === 'wrs') {
+          if (item.attributes.group === 'nwt')
+            return true;
+        }
+        else if (nodeTypeSelector.value === 'switches') {
+          if (item.attributes.group !== 'other')
+            return true;
+        }
+        else
+          return false;
+      }
+    });
+
+    vis_nodes.clear();
+    vis_nodes.add(filtered);
+
+    network.setData({
+      nodes: vis_nodes,
+      edges: edges
+    });
+
+    var options = networkOptFree;
+    if (viewModeSelector.value === 'hierarchy')
+      options = networkOptHierarchy;
+
+    network.setOptions(options);
+
+    var fitOptions = {
+      nodes: vis_nodes.getIds()
+    };
+
+    network.fit(fitOptions); // zoom to fit
+    network.redraw();
+  }
+
+  function neighbourhoodHighlight(params) {
+
+    var allNodes = vis_nodes.get({returnType:"Object"});
+
+    if (highlightActive === true) {
+      // reset all nodes
+      for (var nodeId in allNodes) {
+        allNodes[nodeId].color = allNodes[nodeId].defColor; //undefined;
+        if (allNodes[nodeId].hiddenLabel !== undefined) {
+          allNodes[nodeId].label = allNodes[nodeId].hiddenLabel;
+          allNodes[nodeId].hiddenLabel = undefined;
+        }
+      }
+      highlightActive = false
+    }
+
+    // if a node is selected
+    if (params.nodes.length > 0) {
+
+      highlightActive = true;
+      var i,j;
+      selectedNode = params.nodes[0];
+      var degrees = 2;                  // specify the order of connection
+
+      // get the selected node data and show it in the content div
+      var data = vis_nodes.get(selectedNode);
+      var content = JSON.stringify(data, replacer, 1);
+      nodeContent.innerHTML = content.replace(/[\[\]\{\}]+/g,'').replace(/^\s*[\r\n]/gm,'').replace(/,/g,'');
+      // mark all nodes as hard to read.
+      for (var nodeId in allNodes) {
+        if (allNodes[nodeId].hiddenLabel === undefined) {
+          allNodes[nodeId].defColor = allNodes[nodeId].color;
+          allNodes[nodeId].color = 'rgba(200,200,200,0.1)';
+          allNodes[nodeId].hiddenLabel = allNodes[nodeId].label;
+          allNodes[nodeId].label = undefined;
+        }
+      }
+      var connectedNodes = network.getConnectedNodes(selectedNode);
+      var allConnectedNodes = [];
+
+      // get the second degree nodes
+      for (i = 1; i < degrees; i++) {
+        for (j = 0; j < connectedNodes.length; j++) {
+          allConnectedNodes = allConnectedNodes.concat(network.getConnectedNodes(connectedNodes[j]));
+        }
+      }
+
+      // all second degree nodes get a different color and their label back
+      for (i = 0; i < allConnectedNodes.length; i++) {
+        allNodes[allConnectedNodes[i]].color = 'rgba(150,150,150,0.5)';
+        if (allNodes[allConnectedNodes[i]].hiddenLabel !== undefined) {
+          allNodes[allConnectedNodes[i]].label = allNodes[allConnectedNodes[i]].hiddenLabel;
+          allNodes[allConnectedNodes[i]].hiddenLabel = undefined;
+        }
+      }
+
+      // all first degree nodes get their own color and their label back
+      for (i = 0; i < connectedNodes.length; i++) {
+        allNodes[connectedNodes[i]].color = allNodes[connectedNodes[i]].defColor;
+        if (allNodes[connectedNodes[i]].hiddenLabel !== undefined) {
+          allNodes[connectedNodes[i]].label = allNodes[connectedNodes[i]].hiddenLabel;
+          allNodes[connectedNodes[i]].hiddenLabel = undefined;
+        }
+      }
+
+      // the main node gets its own color and its label back.
+      allNodes[selectedNode].color = allNodes[selectedNode].defColor;
+      if (allNodes[selectedNode].hiddenLabel !== undefined) {
+        allNodes[selectedNode].label = allNodes[selectedNode].hiddenLabel;
+        allNodes[selectedNode].hiddenLabel = undefined;
+      }
+
+      network.focus(selectedNode);  // focus on selected node (move the view)
+    }
+
+    // transform the object into an array
+    var updateArray = [];
+    for (nodeId in allNodes) {
+      if (allNodes.hasOwnProperty(nodeId)) {
+        updateArray.push(allNodes[nodeId]);
+      }
+    }
+    vis_nodes.update(updateArray);
+  }
+
+  /**
+   * This function find a node given by user and highlights it
+   */
+  function findAndHighlight() {
+
+    if (selectNode.value === '') {
+      alert('Please specify node name!')
+      return
+    }
+
+    var nodeLabel = selectNode.value.toLowerCase();
+    var allNodes = vis_nodes.get({returnType:"Object"});
+    var selectedNode = undefined;
+
+    // find a node input by an user
+    for (var nodeId in allNodes) {
+      label = '';
+      if (allNodes[nodeId].label !== undefined)
+        label = allNodes[nodeId].label.toLowerCase();
+      else if (allNodes[nodeId].hiddenLabel !== undefined)
+        label = allNodes[nodeId].hiddenLabel.toLowerCase();
+      if (label === nodeLabel) {
+        selectedNode = allNodes[nodeId].id;
+        break;
+      }
+    }
+
+    if (selectedNode === undefined) {
+      alert(nodeLabel + " not found!");
+    }
+    else {
+      // node is found, now highlight it with its neighbourhood
+      var mynodes = [];
+      mynodes[0] = selectedNode;
+
+      // create a fake data (to simulate the mouse click event)
+      var myargs = { nodes : mynodes };
+      neighbourhoodHighlight(myargs);
+    }
+  }
+
+  /**
+   * This function verifies the given node in the ATD list.
+   */
+  function lookupNode() {
+    if (selectedNode === undefined)
+      return;
+
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          alert(xhr.response);
+        }
+        /*else {
+          console.log('error');
+        }*/
+      }
+    };
+
+    /* @1
+     * Use local file instead of sending a CORS request to catch a file.
+     * Because a remote web server (www-acc) has no CORS header in its response
+     * the web browser will block CORS request with different origin.
+     * For test, allTimingDevices.txt file is downloaded manually and stored in
+     * the local topologies/lldp/ directory.
+     */
+    /* @1 var url = 'https://www-acc.gsi.de/svn/timing/trunk/configuration/network_management/atd/allTimingDevices.txt';
+    xhr.open('GET', url, true);
+    xhr.contentType = 'text/plain'; //xhr.overrideMimeType('text/plain; charset=x-user-defined');
+    xhr.withCredentials = true; */
+
+    // a proper way is to use POST method, but anyway
+    var data = vis_nodes.get(selectedNode);
+    var content = data['label']; //JSON.stringify(data, ['label', 'attributes', 'group']);
+    var url = 'lookup/?node=' + content
+    xhr.open('GET', url, true);
+    xhr.send();
+  }
+
+  /*
+   * Links:
+   * [1] https://stackoverflow.com/questions/26701861/how-to-pass-utf-8-data-from-django-to-javascript
+   * [2] https://stackoverflow.com/questions/8395269/what-do-form-action-and-form-method-post-action-do
+   * [3] https://stackoverflow.com/questions/11556958/sending-data-from-html-form-to-a-python-script-in-flask
+   */
+
+</script>
+
+</body>
+</html>

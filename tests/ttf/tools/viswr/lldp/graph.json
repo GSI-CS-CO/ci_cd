@@ -1,0 +1,912 @@
+{
+    "edges": [
+        {
+            "id": 1,
+            "label": "wri2-wri1",
+            "source": 0,
+            "target": 1,
+            "target_name": "nwt0042m66"
+        },
+        {
+            "id": 2,
+            "label": "wri2-wri1",
+            "source": 1,
+            "target": 2,
+            "target_name": "nwt0009m66"
+        },
+        {
+            "id": 3,
+            "label": "wri2-wri1",
+            "source": 2,
+            "target": 3,
+            "target_name": "nwt0010m66"
+        },
+        {
+            "id": 4,
+            "label": "wri15",
+            "source": 3,
+            "target": 4,
+            "target_name": "WR 00267b0003d5"
+        },
+        {
+            "id": 5,
+            "label": "wri2-wri1",
+            "source": 3,
+            "target": 5,
+            "target_name": "nwt0016m66"
+        },
+        {
+            "id": 6,
+            "label": "wri18",
+            "source": 5,
+            "target": 6,
+            "target_name": "WR 00267b000385"
+        },
+        {
+            "id": 7,
+            "label": "wri2-wri1",
+            "source": 5,
+            "target": 7,
+            "target_name": "nwt0018m66"
+        },
+        {
+            "id": 8,
+            "label": "wri12",
+            "source": 7,
+            "target": 8,
+            "target_name": "WR 00267b00050f"
+        },
+        {
+            "id": 9,
+            "label": "wri15",
+            "source": 7,
+            "target": 9,
+            "target_name": "WR 00267b000355"
+        },
+        {
+            "id": 10,
+            "label": "wri18",
+            "source": 7,
+            "target": 10,
+            "target_name": "WR 00267b000358"
+        },
+        {
+            "id": 11,
+            "label": "wri9",
+            "source": 7,
+            "target": 11,
+            "target_name": "WR 00267b000211"
+        },
+        {
+            "id": 12,
+            "label": "wri2-wri1",
+            "source": 7,
+            "target": 12,
+            "target_name": "nwt0011m66"
+        },
+        {
+            "id": 13,
+            "label": "wri2-wri1",
+            "source": 12,
+            "target": 13,
+            "target_name": "nwt0025m66"
+        },
+        {
+            "id": 14,
+            "label": "eth0-4",
+            "source": 13,
+            "target": 14,
+            "target_name": "nwe4006m"
+        },
+        {
+            "id": 15,
+            "label": "wri2-wri1",
+            "source": 13,
+            "target": 15,
+            "target_name": "nwt0050m66"
+        },
+        {
+            "id": 16,
+            "label": "eth0-6",
+            "source": 15,
+            "target": 14,
+            "target_name": "nwe4006m"
+        },
+        {
+            "id": 17,
+            "label": "wri2-wri1",
+            "source": 15,
+            "target": 16,
+            "target_name": "nwt0049m66"
+        },
+        {
+            "id": 18,
+            "label": "eth0-8",
+            "source": 16,
+            "target": 14,
+            "target_name": "nwe4006m"
+        },
+        {
+            "id": 19,
+            "label": "eth0-2",
+            "source": 12,
+            "target": 14,
+            "target_name": "nwe4006m"
+        },
+        {
+            "id": 20,
+            "label": "eth0-7",
+            "source": 7,
+            "target": 14,
+            "target_name": "nwe4006m"
+        },
+        {
+            "id": 21,
+            "label": "wri3",
+            "source": 5,
+            "target": 17,
+            "target_name": "WR 00267b000415"
+        },
+        {
+            "id": 22,
+            "label": "eth0-5",
+            "source": 5,
+            "target": 14,
+            "target_name": "nwe4006m"
+        },
+        {
+            "id": 23,
+            "label": "wri16",
+            "source": 5,
+            "target": 18,
+            "target_name": "WR 22330a62e06d"
+        },
+        {
+            "id": 24,
+            "label": "wri15",
+            "source": 5,
+            "target": 19,
+            "target_name": "WR 00267b000307"
+        },
+        {
+            "id": 25,
+            "label": "wri9",
+            "source": 5,
+            "target": 20,
+            "target_name": "WR 00267b000218"
+        },
+        {
+            "id": 26,
+            "label": "wri9",
+            "source": 3,
+            "target": 21,
+            "target_name": "WR 00267b000214"
+        },
+        {
+            "id": 27,
+            "label": "eth0-3",
+            "source": 3,
+            "target": 14,
+            "target_name": "nwe4006m"
+        },
+        {
+            "id": 28,
+            "label": "wri18",
+            "source": 2,
+            "target": 22,
+            "target_name": "WR 00267b000377"
+        },
+        {
+            "id": 29,
+            "label": "wri9",
+            "source": 2,
+            "target": 23,
+            "target_name": "WR 00267b00021a"
+        },
+        {
+            "id": 30,
+            "label": "eth0-1",
+            "source": 2,
+            "target": 14,
+            "target_name": "nwe4006m"
+        },
+        {
+            "id": 31,
+            "label": "wri4-wr0",
+            "source": 2,
+            "target": 24,
+            "target_name": "192.168.129.115"
+        },
+        {
+            "id": 32,
+            "label": "wri3",
+            "source": 2,
+            "target": 25,
+            "target_name": "WR 70b3d563500f"
+        },
+        {
+            "id": 33,
+            "label": "wri17",
+            "source": 1,
+            "target": 26,
+            "target_name": "WR 00267b000428"
+        },
+        {
+            "id": 34,
+            "label": "eth0-6",
+            "source": 1,
+            "target": 27,
+            "target_name": "nwe4046m"
+        },
+        {
+            "id": 35,
+            "label": "eth0-GigabitEthernet1/0/23 Interface",
+            "source": 0,
+            "target": 28,
+            "target_name": "nwe3004m"
+        }
+    ],
+    "n_edges": "35",
+    "n_nodes": "29",
+    "nodes": [
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0042m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe3004m",
+                        "neighbour_port": "GigabitEthernet1/0/23 Interface",
+                        "number": "2",
+                        "speed": 100
+                    }
+                ],
+                "ptp_servo": "0",
+                "uptime": "18115080"
+            },
+            "color": "#ff9900",
+            "id": 0,
+            "label": "nwt0037m66",
+            "title": "location nwt0037m66"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0037m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0009m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri17",
+                        "neighbour": "WR 00267b000428",
+                        "neighbour_port": "192.168.128.85",
+                        "number": "19",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4046m",
+                        "neighbour_port": "6",
+                        "number": "2",
+                        "speed": 100
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "18074877"
+            },
+            "color": "#00bfff",
+            "id": 1,
+            "label": "nwt0042m66",
+            "title": "location nwt0042m66"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0010m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri18",
+                        "neighbour": "WR 00267b000377",
+                        "neighbour_port": "192.168.160.17",
+                        "number": "20",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri9",
+                        "neighbour": "WR 00267b00021a",
+                        "neighbour_port": "192.168.128.148",
+                        "number": "11",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4006m",
+                        "neighbour_port": "1",
+                        "number": "2",
+                        "speed": 100
+                    },
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0042m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri4",
+                        "neighbour": "192.168.129.115",
+                        "neighbour_port": "wr0",
+                        "number": "6",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri3",
+                        "neighbour": "WR 70b3d563500f",
+                        "neighbour_port": "192.168.129.110",
+                        "number": "5",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "56943"
+            },
+            "color": "#00bfff",
+            "id": 2,
+            "label": "nwt0009m66",
+            "title": "location nwt0009m66"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "wri15",
+                        "neighbour": "WR 00267b0003d5",
+                        "neighbour_port": "192.168.160.107",
+                        "number": "17",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0016m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri9",
+                        "neighbour": "WR 00267b000214",
+                        "neighbour_port": "192.168.128.142",
+                        "number": "11",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4006m",
+                        "neighbour_port": "3",
+                        "number": "2",
+                        "speed": 100
+                    },
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0009m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "56829"
+            },
+            "color": "#00bfff",
+            "id": 3,
+            "label": "nwt0010m66",
+            "title": "location nwt0010m66"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 4,
+            "label": "WR 00267b0003d5",
+            "size": 10.0,
+            "title": "location WR 00267b0003d5"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0010m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri18",
+                        "neighbour": "WR 00267b000385",
+                        "neighbour_port": "192.168.160.34",
+                        "number": "20",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0018m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri3",
+                        "neighbour": "WR 00267b000415",
+                        "neighbour_port": "192.168.128.71",
+                        "number": "5",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4006m",
+                        "neighbour_port": "5",
+                        "number": "2",
+                        "speed": 100
+                    },
+                    {
+                        "name": "wri16",
+                        "neighbour": "WR 22330a62e06d",
+                        "neighbour_port": "0.0.0.0",
+                        "number": "18",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri15",
+                        "neighbour": "WR 00267b000307",
+                        "neighbour_port": "192.168.160.32",
+                        "number": "17",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri9",
+                        "neighbour": "WR 00267b000218",
+                        "neighbour_port": "192.168.128.146",
+                        "number": "11",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "56544"
+            },
+            "color": "#00bfff",
+            "id": 5,
+            "label": "nwt0016m66",
+            "title": "location nwt0016m66"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 6,
+            "label": "WR 00267b000385",
+            "size": 10.0,
+            "title": "location WR 00267b000385"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "wri12",
+                        "neighbour": "WR 00267b00050f",
+                        "neighbour_port": "192.168.128.111",
+                        "number": "14",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri15",
+                        "neighbour": "WR 00267b000355",
+                        "neighbour_port": "192.168.160.51",
+                        "number": "17",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri18",
+                        "neighbour": "WR 00267b000358",
+                        "neighbour_port": "192.168.160.52",
+                        "number": "20",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0016m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri9",
+                        "neighbour": "WR 00267b000211",
+                        "neighbour_port": "192.168.128.139",
+                        "number": "11",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0011m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4006m",
+                        "neighbour_port": "7",
+                        "number": "2",
+                        "speed": 100
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "56378"
+            },
+            "color": "#00bfff",
+            "id": 7,
+            "label": "nwt0018m66",
+            "title": "location nwt0018m66"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 8,
+            "label": "WR 00267b00050f",
+            "size": 10.0,
+            "title": "location WR 00267b00050f"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 9,
+            "label": "WR 00267b000355",
+            "size": 10.0,
+            "title": "location WR 00267b000355"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 10,
+            "label": "WR 00267b000358",
+            "size": 10.0,
+            "title": "location WR 00267b000358"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 11,
+            "label": "WR 00267b000211",
+            "size": 10.0,
+            "title": "location WR 00267b000211"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0025m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0018m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4006m",
+                        "neighbour_port": "2",
+                        "number": "2",
+                        "speed": 100
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "56376"
+            },
+            "color": "#00bfff",
+            "id": 12,
+            "label": "nwt0011m66",
+            "title": "location nwt0011m66"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0011m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4006m",
+                        "neighbour_port": "4",
+                        "number": "2",
+                        "speed": 100
+                    },
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0050m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "56446"
+            },
+            "color": "#00bfff",
+            "id": 13,
+            "label": "nwt0025m66",
+            "title": "location nwt0025m66"
+        },
+        {
+            "attributes": {
+                "group": "nwe"
+            },
+            "color": "#808080",
+            "id": 14,
+            "label": "nwe4006m",
+            "title": "location nwe4006m"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4006m",
+                        "neighbour_port": "6",
+                        "number": "2",
+                        "speed": 100
+                    },
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0025m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    },
+                    {
+                        "name": "wri2",
+                        "neighbour": "nwt0049m66",
+                        "neighbour_port": "wri1",
+                        "number": "4",
+                        "ptp_state": "6",
+                        "speed": 1000
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "56448"
+            },
+            "color": "#00bfff",
+            "id": 15,
+            "label": "nwt0050m66",
+            "title": "location nwt0050m66"
+        },
+        {
+            "attributes": {
+                "group": "nwt",
+                "if": [
+                    {
+                        "name": "eth0",
+                        "neighbour": "nwe4006m",
+                        "neighbour_port": "8",
+                        "number": "2",
+                        "speed": 100
+                    },
+                    {
+                        "name": "wri1",
+                        "neighbour": "nwt0050m66",
+                        "neighbour_port": "wri2",
+                        "number": "3",
+                        "ptp_state": "9",
+                        "speed": 1000
+                    }
+                ],
+                "ptp_servo": "TRACK_PHASE",
+                "uptime": "56315"
+            },
+            "color": "#00bfff",
+            "id": 16,
+            "label": "nwt0049m66",
+            "title": "location nwt0049m66"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 17,
+            "label": "WR 00267b000415",
+            "size": 10.0,
+            "title": "location WR 00267b000415"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 18,
+            "label": "WR 22330a62e06d",
+            "size": 10.0,
+            "title": "location WR 22330a62e06d"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 19,
+            "label": "WR 00267b000307",
+            "size": 10.0,
+            "title": "location WR 00267b000307"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 20,
+            "label": "WR 00267b000218",
+            "size": 10.0,
+            "title": "location WR 00267b000218"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 21,
+            "label": "WR 00267b000214",
+            "size": 10.0,
+            "title": "location WR 00267b000214"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 22,
+            "label": "WR 00267b000377",
+            "size": 10.0,
+            "title": "location WR 00267b000377"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 23,
+            "label": "WR 00267b00021a",
+            "size": 10.0,
+            "title": "location WR 00267b00021a"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 24,
+            "label": "192.168.129.115",
+            "size": 10.0,
+            "title": "location 192.168.129.115"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 25,
+            "label": "WR 70b3d563500f",
+            "size": 10.0,
+            "title": "location WR 70b3d563500f"
+        },
+        {
+            "attributes": {
+                "group": "other"
+            },
+            "color": "#adff2f",
+            "id": 26,
+            "label": "WR 00267b000428",
+            "size": 10.0,
+            "title": "location WR 00267b000428"
+        },
+        {
+            "attributes": {
+                "group": "nwe"
+            },
+            "color": "#808080",
+            "id": 27,
+            "label": "nwe4046m",
+            "title": "location nwe4046m"
+        },
+        {
+            "attributes": {
+                "group": "nwe"
+            },
+            "color": "#808080",
+            "id": 28,
+            "label": "nwe3004m",
+            "title": "location nwe3004m"
+        }
+    ]
+}
