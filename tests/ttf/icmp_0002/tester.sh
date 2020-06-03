@@ -3,6 +3,7 @@
 # Local settings
 log_folder=icmp_test_log
 log_extension=log
+wait_for_each_pid=1
 verbose=0
 
 # Load test settings
@@ -13,28 +14,35 @@ rm -f $(pwd)/$log_folder/*.$log_extension
 mkdir $(pwd)/$log_folder
 
 pids=()
+pid_status=()
 test_failed=0
 cnt=0
 sub_id=0
 sub_id_text="0"
+all_pids_finished=0
 
 # start processes
 for i in "${devices[@]}"
 do
    ping -c ${count[${cnt}]} -i ${interval[${cnt}]} -s ${size[${cnt}]} "$i" | tee -a "$(pwd)/"$log_folder/$i"_$sub_id_text.$log_extension" &
    pids+=("$!")
+   pid_status+=0
    cnt=$cnt+1
    sub_id=$sub_id+1
    sub_id_text="$((sub_id))"
 done
 
 # wait until every command was executed
-for pid in "${pids[@]}"
-do
-  echo "Waiting for PID $pid..."
-  wait $pid
-done
 echo "Found $sub_id_text subprocess..."
+if [ $wait_for_each_pid -eq 0 ]; then
+  for pid in "${pids[@]}"
+  do
+    echo "Waiting for PID $pid..."
+    wait $pid
+  done
+else
+  wait
+fi
 
 # analyze log files
 echo ""
@@ -51,7 +59,7 @@ do
   cat "$(pwd)/"$log_folder/$i"_$sub_id_text.$log_extension" | grep " 0% packet loss"
   retVal=$?
   if [ $retVal -ne 0 ]; then
-    echo "Error!"
+    echo "Error: Device $i failed!"
     cat "$(pwd)/"$log_folder/$i"_$sub_id_text.$log_extension" | grep "packet loss"
     test_failed=1
   fi

@@ -1,5 +1,5 @@
 # -------------------------------------------------------------------------------------------------
-# Optional Arguments (Example: "make all REMOTE_LOGIN=user@hostname")
+# Optional Arguments (Example: "make remote_run REMOTE_LOGIN=user@hostname")
 # -------------------------------------------------------------------------------------------------
 REMOTE_LOGIN ?= root@localhost
 REMOTE_WORKSPACE ?= /home/group/user/lnx/workspace
@@ -25,13 +25,13 @@ ifeq ($(TEST_CASE),default_test)
 	@./$(PARSER)
 endif
 ifeq ($(TEST_CASE),fast_test)
-	@./$(PARSER) -c 100 -i 0.2
+	@./$(PARSER) -c 10 -i 0.2
 endif
 ifeq ($(TEST_CASE),long_test)
 	@./$(PARSER) -c 10000 -i 1.0
 endif
 ifeq ($(TEST_CASE),overkill_test)
-	@./$(PARSER) -c 10 -i 0.3 -p 10 -x
+	@./$(PARSER) -c 10000 -i 0.2 -p 5 -x
 endif
 
 show_config:
