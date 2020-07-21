@@ -124,6 +124,25 @@ function sumSlacks {
   fi
 }
 
+function locateSynDirectory {
+  # assume we handle with newer Makefile where synthesis directory path is
+  # stored in a variable with prefix PATH_<target>
+
+  # some target includes dash in its name (vetar2a-ee-butis)
+  # but its synthesis directory has underscore (vetar2a_ee_butis)
+  target_underscore=$(echo $CFG_TARGET | sed -e 's/-/_/g')
+
+  # get the synthesis directory path from PATH_<target>
+  local syn_dir=$(grep -e "^PATH_${target_underscore^^}\s*=" Makefile | cut -d"=" -f2 | sed 's/^ *//g')
+
+  # if directory path is not found, then we might handle with legacy  Makefile
+  if [ "$syn_dir" == "" ]; then
+    syn_dir=$(sed -n "/^${CFG_TARGET}:/,/^$/p" Makefile | sed -n '/MAKE/p' | cut -d" " -f3)
+  fi
+
+  echo "$syn_dir"
+}
+
 # build target with the given seed value
 # $1 - build directory, $2 - seed value
 function doBuildEvalLog {
@@ -143,7 +162,7 @@ function doBuildEvalLog {
   echo > $MY_LOG_FILE
 
   # locate the synthesis artifacts directory
-  local SYN_DIR=$(sed -n "/^${CFG_TARGET}:/,/^$/p" Makefile | sed -n '/MAKE/p' | cut -d" " -f3)
+  local SYN_DIR=$(locateSynDirectory)
 
   [[ $SYN_DIR = "" ]] &&
     echo "$CFG_TARGET is not found in Makefile. Ignore!" >> $MY_LOG_FILE && return
@@ -308,7 +327,8 @@ for CFG_TARGET in ${CFG_ALL_TARGETS[@]}; do
   # Check the given target rule in Makefile and Quartus settings file
 
   # Locate synthesis directory for the given target
-  SYN_DIR=$(sed -n "/^${CFG_TARGET}:/,/^$/p" Makefile | sed -n '/MAKE/p' | cut -d" " -f3)
+  SYN_DIR=$(locateSynDirectory)
+
   [[ $SYN_DIR = "" ]] &&
     echo "$CFG_TARGET is not found in Makefile. Ignore!" | appendLog && continue
 

@@ -1,3 +1,4 @@
+
 [
   {
     "name" : "scuxl0099", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
@@ -11,6 +12,14 @@
     "receivers":
     [
        { "dev_name" : "vmel014t", "type" : "vetar2a", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.128.111", "mactg" : "00:26:7b:00:05:0f" },
+    ]
+  },
+  {
+    "name" : "dal028", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
+    "receivers":
+    [
+       { "dev_name" : "pexp137182t", "type" : "pexp", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.129.177", "mactg" : "70:b3:d5:63:52:27" },
+       { "dev_name" : "pexp137181t", "type" : "pexp", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.129.176", "mactg" : "70:b3:d5:63:52:26" }
     ]
   }
 ]

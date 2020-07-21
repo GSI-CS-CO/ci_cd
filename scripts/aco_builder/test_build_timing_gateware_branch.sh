@@ -3,9 +3,10 @@
 #
 # Build the target image of the specified bel_projects branch
 #
-# Requires following user defined-axis:
-# - target       target timing receivers
-#
+# Requires parameters in Jenkins GUI and in this script:
+# - target            target timing receivers (user defined-axis, Jenkins GUI)
+# - CFG_BRANCH        bel_projects branch
+# - CFG_SAFT_BRANCH   SAFTlib branch
 
 # ==============================================================================
 # Jenkins
@@ -29,7 +30,7 @@
 #
 # - Configuration Matrix
 # --> User-defined Axis
-#     Name = target, Default Values = scu3, exploder5, pexarria5
+#     Name = target, Default Values = scu3 exploder5 pexarria5
 #
 # --> Label Expression
 #     Name = label_exp, Label Expression = quartus
@@ -57,8 +58,8 @@
 # ==============================================================================
 # Job Settings (User Settings)
 export CFG_QUARTUS_VERSION=18            # 18
-export CFG_BRANCH=enigma_burst_generator # enigma_burst_generator, enigma, ...
-export CFG_SAFT_BRANCH=burst-ctl         # burst-ctl, master, ...
+export CFG_BRANCH=enigma_pexp # enigma_burst_generator, enigma, ...
+export CFG_SAFT_BRANCH=enigma_pexp         # burst-ctl, master, ...
 
 export CFG_TARGET=$target                # user-defined axis in jenkins job
 
@@ -124,7 +125,7 @@ git checkout $CFG_BRANCH
 git pull
 
 # check out submobules, install hdlmake 3.0
-./autogen.sh
+#./autogen.sh
 
 # get git hash of the project
 bel_git_hash=$(git log --oneline | head -1 | cut -d" " -f1)
@@ -152,8 +153,8 @@ echo "Saft repo hash  : $saft_git_hash" | appendLog
 cd $WORKSPACE && cd $bel_prj_dir
 
 # locate the synthesis artifacts directory
-syn_dir=$(sed -n "/^${CFG_TARGET}:/,/^$/p" Makefile | sed -n '/MAKE/p' | cut -d" " -f3)
-[[ $syn_dir = "" ]] &&
+syn_dir=$(sed -n "/^${CFG_TARGET}:/,/^$/p" Makefile | head -2 | sed -n '/MAKE/p' | cut -d" " -f3)
+[[ "$syn_dir" = "" ]] &&
 echo "$CFG_TARGET is not found in Makefile. Exit!" | appendLog && exit 1
 
 export syn_path=$bel_prj_path/$syn_dir

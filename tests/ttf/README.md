@@ -77,6 +77,7 @@ This folder contains all test cases and configurations for the timing test facil
   * exploder5
   * microtca
   * pmc
+  * pexp
   * vetar2a
   * vetar2a-ee-butis
   * ftm
