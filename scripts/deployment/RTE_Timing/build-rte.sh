@@ -110,7 +110,7 @@ make eca DESTDIR=$RTE_DIR EXTRA_FLAGS=-I"$RTE_DIR/lib/" EB=$TMP_DIR/$BEL_PROJECT
 cd $TMP_DIR/$BEL_PROJECTS/tools
 make -j $JOBS
 # Default tools
-for i in flash console info sflash reset time config-nv; do
+for i in flash console info sflash reset time config-nv fwload; do
   cp eb-$i $RTE_DIR/bin
 done
 cp monitoring/eb-mon $RTE_DIR/bin
