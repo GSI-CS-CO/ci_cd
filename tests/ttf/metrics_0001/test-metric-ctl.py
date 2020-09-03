@@ -42,11 +42,14 @@ v_graphite_addr = (v_host, v_port)
 v_graphite_prefix = "ttf"
 v_devices_json = "../devices.json" # configuration file with test devices
 
+v_passwd_ramdisk_yes = "" # set by an environment variable 'PASSWD_RAMDISK_YES'
+v_passwd_ramdisk_no = "" # set by an environment variable 'PASSWD_RAMDISK_NO'
+
 # metrics (metric_name:metric_key_for_graphite)
 # metric_name: temp = FPGA temperature, offset = difference between TAI and UTC,
 #              sync = WR sync status, temp1w = board temperature (1-wire sensor),
 v_metrics = {"temp":"temp", "offset":"offset", "sync":"sync", "temp1w":"temp1w"}
-v_msg_graphite = ""
+v_graphite_rate = ""
 v_msg_timeout_ssh = "Failed: SSH access to target might be timed out at password prompt. \
     \nYou may need to invoke 'ssh-add ~/.ssh/id_rsa' to add SSH key into ssh-agent!"
 v_sync_map = """[{ "status": "TRACKING", "value": "100"},
@@ -56,7 +59,7 @@ v_1w_boards = {"scu2":"0x42", "scu3":"0x42", "exploder5":"0x28", "pexarria5":"0x
 
 ########################################################################################################################
 def func_print_space():
-    print "----------------------------------------------------------------------------------------------------"
+    print "\n----------------------------------------------------------------------------------------------------"
 
 ########################################################################################################################
 def func_is_int(string):
@@ -135,13 +138,15 @@ def func_build_graphite_metric(cmd_output, metric_key, timestamp):
         for value in values:
             if func_is_int(value) and v_metrics['offset'] in keys:
                 # get offset value
-                metric = "%s %s %s" % (key_parts[0] + key_parts[1] + v_metrics['offset'], str(value), timestamp)
+                int_val = int(value)
+                metric = "%s %s %s" % (key_parts[0] + key_parts[1] + v_metrics['offset'], str(int_val), timestamp)
                 metric_list.append(metric)
                 # remove the key to avoid re-use
                 keys = keys.replace(v_metrics['offset'], " ")
             elif func_is_float(value) and v_metrics['temp1w'] in key_parts[2]:
                 # get board temperature value
-                metric = "%s %s %s" % (key_parts[0] + key_parts[1] + v_metrics['temp1w'], str(value), timestamp)
+                int_val = int(float(value))
+                metric = "%s %s %s" % (key_parts[0] + key_parts[1] + v_metrics['temp1w'], str(int_val), timestamp)
                 metric_list.append(metric)
                 # remove the key to avoid re-use
                 keys = keys.replace(v_metrics['temp1w'], "")
@@ -162,30 +167,31 @@ def func_send_metric(metric_list):
         v_sock.sendto(metric_list[i], v_graphite_addr)
 
 ########################################################################################################################
-def func_get_1w_bus(login_to_host, slot):
+def func_get_1w_bus(login_cmd, slot):
     try:
         idx = ""
-        cmd = "timeout 5 ssh %s eb-ls %s | grep User-1Wire" % (login_to_host, slot)
+        cmd = "%s eb-ls %s | grep User-1Wire" % (login_cmd, slot)
         output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         if output:
             idx = output.split(".")[0]
         return idx
 
     except subprocess.CalledProcessError as e:
-        if e.returncode == 124: # timed out
-            print v_msg_timeout_ssh
+        if v_debug:
+            if e.returncode == 124: # timed out
+                print v_msg_timeout_ssh
 
-        print e
+            print e
 
 ########################################################################################################################
-def func_find_option(login_to_host, opt_key):
+def func_find_option(login_cmd, opt_key):
     try:
         timing_tool = "eb-mon"
 
         if opt_key == "temperature":
             timing_tool = "saft-ctl"
 
-        cmd = "timeout 10 ssh %s %s -h" % (login_to_host, timing_tool)
+        cmd = "%s %s -h" % (login_cmd, timing_tool)
         output = subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
         if output:
             lines = output.split('\n')
@@ -195,16 +201,37 @@ def func_find_option(login_to_host, opt_key):
                     return opt
 
     except subprocess.CalledProcessError as e:
-        if e.returncode == 124: # timed out
-            print v_msg_timeout_ssh
+        if v_debug:
+            if e.returncode == 124: # timed out
+                print v_msg_timeout_ssh
 
-        print e
+            print e
+
+########################################################################################################################
+def func_probe_remote_cmd(login_cmd, remote_cmd):
+    try:
+        cmd = "%s %s" % (login_cmd, remote_cmd)
+        subprocess.check_output(cmd.split(), stderr=subprocess.STDOUT)
+        return 0
+
+    except subprocess.CalledProcessError as e:
+        if v_debug:
+            if e.returncode == 124: # timed out
+                print v_msg_timeout_ssh
+            print e
+        return e.returncode
 
 ########################################################################################################################
 def func_start_poll():
     # Poll metric periodically (temperature, offset, sync etc)
-    cmd_list = []
+    hosts_not_reachable = []
+    cmds_failed = []
+    list_metric_cmd = []
+    target_found = None
     test_target = "" # fill it to test with a developer local device: <user>@<host.domain>
+
+    global v_passwd_ramdisk_yes
+    global v_passwd_ramdisk_no
 
     # Build strings with metric key and polling command (either test device or devices in facility)
     if "@" in test_target:
@@ -213,8 +240,9 @@ def func_start_poll():
 
         # Build a string with metric key and polling command
         # - FPGA temperature
-        cmd = "%s.%s timeout 10 ssh %s saft-ctl -ft bla" % (m_head, v_metrics['temp'], test_target)
-        cmd_list.append(cmd)
+        metric_cmd = "%s.%s timeout 10 %s saft-ctl -ft bla" % (m_head, v_metrics['temp'], test_target)
+        
+        list_metric_cmd.append(metric_cmd)
 
         # Multiple metrics are obtained with single command 'eb-mon'
         # - offset (-o)
@@ -235,57 +263,110 @@ def func_start_poll():
         if temp_1w_opt:
             opts += " " + temp_1w_opt
             metric_key += ":" + v_metrics['temp1w']
-        cmd = "%s.%s timeout 10 ssh %s eb-mon dev/wbm0 %s" % (m_head, metric_key, test_target, opts)
-        cmd_list.append(cmd)
+        metric_cmd = "%s.%s timeout 10 %s eb-mon dev/wbm0 %s" % (m_head, metric_key, test_target, opts)
+        list_metric_cmd.append(metric_cmd)
     else:
+        # get json data with one or more target types of timing recievers (eg, only exploder5 or many others)
+        data = {}
         try:
             with open(v_devices_json) as json_file:
-                data = json.load(json_file)
-                for p in data:
-                    for q in p['receivers']:
-                        if (v_target == str(q['type'])) or (v_target == "all"):
-                            login_to_host = p['login'] + "@" + p['name'] + p['extension']
-                            # Build a header of metric key  with "prefix.host.dev.type.role"
-                            m_head = "%s.%s.%s.%s.%s" % (v_graphite_prefix, p['name'], q['dev_name'], q['type'], q['role'])
-                            # Build a string with metric key and polling command
-                            cmd = "%s.%s timeout 10 ssh %s saft-ctl -t %s" % (m_head, v_metrics['temp'], login_to_host, q['dev_name'])
-                            cmd_list.append(cmd)
+                json_data = json.load(json_file)
 
-                            # Multiple metrics are obtained with single command 'eb-mon'
-                            # - offset (-o)
-                            opts = "-o"
-                            metric_key = v_metrics['offset']
-                            # - WR sync (-y or -z, find a valid option to get the WR sync status because the option varies for eb-mon)
-                            sync_opt = func_find_option(login_to_host, "sync")
-                            # - board temperature (-t<bus_idx> -f<family>)
-                            temp_1w_opt = ""
-                            # Get board temperature if 1-wire temperature sensor is available in target
-                            if v_target in v_1w_boards:
-                                bus_idx = func_get_1w_bus(login_to_host, q['slot'])
-                                if bus_idx:
-                                    temp_1w_opt = "-t%s -f%s" % (bus_idx, v_1w_boards[v_target])
-                            if sync_opt:
-                                opts += " " + sync_opt
-                                metric_key += ":" + v_metrics['sync']
-                            if temp_1w_opt:
-                                opts += " " + temp_1w_opt
-                                metric_key += ":" + v_metrics['temp1w']
-                            cmd = "%s.%s timeout 10 ssh %s eb-mon %s %s" % (m_head, metric_key, login_to_host, q['slot'], opts)
-                            cmd_list.append(cmd)
+                for p in json_data:
+                    for q in p['receivers']:
+                        if (v_target == str(q['type'])) or (v_target == 'all'):
+                            data[str(q['type'])] = p
+                            break
 
         except (ValueError, KeyError, TypeError):
             print "JSON format error"
 
-        if len(cmd_list) == 0:
-            print "Failed: %s target not found in %s. Exit!" % (v_target, v_devices_json)
+        # construct metric header and metric command for each target type (eg, exploder5)
+        for target in data:
+            p = data[target]
+            # construct the login command to a remote host with target type of timing recievers
+            ssh_passwd = v_passwd_ramdisk_yes
+            if str(p['csco_ramdisk']) == 'no':
+                ssh_passwd = v_passwd_ramdisk_no
+
+            login_host = "%s@%s%s" % (p['login'], p['name'], p['extension'])
+            login_cmd = "sshpass -p %s ssh %s" % (ssh_passwd, login_host)
+            timed_login_cmd = "timeout 10 %s" % (login_cmd)
+            list_target_metric_cmd = []  # metric header and metric command for a selected target
+
+            # probe remote command: on failure or time-out ignore all timing receivers in the remote host
+            if (func_probe_remote_cmd(timed_login_cmd, "echo login passed: " + login_host)):
+                continue
+
+            #print "+ Succeeded log in to %s" % login_host
+
+            for q in p['receivers']:
+
+                # Build a header for the FPGA temperature metric "prefix.host.dev.type.role"
+                m_head = "%s.%s.%s.%s.%s" % (v_graphite_prefix, p['name'], q['dev_name'], q['type'], q['role'])
+                # Build a string with metric key and polling command
+                metric_cmd = "%s.%s %s saft-ctl -t %s" % (m_head, v_metrics['temp'], login_cmd, q['dev_name'])
+                test_cmd = "saft-ctl -t %s" % (q['dev_name'])
+
+                # invoke a remote command: on failure or time-out ignore the command
+                if (func_probe_remote_cmd(login_cmd, test_cmd)):
+                    cmds_failed.append(metric_cmd)
+                else:
+                    list_target_metric_cmd.append(metric_cmd)
+
+                # Multiple metrics are obtained with single command 'eb-mon'
+                # - offset (-o)
+                opts = "-o"
+                metric_key = v_metrics['offset']
+                # - WR sync (-y or -z, find a valid option to get the WR sync status because the option varies for eb-mon)
+                sync_opt = func_find_option(login_cmd, "sync")
+                # - board temperature (-t<bus_idx> -f<family>)
+                temp_1w_opt = ""
+                # Get board temperature if 1-wire temperature sensor is available in target
+                if v_target in v_1w_boards:
+                    bus_idx = func_get_1w_bus(login_cmd, q['slot'])
+                    if bus_idx:
+                        temp_1w_opt = "-t%s -f%s" % (bus_idx, v_1w_boards[v_target])
+                if sync_opt:
+                    opts += " " + sync_opt
+                    metric_key += ":" + v_metrics['sync']
+                if temp_1w_opt:
+                    opts += " " + temp_1w_opt
+                    metric_key += ":" + v_metrics['temp1w']
+                metric_cmd = "%s.%s %s eb-mon %s %s" % (m_head, metric_key, login_cmd, q['slot'], opts)
+                test_cmd = "eb-mon %s %s" % (q['slot'], opts)
+
+                # invoke a remote command: on failure or time-out ignore the command
+                if (func_probe_remote_cmd(login_cmd, test_cmd)):
+                    cmds_failed.append(metric_cmd)
+                else:
+                    list_target_metric_cmd.append(metric_cmd)
+
+            func_print_space()
+            if len(list_target_metric_cmd):
+                list_metric_cmd += list_target_metric_cmd
+                print "+ Metric of '%s' will be sent to %s." % (target, v_graphite_rate)
+            else:
+                print "- Failed: Cannot get metrics of '%s'!" % (target)
+
+        if len(cmds_failed):
+            func_print_space()
+            print "- Commands failed:"
+            for entry in cmds_failed:
+                print entry
+        if len(list_metric_cmd) == 0:
+            if len(hosts_not_reachable):
+                func_print_space()
+                print "- Hosts couldn't reach:"
+                for host in hosts_not_reachable:
+                    print host
             return
 
     # Print metric keys with corresponding polling commands
-    for entry in cmd_list:
+    func_print_space()
+    print "+ Commands will be invoked:"
+    for entry in list_metric_cmd:
         print entry
-        func_print_space()
-
-    print v_msg_graphite
 
     # Periodic metric polling and forwarding them to Graphite host
     if v_debug == 0:
@@ -296,11 +377,11 @@ def func_start_poll():
         while True:
             metric_list = []
 
-            for i in range(len(cmd_list)):
+            for i in range(len(list_metric_cmd)):
                 # Get metric key from a string
-                metric_key = cmd_list[i].split()[0]
+                metric_key = list_metric_cmd[i].split()[0]
                 # Get polling command from a string
-                cmd = cmd_list[i].partition(metric_key)[2].strip()
+                cmd = list_metric_cmd[i].partition(metric_key)[2].strip()
                 # Get timestamp
                 ts = str(int(time.time()))
 
@@ -316,10 +397,10 @@ def func_start_poll():
                         metric_list.append(string)
 
                 except subprocess.CalledProcessError as e:
-                    if e.returncode == 124: # timed out
-                        print v_msg_timeout_ssh
-
-                    print "Failed (%d): %s -- %s" % (e.returncode, e.output, e.cmd)
+                    if v_debug:
+                        if e.returncode == 124: # timed out
+                            print v_msg_timeout_ssh
+                        print "Failed (%d): %s -- %s" % (e.returncode, e.output, e.cmd)
 
             # Send metrics to Graphite host
             if metric_list:
@@ -354,6 +435,7 @@ def func_stop_poll():
         except subprocess.CalledProcessError as e:
             if e.returncode == 1:
                 print "No process found with PID: %s" % pid
+                pidfile = "/tmp/%s.%s.pid" % (sys.argv[0], v_target)
                 print "Probably outdated pid file in: %s" % pidfile
                 print "Delete pid file after manual check."
             else:
@@ -374,8 +456,10 @@ def main():
     global v_graphite_addr
     global v_interval_seconds
     global v_graphite_prefix
-    global v_msg_graphite
+    global v_graphite_rate
     global v_sync_map
+    global v_passwd_ramdisk_yes
+    global v_passwd_ramdisk_no
 
     # Plausibility check
     try:
@@ -403,12 +487,15 @@ def main():
                     if "sync_map" in obj:
                         v_sync_map = obj['sync_map']
 
-            v_msg_graphite = "send TR metrics to %s:%d (host:port) every %d seconds" % (v_host, v_port, v_interval_seconds)
+            v_graphite_rate = "%s:%d every %d seconds" % (v_host, v_port, v_interval_seconds)
         except (ValueError, KeyError, TypeError):
             print "JSON formar error: %s " % (file)
 
         v_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         v_graphite_addr = (v_host, v_port)
+
+        v_passwd_ramdisk_yes = (os.environ.get('PASSWD_RAMDISK_YES'))
+        v_passwd_ramdisk_no = (os.environ.get('PASSWD_RAMDISK_NO'))
 
     except:
         print "Error: Could not parse given arguments!"
