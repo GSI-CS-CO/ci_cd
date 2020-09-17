@@ -22,7 +22,7 @@
 #    - target       target timing receivers
 #
 # - Configuration Matrix
-# --> User-defined Axis (Name = target, Default Values = scu3, exploder5, pexarria5)
+# --> User-defined Axis (Name = target, Values = scu3 exploder5 pexarria5 microtca)
 # - Execute concurrent builds if necessary (checked)
 # - Restrict where this project can be run
 # --> Label Expression = quartus
