@@ -37,7 +37,7 @@
 #
 # Post-build Actions:
 # - Archive the artifacts
-# --> Files to archive = build.log
+# --> Files to archive = bel_projects/modules/burst_generator/burstgen.???, bel_projects/syn/**/*.rpd, bel_projects/syn/**/*.sof, bel_projects/syn/**/*.jic, bel_projects/syn/**/*.rpt, build.log
 
 # ==============================================================================
 # Job Settings (User Settings)
