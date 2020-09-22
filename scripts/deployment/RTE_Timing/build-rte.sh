@@ -154,6 +154,9 @@ cp /usr/lib64/libbz2* $RTE_DIR/lib
 cp /lib/libpthread* $RTE_DIR/lib
 cp /usr/lib64/libc* $RTE_DIR/lib
 
+# ugly patch for issue #167 (https://github.com/GSI-CS-CO/bel_projects/issues/167)
+mv $RTE_DIR/lib/libpthread.so $RTE_DIR/lib/libpthread.UNUSED
+
 # Get ldd
 if [ "$BEL_BUILD_ADMIN" = "yes" ]; then
   cp /usr/bin/ldd $RTE_DIR/bin/ldd
