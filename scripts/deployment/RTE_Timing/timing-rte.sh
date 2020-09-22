@@ -62,6 +62,8 @@ ldconfig
 insmod /lib/modules/$KERNEL_VERSION/extra/wishbone.ko
 insmod /lib/modules/$KERNEL_VERSION/extra/pcie_wb.ko
 insmod /lib/modules/$KERNEL_VERSION/extra/vmebus.ko
+insmod /lib/modules/$KERNEL_VERSION/kernel/drivers/usb/serial/usbserial.ko
+insmod /lib/modules/$KERNEL_VERSION/extra/wishbone-serial.ko
 
 # start etherbone TCP->PCIe gateway
 #test -f /usr/bin/socat || cp -a /opt/$NAME/socat /usr/bin

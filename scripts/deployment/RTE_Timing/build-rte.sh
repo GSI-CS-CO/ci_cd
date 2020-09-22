@@ -164,9 +164,9 @@ echo "BUILDING DRIVER"
 echo "---------------"
 
 cd $TMP_DIR
-make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external distclean driver
-make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver
-make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external driver-install
+make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external CONFIG_USB_SERIAL_WISHBONE=yes distclean driver
+make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external CONFIG_USB_SERIAL_WISHBONE=yes driver
+make -C bel_projects PREFIX="" STAGING=$RTE_DIR VME_SOURCE=external CONFIG_USB_SERIAL_WISHBONE=yes driver-install
 
 #cp $BASE_DIR/pkgconfig/* $ROOT_DIR/usr/lib64/pkgconfig
 #patch the pkgconfig with a right prefix path
@@ -199,7 +199,7 @@ for i in $TMP_DIR/rpm/*.rpm; do rpm2cpio "$i" | cpio -idmv; done
 # wr-mil gateway: tools and firmware
 if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
   echo "INSTALLING WR-MIL-GATEWAY"
-  echo "----------------------" 
+  echo "----------------------"
   export PKG_CONFIG_PATH=$RTE_DIR/lib/pkgconfig
   make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/saft-control STAGING=$RTE_DIR PREFIX="" MASP=YES
   make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/saft-control STAGING=$RTE_DIR PREFIX="" install
@@ -207,8 +207,8 @@ if [ "$BEL_BUILD_WRMILGW" = "SIS18" ] || [ "$BEL_BUILD_WRMILGW" = "ESR" ]; then
   cp $TMP_DIR/$BEL_PROJECTS/tools/eb-fwload $RTE_DIR/bin
   # firmware
   make -C $TMP_DIR/$BEL_PROJECTS firmware
-  export PATH="$TMP_DIR/$BEL_PROJECTS/toolchain/bin/:$PATH" 
-  make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/firmware 
+  export PATH="$TMP_DIR/$BEL_PROJECTS/toolchain/bin/:$PATH"
+  make -C $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/firmware
   mkdir $RTE_DIR/firmware
   cp $TMP_DIR/$BEL_PROJECTS/modules/wr-mil-gw/firmware/wr_mil.bin $RTE_DIR/firmware/
 fi
@@ -221,6 +221,10 @@ make -j $JOBS
 cd $TMP_DIR/$BEL_PROJECTS/tools/display
 make LOC=ASL
 cp simple-display $RTE_DIR/bin
+
+# copy additional drivers
+cd $BASE_DIR
+cp $(find . -name *.ko | grep drivers) $RTE_DIR/lib/modules/
 
 # Create compilation information
 cd $BASE_DIR
