@@ -87,5 +87,15 @@ for dev in /dev/wbm*; do eval eb-reset ${dev#/} wddisable; done
 # reset statistics for eCPU stalls and WR time
 for dev in /dev/wbm*; do eval eb-mon ${dev#/} wrstatreset 8 50000; done
 
-#create version file
+# create version file
 cat /etc/timing-rte_buildinfo | grep BEL_PROJECTS -A 2 | tail -n 1 | cut -d "-" -f 3 | cut -d "@" -f1 | cut -c 2- > /etc/timing-rte_version
+
+# publish timing receiver info
+trinfofpga=$(echo "trinfo FPGA:"; for dev in /dev/wbm*; do eb-info ${dev#/} | grep "FPGA model"; echo "; "; eb-info ${dev#/} | grep "Platform"; echo "; "; eb-info ${dev#/} | grep "Build type"; echo "; uptime [h]"; eb-mon ${dev#/} -z; done)
+echo $trinfofpga | log
+
+trinfowr=$(echo "trinfo WR NIC:"; for dev in /dev/wbm*; do echo "MAC:"; eb-mon ${dev#/} -m; echo "; IP:"; eb-mon ${dev#/} -i; echo "; Ethernet: "; eb-mon ${dev#/} -l; echo "; WR-PTP: "; eb-mon ${dev#/} -y; done)
+echo $trinfowr | log
+
+trinforte=$(echo "trinfo RTE:"; cat /etc/timing-rte_version; echo "@ramdisk: "; cat /etc/os-release)
+echo $trinforte | log
