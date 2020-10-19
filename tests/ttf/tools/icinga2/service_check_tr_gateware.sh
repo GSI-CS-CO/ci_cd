@@ -3,7 +3,7 @@ export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/common/usr/timing/lib
 export PATH=$PATH:/common/usr/timing/bin
 
 # Usage: ./script 10.10.10.1
-current_release="Enigma"
+current_release="fallout"
 while getopts H: option
 do
  case "${option}"
