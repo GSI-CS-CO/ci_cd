@@ -45,6 +45,14 @@
     ]
   },
   {
+    "name" : "dal030", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "no", "csco_ramdisk" : "yes",
+    "receivers":
+    [
+       { "dev_name" : "pexp141249t", "type" : "pexp", "role" : "node", "slot" : "dev/wbm0", "iptg" : "192.168.132.32", "mactg" : "70:b3:d5:63:52:2f" },
+       { "dev_name" : "pexp141250t", "type" : "pexp", "role" : "node", "slot" : "dev/wbm1", "iptg" : "192.168.132.33", "mactg" : "70:b3:d5:63:52:30" }
+    ]
+  },
+  {
     "name" : "scuxl0001", "login" : "root", "extension" : ".acc.gsi.de", "host_reset" : "yes", "reset2host" : "yes", "csco_ramdisk" : "yes",
     "receivers":
     [
