@@ -32,10 +32,11 @@ def func_probe():
                         cmd_list.append(cmd)
                         cmd = "timeout 10 ssh %s@%s%s eb-ls %s" % (p['login'], p['name'], p['extension'], q['slot'])
                         cmd_list.append(cmd)
-                        cmd = "timeout 10 ssh %s@%s%s saft-ctl %s -i" % (p['login'], p['name'], p['extension'], q['dev_name'])
-                        cmd_list.append(cmd)
-                        cmd = "timeout 10 ssh %s@%s%s saft-ctl %s -s" % (p['login'], p['name'], p['extension'], q['dev_name'])
-                        cmd_list.append(cmd)
+                        if (str(q['type']) != "ftm"):
+                            cmd = "timeout 10 ssh %s@%s%s saft-ctl %s -i" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                            cmd_list.append(cmd)
+                            cmd = "timeout 10 ssh %s@%s%s saft-ctl %s -s" % (p['login'], p['name'], p['extension'], q['dev_name'])
+                            cmd_list.append(cmd)
     except (ValueError, KeyError, TypeError):
         print "JSON format error"
     for i in range(len(cmd_list)):
@@ -300,3 +301,4 @@ def main():
 # Main
 if __name__ == "__main__":
     main()
+
