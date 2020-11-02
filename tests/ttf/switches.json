@@ -7,8 +7,5 @@
   { "name" : "nwt0011m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "access_monitoring", "ip" : "192.168.20.23" },
   { "name" : "nwt0025m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "access", "ip" : "192.168.20.37" },
   { "name" : "nwt0050m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "access", "ip" : "192.168.20.63" },
-  { "name" : "nwt0049m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "access", "ip" : "192.168.20.62" },
-  { "name" : "nwt0295m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "test", "ip" : "192.168.21.41" },
-  { "name" : "nwt0296m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "test", "ip" : "192.168.21.42" },
-  { "name" : "nwt0297m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "test", "ip" : "192.168.21.43" }
+  { "name" : "nwt0049m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "access", "ip" : "192.168.20.62" }
 ]

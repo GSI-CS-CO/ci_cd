@@ -1,0 +1,5 @@
+[
+  { "name" : "nwt0295m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "test", "ip" : "192.168.21.41" },
+  { "name" : "nwt0296m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "test", "ip" : "192.168.21.42" },
+  { "name" : "nwt0297m66", "login" : "root", "extension" : ".timing.acc.gsi.de", "role" : "test", "ip" : "192.168.21.43" }
+]
