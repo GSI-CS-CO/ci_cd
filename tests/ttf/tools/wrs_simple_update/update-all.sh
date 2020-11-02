@@ -27,6 +27,7 @@ cat ../../switches.json | grep name | awk {'print $7"@"$4""$10"" '} >> $list
 sed -i 's/"//g' $list
 sed -i 's/,//g' $list
 
+# Start update process
 echo "Info: Found the following switch(es):"
 cat $list
 
@@ -34,8 +35,7 @@ echo "Info: Starting update:"
 lines=$(cat $list)
 for line in $lines; do
   echo ""
-  echo ""
-  echo ""
+  echo "**************************************************"
   echo "Info: Updating $line now..."
   echo "-> Deploying firmware..."
   scp $firmware $line":/update"
