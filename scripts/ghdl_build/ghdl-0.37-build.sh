@@ -1,6 +1,6 @@
-# This script builds gcc-10.2 with ghdl-gcc version GHDL 1.0-dev
-# and Verilator v3.926
+# This script builds gcc-10.2 with ghdl-gcc version GHDL 0.37
 # Executables and libraries are installed into `pwd`/local/...
+
 
 BUILDDIR=`pwd`
 INSTALLDIR=$BUILDDIR/local
@@ -51,7 +51,7 @@ wget ftp://ftp.fu-berlin.de/unix/languages/gcc/releases/gcc-10.2.0/gcc-10.2.0.ta
 tar -xvf gcc-10.2.0.tar.gz
 mkdir gcc-build
 cd gcc-build
-../gcc-10.2.0/configure --prefix=$INSTALLDIR --with-isl=$INSTALLDIR --with-mpc=$INSTALLDIR --with-mpfr=$INSTALLDIR --with-gmp=$INSTALLDIR --disable-bootstrap --enable-multilib --enable-shared --enable-languages=c,c++,ada
+../gcc-10.2.0/configure --prefix=$INSTALLDIR --disable-bootstrap --with-isl=$INSTALLDIR --with-mpc=$INSTALLDIR --with-mpfr=$INSTALLDIR --with-gmp=$INSTALLDIR --enable-multilib --enable-shared --enable-languages=c,c++,ada
 LD_LIBRARY_PATH=$INSTALLDIR/lib:$INSTALLDIR/lib64 make -j 16
 make install
 cd $BUILDDIR
@@ -71,7 +71,7 @@ cd $BUILDDIR
 # clone GHDL repo
 git clone https://github.com/ghdl/ghdl.git
 cd ghdl
-git checkout tags/v1.0.0rc3
+git checkout tags/v0.37
 PATH=$INSTALLDIR/bin:$PATH LD_LIBRARY_PATH=$INSTALLDIR/lib:$INSTALLDIR/lib64 ./configure --prefix=$INSTALLDIR --with-gcc=../gcc-10.2.0 --enable-libghdl 
 PATH=$INSTALLDIR/bin:$PATH LD_LIBRARY_PATH=$INSTALLDIR/lib:$INSTALLDIR/lib64 make copy-sources 
 cd $BUILDDIR
