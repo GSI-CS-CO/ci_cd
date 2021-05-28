@@ -2,7 +2,7 @@
 
 # =========================================================
 # Job Settings (User Settings)
-export BRANCH="master"
+export BRANCH="fallout"
 
 # =========================================================
 # Build Steps (Don't Edit This Area!)
@@ -16,7 +16,7 @@ sed -i -e 's/BEL_BRANCH=\"\"/BEL_BRANCH=\"'$BRANCH'\"/g' build-rte.sh
 # Build
 ./build-rte.sh
 
-# Plausibility Check
+# Plausibility Check 
 cd rte-build
 test `find . -name saftd`
 test `find . -name eb-console`
@@ -28,3 +28,5 @@ test `find . -name vme_wb.ko`
 # Build TAR File
 cd ..
 tar -cvf timing-rte.tar rte-build
+
+# Archive: ci_cd/**/timing-rte.tar
