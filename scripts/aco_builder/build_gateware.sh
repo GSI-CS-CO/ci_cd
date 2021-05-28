@@ -2,10 +2,10 @@
 
 # =========================================================
 # Job Settings (User Settings)
-export CFG_QUARTUS_VERSION=16 # 16 or 18
-export CFG_BRANCH=doomsday # doomsday, master, ...
-export CFG_TARGET=scu2 # scu2, scu3, vetar2a, vetar2a-ee-butis, exploder5, pexarria5, microtca, pmc
-export GSI_BUILD_TYPE="Doomsday-v4.X.Y" # release name
+export CFG_QUARTUS_VERSION=18 # 16 or 18
+export CFG_BRANCH=fallout # doomsday, master, ...
+export CFG_TARGET=$gateware # scu2, scu3, vetar2a, vetar2a-ee-butis, exploder5, pexarria5, microtca, pmc
+export GSI_BUILD_TYPE="fallout-v6.0.1" # release name
 
 # =========================================================
 # Environmental Settings (Don't Edit This Area!)
@@ -19,11 +19,14 @@ export CHECKOUT_NAME=bel_projects
 
 # =========================================================
 # Build Steps (Don't Edit This Area!)
+if [ -d "$CHECKOUT_NAME" ]; then
+  rm -rf $CHECKOUT_NAME
+fi
 git clone https://github.com/GSI-CS-CO/bel_projects.git
-cd bel_projects
+cd $CHECKOUT_NAME
 git checkout $CFG_BRANCH
-./autogen.sh
 make
-make $CFG_TARGET-clean
 make $CFG_TARGET
 make $CFG_TARGET-check
+
+# Archive: bel_projects/syn/**/*.rpd, bel_projects/syn/**/*.sof, bel_projects/syn/**/*.jic, bel_projects/syn/**/*.rpt
